@@ -1,0 +1,11 @@
+{
+  "name": "yasp",
+  "version": "0.0.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-http-server": "0.0.2",
+    "grunt-jsdoc": "~0.5.1",
+    "grunt-curl": "~1.1.1",
+    "grunt-contrib-connect": "~0.6.0"
+  }
+}
