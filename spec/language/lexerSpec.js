@@ -49,7 +49,8 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
               line: 0,
               character: 0
             }
-          }, {
+          },
+          {
             text: 'output',
             params: {
               line: 0,
@@ -68,11 +69,46 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
               line: 0,
               character: 0
             }
-          }, {
+          },
+          {
             text: 'output',
             params: {
               line: 0,
               character: 7
+            }
+          }
+        ]
+      },
+      {
+        name: 'is tokenizing text with multiple whitespaces between 3 words properly',
+        input: '        input  output   input  output   ',
+        output: [
+          {
+            text: 'input',
+            params: {
+              line: 0,
+              character: 8
+            }
+          },
+          {
+            text: 'output',
+            params: {
+              line: 0,
+              character: 15
+            }
+          },
+          {
+            text: 'input',
+            params: {
+              line: 0,
+              character: 24
+            }
+          },
+          {
+            text: 'output',
+            params: {
+              line: 0,
+              character: 31
             }
           }
         ]
