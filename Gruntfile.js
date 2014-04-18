@@ -31,16 +31,23 @@ module.exports = function(grunt) {
           keepalive: true
         }
       }
+    },
+    jasmine: {
+      src: 'src/**/*.js',
+      options: {
+        specs: 'specs/**/*Spec.js'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-curl');
-  grunt.loadNpmTasks('grunt-doctool');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-jsdoc');
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
 
   grunt.registerTask('default', [ ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('http', [ 'connect' ]);
   grunt.registerTask('doc', [ 'jsdoc' ]);
+  grunt.registerTask('test', [ 'jasmine' ]);
 };

@@ -1,11 +1,14 @@
 {
-  "name": "yasp",
+  "name": "Awesome",
   "version": "0.0.0",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-http-server": "0.0.2",
     "grunt-jsdoc": "~0.5.1",
     "grunt-curl": "~1.1.1",
-    "grunt-contrib-connect": "~0.6.0"
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-jasmine-runner": "~0.6.0",
+    "grunt-contrib-jasmine": "~0.6.3",
+    "requirejs": "~2.1.11"
   }
 }

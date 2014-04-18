@@ -9,12 +9,15 @@ Thumbs.db
 
 # Grunt and build
 dest
-
 node_modules/
 
 
 # Generated HTML doc
 doc/jsdoc
+
+# Generated from Jasmine
+_SpecRunner.html
+.grunt/
 
 # Libs
 src/lib
