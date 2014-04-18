@@ -43,15 +43,17 @@ define([ ], function() {
   };
   
   Lexer.prototype._nextToken = function() {
-    var text = this.input.substr(this.lastPosition, this.position);
-    var token = new Token(text, {
-      file: null,
-      lineText: this.input,
-      line: 0,
-      character: this.lastPosition
-    });
-    
-    this.result.push(token);
+    var text = this.input.substring(this.lastPosition, this.position);
+    if (text.trim().length > 0) {
+      var token = new Token(text, {
+        file: null,
+        lineText: this.input,
+        line: 0,
+        character: this.lastPosition
+      });
+      
+      this.result.push(token);
+    }
     
     this.lastPosition = this.position + 1; // current position + singleToken
   };
