@@ -3,12 +3,15 @@
   "version": "0.0.0",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-http-server": "0.0.2",
-    "grunt-jsdoc": "~0.5.1",
-    "grunt-curl": "~1.1.1",
     "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-jasmine": "~0.5.3",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-curl": "~1.1.1",
+    "grunt-http-server": "0.0.2",
     "grunt-jasmine-runner": "~0.6.0",
-    "grunt-contrib-jasmine": "~0.6.3",
+    "grunt-jsdoc": "~0.5.1",
+    "grunt-jsvalidate": "0.2.2",
     "requirejs": "~2.1.11"
   }
 }

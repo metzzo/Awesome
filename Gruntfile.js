@@ -26,17 +26,54 @@ module.exports = function(grunt) {
     connect: {
       server: {
         options: {
-          port: 8083,
-          base: 'src',
-          keepalive: true
+          port: 8082,
+          // keepalive: true
         }
       }
     },
     jasmine: {
       src: 'src/**/*.js',
       options: {
-        specs: 'specs/**/*Spec.js'
+        specs: 'spec/**/*Spec.js',
+        template: require('grunt-template-jasmine-requirejs'),
+        host: 'http://127.0.0.1:8082/',
+        summary: true,
+        templateOptions: {
+          requireConfig: {
+            baseUrl: './src'
+          }
+        }
       }
+    },
+    watch: {
+      test: {
+        files: ['spec/**/*Spec.js', 'src/**/*.js'],
+        tasks: ['test']
+      }
+    },
+    jsvalidate: {
+      options:{
+        globals: {},
+        esprimaOptions: {},
+        verbose: false
+      },
+      targetName:{
+        files:{
+          src:['spec/**/*Spec.js', 'src/**/*.js']
+        }
+      }
+    },
+    jshint: {
+      options: {
+        curly: true,
+        eqeqeq: true,
+        eqnull: true,
+        browser: true,
+        globals: {
+          jQuery: true
+        },
+      },
+      all: ['Gruntfile.js', 'src/app/**/*.js', 'spec/**/*.js']
     }
   });
 
@@ -44,10 +81,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-jsdoc');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-jsvalidate');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
-  grunt.registerTask('default', [ ]);
+  grunt.registerTask('default', [ 'jsvalidate', 'jshint', 'connect', 'jasmine' ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('http', [ 'connect' ]);
   grunt.registerTask('doc', [ 'jsdoc' ]);
-  grunt.registerTask('test', [ 'jasmine' ]);
+  grunt.registerTask('test', [ 'jsvalidate', 'connect', 'jasmine' ]);
+  grunt.registerTask('watchtest', ['watch:test']);
 };
