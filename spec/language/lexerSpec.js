@@ -25,94 +25,96 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
       expect(lexer.input).toBe(input);
     });
     
-    it('is tokenizing simple text properly', function() {
-      // arrange
-      var lexer;
-      var input = 'input';
-      
-      var result;
-      var expectedResult = [
-        new lexerModule.Token(input, {
-          line: 0,
-          character: 0,
-          file: null,
-          lineText: input
-        })
-      ];
-      
-      // act
-      lexer = new lexerModule.Lexer(input);
-      result = lexer.tokenize();
-      
-      // assert
-      expect(lexer).not.toBeNull();
-      expect(lexer.input).toBe(input);
-      expect(result).not.toBeNull();
-      expect(result).toEqual(expectedResult);
-    });
+    var params = [
+      {
+        name: 'is tokenizing simple text properly',
+        input: 'input',
+        output: [
+          {
+            text: 'input', 
+            params: {
+              line: 0,
+              character: 0
+            }
+          }
+        ]
+      },
+      {
+        name: 'is tokenizing text with 2 words properly',
+        input: 'input output',
+        output: [
+          {
+            text: 'input',
+            params: {
+              line: 0,
+              character: 0
+            }
+          }, {
+            text: 'output',
+            params: {
+              line: 0,
+              character: 6
+            }
+          }
+        ]
+      },
+      {
+        name: 'is tokenizing text with multiple whitespaces between 2 words properly',
+        input: 'input  output',
+        output: [
+          {
+            text: 'input',
+            params: {
+              line: 0,
+              character: 0
+            }
+          }, {
+            text: 'output',
+            params: {
+              line: 0,
+              character: 7
+            }
+          }
+        ]
+      }
+    ];
     
-    it('is tokenizing text with 2 words properly', function() {
-      // arrange
-      var lexer;
-      var input = 'input output';
-      
-      var result;
-      var expectedResult = [
-        new lexerModule.Token('input', {
-          line: 0,
-          character: 0,
-          file: null,
-          lineText: input
-        }),
-        new lexerModule.Token('output', {
-          line: 0,
-          character: 6,
-          file: null,
-          lineText: input
-        })
-      ];
-      // act
-      lexer = new lexerModule.Lexer(input);
-      result = lexer.tokenize();
-      
-      // assert
-      expect(lexer).not.toBeNull();
-      expect(lexer.input).toBe(input);
-      expect(result).not.toBeNull();
-      expect(result).toEqual(expectedResult);
-    });
+    for (var testCase = 0; testCase < params.length; testCase++) {
+      var test = params[testCase];
+      it(test.name, function() {
+        // arrange
+        var lexer;
+        var input = test.input;
+        
+        var result;
+        var expectedResult = [ ];
+        for (var resultToken = 0; resultToken < test.output.length; resultToken++) {
+          var token = test.output[resultToken];
+          if (typeof token.params.lineText == 'undefined') {
+            if (resultToken == 0) {
+              token.params.lineText = test.input; // use the input as line
+            } else {
+              token.params.lineText = test.output[resultToken - 1].params.lineText; // use the line of the token before
+            }
+          }
+          if (typeof token.params.file == 'undefined') {
+            token.params.file = null;
+          }
+          expectedResult.push(new lexerModule.Token(token.text, token.params));
+        }
+        
+        // act
+        lexer = new lexerModule.Lexer(input);
+        result = lexer.tokenize();
+        
+        // assert
+        expect(lexer).not.toBeNull();
+        expect(lexer.input).toBe(input);
+        expect(result).not.toBeNull();
+        expect(result).toEqual(expectedResult);
+      });
+    };
     
-    it('is tokenizing text with multiple whitespaces between 2 words properly', function() {
-      // arrange
-      var lexer;
-      var input = 'input  output';
-      
-      var result;
-      var expectedResult = [
-        new lexerModule.Token('input', {
-          line: 0,
-          character: 0,
-          file: null,
-          lineText: input
-        }),
-        new lexerModule.Token('output', {
-          line: 0,
-          character: 7,
-          file: null,
-          lineText: input
-        })
-      ];
-      
-      // act
-      lexer = new lexerModule.Lexer(input);
-      result = lexer.tokenize();
-      
-      // assert
-      expect(lexer).not.toBeNull();
-      expect(lexer.input).toBe(input);
-      expect(result).not.toBeNull();
-      expect(result).toEqual(expectedResult);
-    });
     
     /*it('', function() {
       // arrange
