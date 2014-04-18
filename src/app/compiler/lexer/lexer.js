@@ -1,5 +1,6 @@
 define([ ], function() {
   var delimiter = ' ';
+  var comment = '--';
   
   
   var Token = function(text, params) {
@@ -28,12 +29,20 @@ define([ ], function() {
     
     for (this.position = 0; this.position < this.input.length; this.position++) {
       var singleToken = this.input.charAt(this.position);
-      var doubleToken = (this.position < this.input.length - 1) ? this.input.substring(this.position, 2) : '';
+      var doubleToken = (this.position < this.input.length - 1) ? this.input.substr(this.position, 2) : '';
       
-      if (delimiter.indexOf(singleToken) != -1) {
+      if (doubleToken === comment) {
+        // comment!
+        this._nextToken();
+        while(this.position < this.input.length && this.input.charAt(this.position) != '\n') {
+          this.position++;
+        }
+        this.lastPosition = this.position;
+      } else if (delimiter.indexOf(singleToken) != -1) {
         // shit just got serious
         this._nextToken();
       }
+      
     };
     if (this.lastPosition < this.position) {
       this._nextToken()
@@ -55,7 +64,7 @@ define([ ], function() {
       this.result.push(token);
     }
     
-    this.lastPosition = this.position + 1; // current position + singleToken
+    this.lastPosition = this.position + 1; // current position + singleToken length
   };
   
   return {
