@@ -45,7 +45,7 @@ define([ ], function() {
       INT_LITERAL: {
         name: 'Int Literal',
         params: {
-          intValue: 0
+          value: 0
         },
         functions: {
           
