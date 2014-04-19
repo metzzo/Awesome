@@ -509,14 +509,5 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
         });
       })(test);
     };
-    
-    /*it('', function() {
-      // arrange
-      
-      // act
-      
-      // assert
-      
-    });*/
   });
 });
