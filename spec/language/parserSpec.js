@@ -1,4 +1,4 @@
-define(['app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/ast/ast', 'app/compiler/parser/operator'], function(parserModule, tokenModule, astModule, operatorModule) {
+define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/ast/ast', 'app/compiler/parser/operator', 'app/compiler/syntaxError', 'app/compiler/errorMessages'], function(_s, parserModule, tokenModule, astModule, operatorModule, syntaxErrorModule, errorMessages) {
   describe('Parser', function() {
     it('is created properly', function() {
       // arrange
@@ -80,6 +80,19 @@ define(['app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/
             })
           ]
         })
+      },
+      {
+        name: 'is not parsing simple term',
+        input: [ '1', '+', '+', '2' ],
+        output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, '+'), {
+          token: new tokenModule.Token('+', {
+            file: null,
+            lineText: '',
+            line: 0,
+            character: 0
+          })
+        }),
+        fails: true
       }
     ];
     
@@ -92,6 +105,7 @@ define(['app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/
           var input = [ ];
           var output;
           var expectedOutput = test.output;
+          var fails = test.fails;
           
           for (var inputToken = 0; inputToken < test.input.length; inputToken++) {
             var token = test.input[inputToken];
@@ -103,27 +117,29 @@ define(['app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/
             }));
           }
           
-          // act
-          parser = new parserModule.Parser(input);
-          output = parser.parse(input);
-          
-          // assert
-          expect(parser).not.toBeNull();
-          expect(parser.input).toBe(input);
-          expect(output).not.toBeNull();
-          expect(output).toEqual(expectedOutput);
+          var func = function() {
+            // act
+            parser = new parserModule.Parser(input);
+            output = parser.parse(input);
+            
+          };
+          if (fails) {
+            expect(func).toThrow(expectedOutput);
+            
+            expect(parser).not.toBeNull();
+            expect(parser.input).toBe(input);
+            expect(parser.output).toBeNull();
+          } else {
+            func();
+            
+            // assert
+            expect(parser).not.toBeNull();
+            expect(parser.input).toBe(input);
+            expect(output).not.toBeNull();
+            expect(output).toEqual(expectedOutput);
+          }
         });
       })(test);
     };
   });
-  
-  /*it('', function() {
-    // arrange
-    
-    // act
-    
-    // assert
-    
-  });*/
-  
 });

@@ -1,4 +1,4 @@
-define([ 'underscore' ], function() {
+define([ 'underscore.string', 'app/compiler/errorMessages', 'app/compiler/syntaxError' ], function(_, errorMessages, syntaxErrorModule) {
   /**
    * Creates an iterator that iterates through a token array.
    * It also features some useful methods
@@ -19,7 +19,7 @@ define([ 'underscore' ], function() {
     if (this.is(text)) {
       return this.next();
     } else {
-      this.riseSyntaxError("Unexpected token " + this.current().text + ", expecting '" + text + "'");
+      this.riseSyntaxError(_.sprintf(errorMessages.UNEXPECTED_TOKEN, this.current().text, text));
     }
   };
 
@@ -44,7 +44,7 @@ define([ 'underscore' ], function() {
       this.position++;
       return this.current();
     } else {
-      this.riseSyntaxError("Unexpected end of file");
+      this.riseSyntaxError(errorMessages.UNEXPECTED_TOKEN);
     }
   };
 
@@ -94,8 +94,10 @@ define([ 'underscore' ], function() {
    * @param msg
    */
   TokenIterator.prototype.riseSyntaxError = function (msg, fatality) {
-    if (_.isUndefined(fatality)) fatality = 'CRITICAL';
-    throw 'Syntax Error: ' + msg + ' at token '+this.current().toString() + ' fatality ' + fatality;
+    throw new syntaxErrorModule.SyntaxError(msg, {
+      fatality: fatality,
+      token: this.current()
+    });
   };
 
   /**

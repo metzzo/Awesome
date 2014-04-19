@@ -4,7 +4,8 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     'curl-dir': {
       'src/lib/js': [
-        'http://underscorejs.org/underscore.js'
+        'http://underscorejs.org/underscore.js',
+        'http://epeli.github.io/underscore.string/lib/underscore.string.js'
       ],
       'src/lib/css': [
         
@@ -43,11 +44,15 @@ module.exports = function(grunt) {
           requireConfig: {
             baseUrl: './src',
             paths: {
-              'underscore': 'lib/js/underscore'
+              'underscore': 'lib/js/underscore',
+              'underscore.string': 'lib/js/underscore.string'
             },
             shim: {
               'underscore': {
                 exports: '_'
+              },
+              'underscore.string': {
+                deps: ['underscore']
               }
             }
           }

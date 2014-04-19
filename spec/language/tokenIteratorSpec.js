@@ -1,13 +1,13 @@
-define([ 'app/compiler/parser/tokenIterator'], function(tokenIteratorModule) {
+define([ 'app/compiler/parser/tokenIterator', 'app/compiler/syntaxError'], function(tokenIteratorModule, syntaxErrorModule) {
   describe('TokenIterator', function() {
     var iterator;
     
     beforeEach(function() {
       // arrange
       iterator = new tokenIteratorModule.TokenIterator([
-        {text: 'A'},
-        {text: 'B'},
-        {text: '\n'}
+        {text: 'A', params: {line: 0, character: 0, file: null, lineText: ''}},
+        {text: 'B', params: {line: 0, character: 0, file: null, lineText: ''}},
+        {text: '\n', params: {line: 0, character: 0, file: null, lineText: ''}}
       ]);
     });
     
@@ -91,7 +91,13 @@ define([ 'app/compiler/parser/tokenIterator'], function(tokenIteratorModule) {
     });
     
     it('is throwing correct syntax messages', function() {
-      expect(function() { iterator.riseSyntaxError('yolo'); }).toThrow();
+      // arrange
+      var msg = 'yolo';
+      
+      // act / assert
+      expect(function() { iterator.riseSyntaxError(msg); }).toThrow(new syntaxErrorModule.SyntaxError(msg, {
+        token: iterator.current()
+      }));
     });
   });
 });

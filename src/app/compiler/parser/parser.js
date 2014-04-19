@@ -1,4 +1,4 @@
-define([ 'underscore', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/ast', 'app/compiler/parser/operator', 'app/compiler/lexer/token' ], function(_, tokenIteratorModule, astModule, operatorModule, tokenModule) {
+define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/ast', 'app/compiler/parser/operator', 'app/compiler/lexer/token', 'app/compiler/syntaxError', 'app/compiler/errorMessages' ], function(_,_s, tokenIteratorModule, astModule, operatorModule, tokenModule, syntaxErrorModule, errorMessages) {
   var AstScope = astModule.AstPrototypes.SCOPE;
   var AstOperator = astModule.AstPrototypes.OPERATOR;
   var AstIntLit = astModule.AstPrototypes.INT_LITERAL;
@@ -24,11 +24,19 @@ define([ 'underscore', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/as
   Parser.prototype.parse = function() {
     this.output = astModule.createNode(AstScope, { type: AstScope.types.MAIN, nodes: [ ] });
     
-    if (this.input.length > 0) {
-      var expr = this.parseExpression();
-      if (!!expr) {
-        this.output.params.nodes.push(expr);
+    try {
+      if (this.input.length > 1) {
+        var expr = this.parseExpression();
+        if (!!expr) {
+          this.output.params.nodes.push(expr);
+        }
       }
+    } catch(ex) {
+      if (ex instanceof syntaxErrorModule.SyntaxError) {
+        this.output = null;
+      }
+      
+      throw ex;
     }
     
     return this.output;
@@ -77,6 +85,8 @@ define([ 'underscore', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/as
       return astModule.createNode(AstIntLit, {
         value: +text
       });
+    } else {
+      this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, this.iterator.current().text));
     }
   };
   
