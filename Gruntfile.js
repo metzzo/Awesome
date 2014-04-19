@@ -37,7 +37,8 @@ module.exports = function(grunt) {
         specs: 'spec/**/*Spec.js',
         template: require('grunt-template-jasmine-requirejs'),
         host: 'http://127.0.0.1:8082/',
-        summary: true,
+        keepRunner: true,
+        summary: false,
         templateOptions: {
           requireConfig: {
             baseUrl: './src'

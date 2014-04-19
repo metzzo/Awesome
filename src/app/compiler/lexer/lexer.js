@@ -1,5 +1,6 @@
 define([ ], function() {
-  var delimiter = ' ';
+  var delimiter = ' \t\n\r!"§$%&/()=?`´[]{}^°+*#\'-.:,;<>'; // marks the end of a token
+  var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';
   
   
@@ -41,6 +42,19 @@ define([ ], function() {
       } else if (delimiter.indexOf(singleToken) != -1) {
         // shit just got serious
         this._nextToken();
+        
+        // add the delimiter itself if it is not silent
+        if (silentDelimiter.indexOf(singleToken) == -1) {
+          this.lastPosition = this.position;
+          this.position++;
+          
+          console.log("YOOOOOOOOOLOOOOOOOOOOOO" + this.lastPosition+" pos "+this.position);
+          this._nextToken();
+          
+          this.lastPosition = this.position;
+        } else {
+          this.lastPosition = this.position + 1; // current position + singleToken length
+        }
       }
       
     };
@@ -63,8 +77,6 @@ define([ ], function() {
       
       this.result.push(token);
     }
-    
-    this.lastPosition = this.position + 1; // current position + singleToken length
   };
   
   return {

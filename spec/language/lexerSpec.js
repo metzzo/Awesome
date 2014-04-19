@@ -125,6 +125,173 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
             }
           }
         ]
+      },
+      {
+        name: 'is tokenizing text with multiple delimiters properly',
+        input: 'text text,text;text.text-text*text+text-text(text)text%text$',
+        output: [
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 0
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 5
+            }
+          },
+          {
+            text: ',',
+            params: {
+              line: 0,
+              character: 9
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 10
+            }
+          },
+          {
+            text: ';',
+            params: {
+              line: 0,
+              character: 14
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 15
+            }
+          },
+          {
+            text: '.',
+            params: {
+              line: 0,
+              character: 19
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 20
+            }
+          },
+          {
+            text: '-',
+            params: {
+              line: 0,
+              character: 24
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 25
+            }
+          },
+          {
+            text: '*',
+            params: {
+              line: 0,
+              character: 29
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 30
+            }
+          },
+          {
+            text: '+',
+            params: {
+              line: 0,
+              character: 34
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 35
+            }
+          },
+          {
+            text: '-',
+            params: {
+              line: 0,
+              character: 39
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 40
+            }
+          },
+          {
+            text: '(',
+            params: {
+              line: 0,
+              character: 44
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 45
+            }
+          },
+          {
+            text: ')',
+            params: {
+              line: 0,
+              character: 49
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 50
+            }
+          },
+          {
+            text: '%',
+            params: {
+              line: 0,
+              character: 54
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 55
+            }
+          },
+          {
+            text: '$',
+            params: {
+              line: 0,
+              character: 59
+            }
+          }
+        ]
       }
     ];
     
