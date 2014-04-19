@@ -27,6 +27,11 @@ define([ 'app/compiler/parser/tokenIterator'], function(tokenIteratorModule) {
       expect(iterator.is("A")).toBe(true);
     });
     
+    it('The "is" function does not throw an exception if used outside the range of the array', function() {
+      iterator.position = 10;
+      expect(iterator.is()).toBe(null);
+    });
+    
     it('The "next" function goes to the next token', function () {
       expect(iterator.next().text).toBe('B');
     });
@@ -83,6 +88,10 @@ define([ 'app/compiler/parser/tokenIterator'], function(tokenIteratorModule) {
       
       // assert
       expect(iterator.current().text).toBe('B');
+    });
+    
+    it('is throwing correct syntax messages', function() {
+      expect(function() { iterator.riseSyntaxError('yolo'); }).toThrow();
     });
   });
 });

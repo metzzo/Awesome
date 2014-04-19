@@ -1,4 +1,4 @@
-define([ ], function() {  
+define([ 'app/compiler/ast/operator', 'app/compiler/ast/scope', 'app/compiler/ast/int_literal' ], function(operator, scope, int_literal) {  
   return {
     createNode: function(astPrototype, params) {
       if (!params) params = { };
@@ -33,26 +33,9 @@ define([ ], function() {
       });
     },
     AstPrototypes: {
-      OPERATOR: {
-        name: 'Operator',
-        params: {
-          leftOperand: null,
-          rightOperand: null,
-          operator: null
-        },
-        functions: {
-          
-        }
-      },
-      INT_LITERAL: {
-        name: 'Int Literal',
-        params: {
-          value: 0
-        },
-        functions: {
-          
-        }
-      }
+      SCOPE: scope,
+      OPERATOR: operator,
+      INT_LITERAL: int_literal
     }
   };
 });

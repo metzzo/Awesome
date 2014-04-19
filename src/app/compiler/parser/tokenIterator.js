@@ -1,4 +1,4 @@
-define([ ], function() {
+define([ 'underscore' ], function() {
   /**
    * Creates an iterator that iterates through a token array.
    * It also features some useful methods
@@ -29,7 +29,11 @@ define([ ], function() {
    * @returns {boolean}
    */
   TokenIterator.prototype.is = function (text) {
-    return this.current().text == text;
+    if (this.position >= 0 && this.position < this.tokens.length) {
+      return this.current().text === text;
+    } else {
+      return null;
+    }
   };
 
   /**
@@ -40,7 +44,7 @@ define([ ], function() {
       this.position++;
       return this.current();
     } else {
-      this.riseSyntaxError(this, "Unexpected end of file");
+      this.riseSyntaxError("Unexpected end of file");
     }
   };
 
@@ -90,8 +94,8 @@ define([ ], function() {
    * @param msg
    */
   TokenIterator.prototype.riseSyntaxError = function (msg, fatality) {
-    if (typeof fatality == 'undefined') type = 'CRITICAL';
-    throw 'Syntax Error: ' + msg + ' at token '+this.current().toString() + ' fatality ' + type;
+    if (_.isUndefined(fatality)) fatality = 'CRITICAL';
+    throw 'Syntax Error: ' + msg + ' at token '+this.current().toString() + ' fatality ' + fatality;
   };
 
   /**
