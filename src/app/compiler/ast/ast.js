@@ -2,7 +2,9 @@ define([ ], function() {
   return {
     createNode: function(astPrototype, params) {
       if (!params) params = { };
-      if (!astPrototype) throw 'Invalid Parameter';
+      if (!astPrototype) {
+        throw 'Invalid Parameter';
+      }
       
       return Object.create({ }, {
         name: {

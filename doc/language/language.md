@@ -23,7 +23,6 @@ The conversation between data types follow the following rules:
  * integer converts to float, string
  * float converts to integer, string
  * bool converts to string
- * character converts to integer, string
  * string converts to nothing
  * function converts to nothing
  * object converts to string (calling toString)

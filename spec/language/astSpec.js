@@ -1,4 +1,4 @@
-define(['app/compiler/ast/ast'], function(astModule) {
+define(['app/compiler/ast/ast', 'app/compiler/parser/operator'], function(astModule, operatorModule) {
   describe('AstNode', function() {
     // this node mocks a node for testing purpose only
     var stubNode = {
@@ -29,7 +29,7 @@ define(['app/compiler/ast/ast'], function(astModule) {
               name: 'Stub',
               params: { }
             },
-            operator: null
+            operator: operatorModule.Operators.PLUS_OPERATOR
           }
         };
         
@@ -37,7 +37,7 @@ define(['app/compiler/ast/ast'], function(astModule) {
         ast = astModule.createNode(astModule.AstPrototypes.OPERATOR, {
           leftOperand: astModule.createNode(stubNode),
           rightOperand: astModule.createNode(stubNode),
-          operator: null
+          operator: operatorModule.Operators.PLUS_OPERATOR
         });
         
         // assert
