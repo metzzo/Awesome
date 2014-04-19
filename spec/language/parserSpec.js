@@ -117,7 +117,28 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
             })
           ]
         })
-
+      },
+      {
+        name: 'is parsing if with then',
+        input: [ 'if', 'true', 'then', '\n', '1', '\n', 'end' ],
+        output: astModule.createNode(AstScope, {
+          type: AstScope.types.MAIN,
+          nodes: [
+            astModule.createNode(AstIf, {
+              cases: [
+                {
+                  condition: astModule.createNode(AstBoolLit, { value: true }),
+                  scope: astModule.createNode(AstScope, {
+                    type: AstScope.types.LOCAL,
+                    nodes: [
+                      astModule.createNode(AstIntLit, { value: 1 })
+                    ]
+                  })
+                }
+              ]
+            })
+          ]
+        })
       }
     ];
     

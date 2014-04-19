@@ -67,5 +67,83 @@ define(['app/compiler/ast/ast', 'app/compiler/parser/operator'], function(astMod
         expect(ast).toEqual(expectedAst);
       });
     });
+    
+    describe('Bool Literal', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'Bool Literal',
+          params: {
+            value: true
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.BOOL_LITERAL, {
+          value: true
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+      
+      describe('Scope', function() {
+        it('is created properly', function() {
+          // arrange
+          var ast;
+          var expectedAst = {
+            name: 'Scope',
+            params: {
+              type: astModule.AstPrototypes.SCOPE.types.MAIN,
+              nodes: [ { name: 'Stub', params: { } } ]
+            }
+          };
+          
+          // act
+          ast = astModule.createNode(astModule.AstPrototypes.SCOPE, {
+            type: astModule.AstPrototypes.SCOPE.types.MAIN,
+            nodes: [ astModule.createNode(stubNode) ]
+          });
+          
+          // assert
+          expect(ast).not.toBeNull();
+          expect(ast).toEqual(expectedAst);
+        });
+      });
+      
+      describe('If', function() {
+        it('is created properly', function() {
+          // arrange
+          var ast;
+          var expectedAst = {
+            name: 'If',
+            params: {
+              cases: [
+                {
+                  condition: { name: 'Stub', params: { } },
+                  scope: { name: 'Stub', params: { } }
+                }
+              ]
+            }
+          };
+          
+          // act
+          ast = astModule.createNode(astModule.AstPrototypes.IF, {
+            cases: [
+              {
+                condition: astModule.createNode(stubNode),
+                scope: astModule.createNode(stubNode)
+              }
+            ]
+          });
+          
+          // assert
+          expect(ast).not.toBeNull();
+          expect(ast).toEqual(expectedAst);
+        });
+      });
+    });
   });
 });
