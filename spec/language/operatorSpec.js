@@ -17,5 +17,28 @@ define(['app/compiler/parser/operator'], function(operatorModule) {
       expect(operator.params).not.toBeNull();
       expect(operator.params).toEqual(params);
     });
+    it('findOperatorsByPriority returns correct value', function() {
+      // arrange
+      var expectedOperators = [operatorModule.Operators.PLUS_OPERATOR, operatorModule.Operators.MINUS_OPERATOR];
+      var operators;
+      
+      // act
+      operators = operatorModule.findOperatorsByPriority(operatorModule.Operators.PLUS_OPERATOR.params.priority);
+      
+      // assert
+      expect(operators).not.toBeNull();
+      expect(operators).toEqual(expectedOperators);
+    });
+    it('findMaxPriority returns max priority', function() {
+      // arrange
+      var expectedPriority = 20;
+      var priority;
+      
+      // act
+      priority = operatorModule.findMaxPriority();
+      
+      // assert
+      expect(priority).toBe(expectedPriority);
+    });
   })
 });

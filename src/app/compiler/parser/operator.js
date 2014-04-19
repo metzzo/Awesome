@@ -10,6 +10,7 @@ define(['underscore'], function(_) {
     };
   };
   
+  var maxPriority;
   var operators;
   return {
     Operator: Operator,
@@ -19,6 +20,12 @@ define(['underscore'], function(_) {
       }),
       MINUS_OPERATOR: new Operator('-', {
         priority: 10
+      }),
+      MUL_OPERATOR: new Operator('*', {
+        priority: 20
+      }),
+      DIV_OPERATOR: new Operator('/', {
+        priority: 20
       })
     },
     findOperatorsByPriority: function(priority) {
@@ -29,6 +36,17 @@ define(['underscore'], function(_) {
         }
       });
       return result;
+    },
+    findMaxPriority: function() {
+      if (_.isUndefined(maxPriority)) {
+        maxPriority = 0;
+        _.each(operators, function(value) {
+          if (value.params.priority > maxPriority) {
+            maxPriority = value.params.priority;
+          }
+        });
+      }
+      return maxPriority;
     }
   };
 });

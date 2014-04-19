@@ -39,7 +39,7 @@ define([ 'underscore', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/as
       priority = 0;
     }
     
-    if (priority < 15) { // TODO: Not hardcoded -> Max Priority
+    if (priority <= operatorModule.findMaxPriority()) {
       var leftOperand, rigtOperand;
       leftOperand = this.parseExpression(priority + 1);
       

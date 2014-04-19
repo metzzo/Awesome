@@ -62,6 +62,24 @@ define(['app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/
             })
           ]
         })
+      },
+      {
+        name: 'is parsing complex term properly',
+        input: [ '1', '+', '2', '*', '3'],
+        output: astModule.createNode(AstScope, {
+          type: AstScope.types.MAIN,
+          nodes: [
+            astModule.createNode(AstOperator, {
+              leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+              rightOperand: astModule.createNode(AstOperator, {
+                leftOperand: astModule.createNode(AstIntLit, { value: 2 }),
+                rightOperand: astModule.createNode(AstIntLit, { value: 3 }),
+                operator: operatorModule.Operators.MUL_OPERATOR
+              }),
+              operator: operatorModule.Operators.PLUS_OPERATOR
+            })
+          ]
+        })
       }
     ];
     
