@@ -1,62 +1,4 @@
-define(['app/compiler/lexer/lexer'], function(lexerModule) {
-  describe('Token', function() {
-    it('is created properly', function() {
-      // arrange
-      var token;
-      var tokenText = 'token';
-      var tokenParams = {
-        file: null,
-        lineText: tokenText,
-        line: 0,
-        character: 0
-      };
-      
-      // act
-      token = new lexerModule.Token(tokenText, tokenParams);
-      
-      // assert
-      expect(token).not.toBeNull();
-      expect(token.text).toBe(tokenText);
-      expect(token.params).toEqual(tokenParams);
-    });
-    
-    it('is not creating invalid token properly', function() {
-      // arrange
-      var token;
-      var tokenText = '';
-      var tokenParams = {
-        file: null,
-        lineText: tokenText,
-        line: 0,
-        character: 0
-      };
-      
-      // act / assert
-      expect(function() { new lexerModule.Token(tokenText, tokenParams); }).toThrow("Invalid Parameter");
-    });
-    
-    it('is created properly and returns correct toString', function() {
-      // arrange
-      var token;
-      var tokenText = 'token';
-      var tokenParams = {
-        file: null,
-        lineText: tokenText,
-        line: 0,
-        character: 0
-      };
-      
-      // act
-      token = new lexerModule.Token(tokenText, tokenParams);
-      
-      // assert
-      expect(token).not.toBeNull();
-      expect(token.text).toBe(tokenText);
-      expect(token.params).toEqual(tokenParams);
-      expect(token.toString()).toBe(tokenText+' (file: ' + tokenParams.file + ' in line '+tokenParams.line + ' at character ' + tokenParams.character + ')');
-    });
-  });
-  
+define(['app/compiler/lexer/lexer', 'app/compiler/lexer/token'], function(lexerModule, tokenModule) {
   describe('Lexer', function() {
     it('is created properly', function() {
       // arrange
@@ -480,32 +422,32 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
             input = test.input.join('\n');
           }
           
-          var result;
-          var expectedResult = [ ];
-          for (var resultToken = 0; resultToken < test.output.length; resultToken++) {
-            var token = test.output[resultToken];
+          var output;
+          var expectedOutput = [ ];
+          for (var outputToken = 0; outputToken < test.output.length; outputToken++) {
+            var token = test.output[outputToken];
             if (typeof token.params.lineText == 'undefined') {
-              if (resultToken == 0) {
+              if (outputToken == 0) {
                 token.params.lineText = input; // use the input as line
               } else {
-                token.params.lineText = test.output[resultToken - 1].params.lineText; // use the line of the token before
+                token.params.lineText = test.output[outputToken - 1].params.lineText; // use the line of the token before
               }
             }
             if (typeof token.params.file == 'undefined') {
               token.params.file = null;
             }
-            expectedResult.push(new lexerModule.Token(token.text, token.params));
+            expectedOutput.push(new tokenModule.Token(token.text, token.params));
           }
           
           // act
           lexer = new lexerModule.Lexer(input);
-          result = lexer.tokenize();
+          output = lexer.tokenize();
           
           // assert
           expect(lexer).not.toBeNull();
           expect(lexer.input).toBe(input);
-          expect(result).not.toBeNull();
-          expect(result).toEqual(expectedResult);
+          expect(output).not.toBeNull();
+          expect(output).toEqual(expectedOutput);
         });
       })(test);
     };

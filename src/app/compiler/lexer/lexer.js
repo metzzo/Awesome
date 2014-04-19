@@ -1,40 +1,21 @@
-define([ ], function() {
+define(['app/compiler/lexer/token'], function(tokenModule) {
   var delimiter = ' \t\n\r!"§$%&/()=?`´[]{}^°+*#\'-.:,;<>'; // marks the end of a token
   var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';
   var newLine = '\n';
   
-  
-  var Token = function(text, params) {
-    // check if params are valid
-    if (params.line < 0 || typeof params.lineText == 'undefined' || params.character < 0 || text.length == 0) {
-      throw 'Invalid Parameter'
-    }
-    
-    this.text = text;
-    this.params = {
-      file: params.file,
-      lineText: params.lineText,
-      line: params.line,
-      character: params.character
-    };
-  };
-  Token.prototype.toString = function() {
-    return this.text + ' (file: ' + this.params.file + ' in line ' + this.params.line + ' at character ' + this.params.character + ')';
-  };
-  
   var Lexer = function(input) {
     this.input = input;
     this.position = 0;
     this.lastPosition = 0;
-    this.result = [ ];
+    this.output = [ ];
     this.line = 0;
     this.lastNewLine = 0;
     this.lineText = '';
   };
   
   Lexer.prototype.tokenize = function() {
-    this.result = [ ];
+    this.output = [ ];
     this.lastPosition = 0;
     this.lastNewLine = 0;
     this.line = 0;
@@ -80,20 +61,20 @@ define([ ], function() {
       this._nextToken()
     }
     
-    return this.result;
+    return this.output;
   };
   
   Lexer.prototype._nextToken = function() {
     var text = this.input.substring(this.lastPosition, this.position);
     if (text.length > 0) {
-      var token = new Token(text, {
+      var token = new tokenModule.Token(text, {
         file: null,
         lineText: this.lineText,
         line: this.line,
         character: this.lastPosition - this.lastNewLine
       });
       
-      this.result.push(token);
+      this.output.push(token);
     }
   };
   
@@ -104,7 +85,6 @@ define([ ], function() {
   };
   
   return {
-    Lexer: Lexer,
-    Token: Token
+    Lexer: Lexer
   };
 });

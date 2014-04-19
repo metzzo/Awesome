@@ -1,10 +1,16 @@
-define([ ], function() {
-  var Parser = function(tokens) {
-    if (!(tokens instanceof Array)) {
+define([ 'app/compiler/parser/tokenIterator' ], function(tokenIteratorSpec) {
+  var Parser = function(input) {
+    if (!(input instanceof Array)) {
       throw 'Invalid Parameter';
     }
     
-    this.tokens = tokens;
+    this.input = input;
+    this.result = null;
+  };
+  
+  Parser.prototype.parse = function() {
+    this.result = [ ];
+    return this.result;
   };
   
   return {
