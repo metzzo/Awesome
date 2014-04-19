@@ -46,6 +46,7 @@ define([ ], function() {
           this.position++;
         }
         this.lastPosition = this.position;
+        this.position--;
       } else if (delimiter.indexOf(singleToken) != -1) {
         // shit just got serious
         this._nextToken();

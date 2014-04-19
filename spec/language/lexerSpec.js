@@ -354,7 +354,61 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
             }
           },
         ]
+      },
+      {
+        name: 'is tokenizing text with comment and newlines properly',
+        input: [  'text -- this is a comment',
+                  'anothertext--another comment',
+                  'moar text --comment' ],
+        output: [
+          {
+            text: 'text',
+            params: {
+              line: 0,
+              character: 0,
+              lineText: 'text -- this is a comment'
+            }
+          },
+          {
+            text: '\n',
+            params: {
+              line: 0,
+              character: 25
+            }
+          },
+          {
+            text: 'anothertext',
+            params: {
+              line: 1,
+              character: 0,
+              lineText: 'anothertext--another comment'
+            }
+          },
+          {
+            text: '\n',
+            params: {
+              line: 1,
+              character: 28
+            }
+          },
+          {
+            text: 'moar',
+            params: {
+              line: 2,
+              character: 0,
+              lineText: 'moar text --comment'
+            }
+          },
+          {
+            text: 'text',
+            params: {
+              line: 2,
+              character: 5
+            }
+          }
+        ]
       }
+      
     ];
     
     for (var testCase = 0; testCase < params.length; testCase++) {
