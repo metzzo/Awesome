@@ -2,6 +2,7 @@ define([ ], function() {
   var delimiter = ' \t\n\r!"§$%&/()=?`´[]{}^°+*#\'-.:,;<>'; // marks the end of a token
   var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';
+  var newLine = '\n';
   
   
   var Token = function(text, params) {
@@ -22,11 +23,17 @@ define([ ], function() {
     this.position = 0;
     this.lastPosition = 0;
     this.result = [ ];
+    this.line = 0;
+    this.lastNewLine = 0;
+    this.lineText = '';
   };
   
   Lexer.prototype.tokenize = function() {
     this.result = [ ];
     this.lastPosition = 0;
+    this.lastNewLine = 0;
+    this.line = 0;
+    this.lineText = this.processLineText();
     
     for (this.position = 0; this.position < this.input.length; this.position++) {
       var singleToken = this.input.charAt(this.position);
@@ -48,7 +55,6 @@ define([ ], function() {
           this.lastPosition = this.position;
           this.position++;
           
-          console.log("YOOOOOOOOOLOOOOOOOOOOOO" + this.lastPosition+" pos "+this.position);
           this._nextToken();
           
           this.lastPosition = this.position;
@@ -57,6 +63,12 @@ define([ ], function() {
         }
       }
       
+           
+      if (singleToken === newLine) {
+        this.lastNewLine = this.position;
+        this.line++;
+        this.lineText = this.processLineText();
+      }
     };
     if (this.lastPosition < this.position) {
       this._nextToken()
@@ -67,16 +79,22 @@ define([ ], function() {
   
   Lexer.prototype._nextToken = function() {
     var text = this.input.substring(this.lastPosition, this.position);
-    if (text.trim().length > 0) {
+    if (text.length > 0) {
       var token = new Token(text, {
         file: null,
-        lineText: this.input,
-        line: 0,
-        character: this.lastPosition
+        lineText: this.lineText,
+        line: this.line,
+        character: this.lastPosition - this.lastNewLine
       });
       
       this.result.push(token);
     }
+  };
+  
+  Lexer.prototype.processLineText = function() {
+    var currentPosition = this.position;
+    while (currentPosition < this.input.length && this.input.charAt(currentPosition) != newLine) currentPosition++;
+    return this.input.substring(this.position, currentPosition);
   };
   
   return {

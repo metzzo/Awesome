@@ -292,6 +292,68 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
             }
           }
         ]
+      },
+      {
+        name: 'is tokenizing text with newlines properly',
+        input: [ 'my',
+                 'name',
+                 'is',
+                 'skrillex'],
+        output: [
+          {
+            text: 'my',
+            params: {
+              line: 0,
+              character: 0,
+              lineText: 'my'
+            }
+          },
+          {
+            text: '\n',
+            params: {
+              line: 0,
+              character: 2
+            }
+          },
+          {
+            text: 'name',
+            params: {
+              line: 1,
+              character: 0,
+              lineText: 'name'
+            }
+          },
+          {
+            text: '\n',
+            params: {
+              line: 1,
+              character: 4
+            }
+          },
+          {
+            text: 'is',
+            params: {
+              line: 2,
+              character: 0,
+              lineText: 'is'
+            }
+          },
+          {
+            text: '\n',
+            params: {
+              line: 2,
+              character: 2
+            }
+          },
+          {
+            text: 'skrillex',
+            params: {
+              line: 3,
+              character: 0,
+              lineText: 'skrillex'
+            }
+          },
+        ]
       }
     ];
     
@@ -302,6 +364,9 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
           // arrange
           var lexer;
           var input = test.input;
+          if (test.input instanceof Array) {
+            input = test.input.join('\n');
+          }
           
           var result;
           var expectedResult = [ ];
@@ -309,7 +374,7 @@ define(['app/compiler/lexer/lexer'], function(lexerModule) {
             var token = test.output[resultToken];
             if (typeof token.params.lineText == 'undefined') {
               if (resultToken == 0) {
-                token.params.lineText = test.input; // use the input as line
+                token.params.lineText = input; // use the input as line
               } else {
                 token.params.lineText = test.output[resultToken - 1].params.lineText; // use the line of the token before
               }
