@@ -33,7 +33,7 @@ define([ ], function() {
     this.lastPosition = 0;
     this.lastNewLine = 0;
     this.line = 0;
-    this.lineText = this.processLineText();
+    this.lineText = this._processLineText();
     
     for (this.position = 0; this.position < this.input.length; this.position++) {
       var singleToken = this.input.charAt(this.position);
@@ -68,7 +68,7 @@ define([ ], function() {
       if (singleToken === newLine) {
         this.lastNewLine = this.position;
         this.line++;
-        this.lineText = this.processLineText();
+        this.lineText = this._processLineText();
       }
     };
     if (this.lastPosition < this.position) {
@@ -92,7 +92,7 @@ define([ ], function() {
     }
   };
   
-  Lexer.prototype.processLineText = function() {
+  Lexer.prototype._processLineText = function() {
     var currentPosition = this.position;
     while (currentPosition < this.input.length && this.input.charAt(currentPosition) != newLine) currentPosition++;
     return this.input.substring(this.position, currentPosition);
