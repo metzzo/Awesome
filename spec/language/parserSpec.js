@@ -32,6 +32,8 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
     var AstScope = astModule.AstPrototypes.SCOPE;
     var AstOperator = astModule.AstPrototypes.OPERATOR;
     var AstIntLit = astModule.AstPrototypes.INT_LITERAL;
+    var AstIf = astModule.AstPrototypes.IF;
+    var AstBoolLit = astModule.AstPrototypes.BOOL_LITERAL;
     
     var params = [
       {
@@ -93,6 +95,29 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
           })
         }),
         fails: true
+      },
+      {
+        name: 'is parsing if',
+        input: [ 'if', 'true', '\n', '1', '\n', 'end' ],
+        output: astModule.createNode(AstScope, {
+          type: AstScope.types.MAIN,
+          nodes: [
+            astModule.createNode(AstIf, {
+              cases: [
+                {
+                  condition: astModule.createNode(AstBoolLit, { value: true }),
+                  scope: astModule.createNode(AstScope, {
+                    type: AstScope.types.LOCAL,
+                    nodes: [
+                      astModule.createNode(AstIntLit, { value: 1 })
+                    ]
+                  })
+                }
+              ]
+            })
+          ]
+        })
+
       }
     ];
     

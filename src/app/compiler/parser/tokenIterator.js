@@ -22,6 +22,20 @@ define([ 'underscore.string', 'app/compiler/errorMessages', 'app/compiler/syntax
       this.riseSyntaxError(_.sprintf(errorMessages.UNEXPECTED_TOKEN, this.current().text, text));
     }
   };
+  
+  /**
+   * Matches the current token with the specified text, if it succeeds it returns true and skips the token, if it fails it returns false
+   * @param text
+   * @returns {*}
+   */
+  TokenIterator.prototype.optMatch = function (text) {
+    if (this.is(text)) {
+      this.next();
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   /**
    * Checks whether the current token equals the given text.
@@ -108,9 +122,10 @@ define([ 'underscore.string', 'app/compiler/errorMessages', 'app/compiler/syntax
     // if \n skip!!
     while (this.hasNext() && this.is("\n")) this.next();
     
-    while (this.hasNext()) {
+    var stop = false;
+    while (this.hasNext() && !stop) {
       try {
-        func();
+        stop = func();
 
         if (this.hasNext()) {
           do {

@@ -2,6 +2,8 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
   var AstScope = astModule.AstPrototypes.SCOPE;
   var AstOperator = astModule.AstPrototypes.OPERATOR;
   var AstIntLit = astModule.AstPrototypes.INT_LITERAL;
+  var AstIf = astModule.AstPrototypes.IF;
+  var AstBoolLit = astModule.AstPrototypes.BOOL_LITERAL;
   
   var Parser = function(input) {
     if (!(input instanceof Array)) {
@@ -10,7 +12,7 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
     
     this.input = input;
     this.output = null;
-    this.iterator = new tokenIteratorModule.TokenIterator(input);
+    
     
     // prepare input
     this.input.push(new tokenModule.Token('\n', {
@@ -22,15 +24,11 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
   };
   
   Parser.prototype.parse = function() {
-    this.output = astModule.createNode(AstScope, { type: AstScope.types.MAIN, nodes: [ ] });
+    this.output = null;
+    this.iterator = new tokenIteratorModule.TokenIterator(this.input);
     
     try {
-      if (this.input.length > 1) {
-        var expr = this.parseExpression();
-        if (!!expr) {
-          this.output.params.nodes.push(expr);
-        }
-      }
+      this.output = this.parseScope(AstScope.types.MAIN);
     } catch(ex) {
       if (ex instanceof syntaxErrorModule.SyntaxError) {
         this.output = null;
@@ -42,6 +40,62 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
     return this.output;
   };
   
+  Parser.prototype.parseLine = function() {
+    var expr;
+    if (this.isKeyword()) {
+      expr = this.parseKeyword();
+    } else {
+      expr = this.parseExpression();
+    }
+    return expr;
+  };
+  
+  // SCOPE
+  Parser.prototype.parseScope = function(type) {
+    var scope = astModule.createNode(AstScope, { type: type, nodes: [ ] });
+    this.iterator.iterate(_.bind(function() {
+      if (this.iterator.is('end')) {
+        this.iterator.next();
+        return true;
+      } else {
+        var line = this.parseLine();
+        if (!!line) {
+          scope.params.nodes.push(line);
+        }
+        return false;
+      }
+    }, this));
+    return scope;
+  };
+  
+  // KEYWORD
+  Parser.prototype.isKeyword = function() {
+    return !!this.keywordsParser[this.iterator.current().text];
+  };
+  
+  Parser.prototype.parseKeyword = function() {
+    return this.keywordsParser[this.iterator.current().text].call(this);
+  };
+  Parser.prototype.keywordsParser = {
+    'if': function() {
+      this.iterator.next();
+      var condition = this.parseExpression();
+      this.iterator.optMatch('then');
+      var scope = this.parseScope(AstScope.types.LOCAL);
+      
+      return astModule.createNode(AstIf, {
+        cases: [
+          {
+            condition: condition,
+            scope: scope
+          }
+        ]
+      });
+    }
+  };
+  
+  
+  // EXPRESSION
   Parser.prototype.parseExpression = function(priority) {
     if (_.isUndefined(priority)) {
       priority = 0;
@@ -84,6 +138,11 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
       this.iterator.next();
       return astModule.createNode(AstIntLit, {
         value: +text
+      });
+    } else if(text === 'true' || text === 'false') {
+      this.iterator.next();
+      return astModule.createNode(AstBoolLit, {
+        value: text === 'true'
       });
     } else {
       this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, this.iterator.current().text));

@@ -23,6 +23,16 @@ define([ 'app/compiler/parser/tokenIterator', 'app/compiler/syntaxError'], funct
       expect(function () { iterator.match("B"); }).toThrow();
     });
     
+    it('The "optMatch" function matches A == A and skips', function() {
+      expect(iterator.optMatch('A')).toBe(true);
+      expect(iterator.current().text).toBe('B');
+    });
+    
+    it('The "optMatch" function matches A == B and does not skip', function() {
+      expect(iterator.optMatch('B')).toBe(false);
+      expect(iterator.current().text).toBe('A');
+    });
+    
     it('The "is" function matches A == A and returns true', function () {
       expect(iterator.is("A")).toBe(true);
     });
