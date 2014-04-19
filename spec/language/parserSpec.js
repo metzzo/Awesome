@@ -82,7 +82,7 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
         })
       },
       {
-        name: 'is not parsing simple term',
+        name: 'is not parsing simple term "1++1"',
         input: [ '1', '+', '+', '2' ],
         output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, '+'), {
           token: new tokenModule.Token('+', {

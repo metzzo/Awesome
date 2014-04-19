@@ -14,10 +14,14 @@ define(['underscore'], function(_) {
       fatality: params.fatality ? params.fatality : FatalityLevel.CRITICAL,
       token:  params.token
     };
+    
+    this.message = this.toString(); // fix for jasmine .toThrow handling
   };
+  
   SyntaxError.prototype.toString = function() {
     return 'Syntax Error: ' + this.msg + ' at '+this.params.token.text + ' in line ' + this.params.token.params.line + ' at character ' + this.params.token.params.character + ' in file ' + this.params.token.params.file;
   };
+  
   
   return {
     SyntaxError: SyntaxError,

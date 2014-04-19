@@ -6,9 +6,9 @@ define([ ], function() {
       type: 0
     },
     types: {
-      MAIN: 0, // "first" scope
-      FUNCTION: 1, // function
-      LOCAL: 2 // if, while, ...
+      MAIN: 'main', // "first" scope
+      FUNCTION: 'function', // function
+      LOCAL: 'local' // if, while, ...
     }
   };
 });
