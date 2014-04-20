@@ -168,6 +168,30 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator'], functio
       });
     });
     
+    describe('While', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'While',
+          params: {
+            condition: { name: 'Stub', params: { } },
+            scope: { name: 'Stub', params: { } }
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.WHILE, {
+          condition: astModule.createNode(stubNode),
+          scope: astModule.createNode(stubNode)
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
+    
     describe('Call', function() {
       it('is created properly', function() {
         // arrange

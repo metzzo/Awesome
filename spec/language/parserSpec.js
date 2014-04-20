@@ -1,4 +1,4 @@
-define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'spec/language/params/parser/expressionParams', 'spec/language/params/parser/ifParams'], function(parserModule, tokenModule, expressionParams, ifParams) {
+define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'spec/language/params/parser/expressionParams', 'spec/language/params/parser/ifParams', 'spec/language/params/parser/loopParams'], function(parserModule, tokenModule, expressionParams, ifParams, loopParams) {
   describe('Parser', function() {
     it('is created properly', function() {
       // arrange
@@ -32,7 +32,7 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'spec/
     var params = [ ];
     params = params.concat(expressionParams);
     params = params.concat(ifParams);
-    
+    params = params.concat(loopParams);
     
     for (var testCase = 0; testCase < params.length; testCase++) {
       var test = params[testCase];

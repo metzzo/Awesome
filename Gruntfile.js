@@ -73,7 +73,7 @@ module.exports = function(grunt) {
       },
       targetName:{
         files:{
-          src:['spec/**/*Spec.js', 'src/**/*.js']
+          src:['spec/**/*.js', 'src/**/*.js']
         }
       }
     },

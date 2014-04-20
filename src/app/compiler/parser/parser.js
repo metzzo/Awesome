@@ -7,6 +7,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstCall       = astModule.AstPrototypes.CALL;
   var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
+  var AstWhile      = astModule.AstPrototypes.WHILE;
   
   var Parser = function(input) {
     if (!(input instanceof Array)) {
@@ -100,6 +101,19 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   Parser.prototype.keywordsParser = {
     'else': Parser.prototype.parseInvalidKeyword,
     'then': Parser.prototype.parseInvalidKeyword,
+    'do': Parser.prototype.parseInvalidKeyword,
+    'while': function() {
+      this.iterator.next();
+      var condition = this.parseExpression();
+      this.iterator.optMatch('do');
+      var scope = this.parseScope(AstScope.types.LOCAL);
+      this.iterator.optMatch('end');
+      
+      return astModule.createNode(AstWhile, {
+        condition: condition,
+        scope: scope
+      });
+    },
     'if': function() {
       var cases = [ ];
       
