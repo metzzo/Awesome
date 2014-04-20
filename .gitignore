@@ -10,7 +10,7 @@ Thumbs.db
 # Grunt and build
 dest
 node_modules/
-
+npm-debug.log
 
 # Generated HTML doc
 doc/jsdoc

@@ -40,5 +40,17 @@ define(['app/compiler/parser/operator'], function(operatorModule) {
       // assert
       expect(priority).toBe(expectedPriority);
     });
+    it('findOperatorByText returns correct operator', function() {
+      // arrange
+      var operator = '+';
+      var expectedOperator = operatorModule.Operators.PLUS_OPERATOR;
+      
+      // act
+      operator = operatorModule.findOperatorByText(operator);
+      
+      // assert
+      expect(operator).not.toBeNull();
+      expect(operator).toEqual(expectedOperator);
+    });
   })
 });

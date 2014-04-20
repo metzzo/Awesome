@@ -1,9 +1,12 @@
 define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/ast', 'app/compiler/parser/operator', 'app/compiler/lexer/token', 'app/compiler/syntaxError', 'app/compiler/errorMessages' ], function(_,_s, tokenIteratorModule, astModule, operatorModule, tokenModule, syntaxErrorModule, errorMessages) {
-  var AstScope = astModule.AstPrototypes.SCOPE;
-  var AstOperator = astModule.AstPrototypes.OPERATOR;
-  var AstIntLit = astModule.AstPrototypes.INT_LITERAL;
-  var AstIf = astModule.AstPrototypes.IF;
-  var AstBoolLit = astModule.AstPrototypes.BOOL_LITERAL;
+  var AstScope      = astModule.AstPrototypes.SCOPE;
+  var AstOperator   = astModule.AstPrototypes.OPERATOR;
+  var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
+  var AstIf         = astModule.AstPrototypes.IF;
+  var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
+  var AstCall       = astModule.AstPrototypes.CALL;
+  var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
+  var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
   
   var Parser = function(input) {
     if (!(input instanceof Array)) {
@@ -44,6 +47,8 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
     var expr;
     if (this.isKeyword()) {
       expr = this.parseKeyword();
+    } else if (this.isIdentifier()) {
+      expr = this.parseFuncCall(false);
     } else {
       expr = this.parseExpression();
     }
@@ -74,13 +79,18 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
   };
   
   Parser.prototype.parseKeyword = function() {
-    return this.keywordsParser[this.iterator.current().text].call(this);
+    if (this.isKeyword()) {
+      return this.keywordsParser[this.iterator.current().text].call(this);
+    } else {
+      this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_KEYWORD, this.iterator.current().text));
+    }
   };
   Parser.prototype.keywordsParser = {
     'if': function() {
       this.iterator.next();
       var condition = this.parseExpression();
       this.iterator.optMatch('then');
+      
       var scope = this.parseScope(AstScope.types.LOCAL);
       
       return astModule.createNode(AstIf, {
@@ -132,6 +142,10 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
     }
   };
   
+  Parser.prototype.isOperator = function() {
+    return operatorModule.findOperatorByText(this.iterator.current().text);
+  };
+  
   Parser.prototype.parseFactor = function() {
     var text = this.iterator.current().text;
     if (/^\d+$/.test(text)) {
@@ -144,8 +158,73 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
       return astModule.createNode(AstBoolLit, {
         value: text === 'true'
       });
+    } else if ((_s.startsWith(text, '"') || _s.startsWith(text, "'")) && (_s.endsWith(text, '"') || _s.endsWith(text, "'"))) {
+      this.iterator.next();
+      return astModule.createNode(AstStringLit, {
+        value: text.substring(1, text.length-1)
+      });
+    } else if (this.isIdentifier()) { // check if identifier?
+      return this.parseFuncCall(true);
     } else {
       this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, this.iterator.current().text));
+    }
+  };
+  
+  Parser.prototype.isIdentifier = function() {
+    var text = this.iterator.current().text;
+    return /^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(text) && !this.keywordsParser[this.iterator.current().text];
+  };
+  
+  Parser.prototype.parseIdentifier = function() {
+    if (this.isIdentifier()) {
+      var name = this.iterator.current().text;
+      this.iterator.next();
+      return astModule.createNode(AstIdentifier, {
+        name: name
+      });
+    } else {
+      this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_IDENTIFIER, this.iterator.current().text));
+    }
+  };
+  
+  Parser.prototype.parseFuncCall = function(requireBrackets) {
+    var identifier = this.parseIdentifier();
+    var hasBrackets;
+    
+    if (this.iterator.optMatch('(')) {
+      hasBrackets = true;
+    } else {
+      hasBrackets = false;
+    }
+    
+    if (!requireBrackets && this.isOperator()) {
+      this.iterator.riseSyntaxError(errorMessages.EXPECTING_FUNCTIONCALL);
+    }
+    
+    if (!hasBrackets && requireBrackets) {
+      // not a function, but a normal identifier
+      return identifier;
+    } else {
+      // parse parameters
+      var first = true;
+      var params = [ ];
+      while (!(this.iterator.is('\n') || this.iterator.is(')'))) {
+        if (!first) {
+          this.iterator.match(',');
+        }
+        params.push(this.parseExpression());
+        
+        first = false;
+      }
+      
+      if (hasBrackets) {
+        this.iterator.match(')');
+      }
+      
+      return astModule.createNode(AstCall, {
+        func: identifier,
+        params: params
+      });
     }
   };
   

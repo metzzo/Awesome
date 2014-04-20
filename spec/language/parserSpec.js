@@ -29,11 +29,14 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
       expect(function() { parser = new parserModule.Parser(input); }).toThrow('Invalid Parameter');
     });
     
-    var AstScope = astModule.AstPrototypes.SCOPE;
-    var AstOperator = astModule.AstPrototypes.OPERATOR;
-    var AstIntLit = astModule.AstPrototypes.INT_LITERAL;
-    var AstIf = astModule.AstPrototypes.IF;
-    var AstBoolLit = astModule.AstPrototypes.BOOL_LITERAL;
+    var AstScope      = astModule.AstPrototypes.SCOPE;
+    var AstOperator   = astModule.AstPrototypes.OPERATOR;
+    var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
+    var AstIf         = astModule.AstPrototypes.IF;
+    var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
+    var AstCall       = astModule.AstPrototypes.CALL;
+    var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
+    var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
     
     var params = [
       {
@@ -139,6 +142,58 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
             })
           ]
         })
+      },
+      {
+        name: 'is parsing simple function call',
+        input: [ 'print', '"Hello World"' ],
+        output: astModule.createNode(AstScope, {
+          type: AstScope.types.MAIN,
+          nodes: [
+            astModule.createNode(AstCall, {
+              func: astModule.createNode(AstIdentifier, { name: 'print' }),
+              params: [
+                astModule.createNode(AstStringLit, { value: 'Hello World' })
+              ]
+            })
+          ]
+        })
+      },
+      {
+        name: 'is parsing complex term with functions and variables',
+        input: [ '1', '+', 'swag', '*', 'hallo', '(', 'true', ',', 'false', ')' ],
+        output: astModule.createNode(AstScope, {
+          type: AstScope.types.MAIN,
+          nodes: [
+            astModule.createNode(AstOperator, {
+              leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+              rightOperand: astModule.createNode(AstOperator, {
+                leftOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
+                rightOperand: astModule.createNode(AstCall, {
+                  func: astModule.createNode(AstIdentifier, { name: 'hallo' }),
+                  params: [
+                    astModule.createNode(AstBoolLit, { value: true }),
+                    astModule.createNode(AstBoolLit, { value: false }),
+                  ]
+                }),
+                operator: operatorModule.Operators.MUL_OPERATOR
+              }),
+              operator: operatorModule.Operators.PLUS_OPERATOR
+            })
+          ]
+        })
+      },
+      {
+        name: 'is parsing variable addition',
+        input: [ 'yolo', '+', 'swag' ],
+        output: new syntaxErrorModule.SyntaxError(errorMessages.EXPECTING_FUNCTIONCALL, {
+          token: new tokenModule.Token('+', {
+            file: null,
+            lineText: '',
+            line: 0,
+            character: 0
+          })
+        }),
+        fails: true
       }
     ];
     

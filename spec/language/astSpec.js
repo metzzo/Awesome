@@ -89,6 +89,29 @@ define(['app/compiler/ast/ast', 'app/compiler/parser/operator'], function(astMod
         expect(ast).toEqual(expectedAst);
       });
     });
+    
+    describe('String Literal', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'String Literal',
+          params: {
+            value: 'swiggidy swag'
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.STRING_LITERAL, {
+          value: 'swiggidy swag'
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
+    
     describe('Scope', function() {
       it('is created properly', function() {
         // arrange
@@ -144,6 +167,51 @@ define(['app/compiler/ast/ast', 'app/compiler/parser/operator'], function(astMod
         expect(ast).toEqual(expectedAst);
       });
     });
-
+    
+    describe('Call', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'Call',
+          params: {
+            func: { name: 'Stub', params: { } },
+            params: [ { name: 'Stub', params: { } } ]
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.CALL, {
+          func: { name: 'Stub', params: { } },
+          params: [ { name: 'Stub', params: { } } ]
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
+    
+    describe('Identifier', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'Identifier',
+          params: {
+            name: 'yolo'
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.IDENTIFIER, {
+          name: 'yolo'
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
   });
 });

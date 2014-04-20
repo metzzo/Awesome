@@ -47,6 +47,15 @@ define(['underscore'], function(_) {
         });
       }
       return maxPriority;
+    },
+    findOperatorByText: function(operator) {
+      var result;
+      _.each(operators, function(value) {
+        if (value.name === operator) {
+          result = value;
+        }
+      });
+      return result;
     }
   };
 });
