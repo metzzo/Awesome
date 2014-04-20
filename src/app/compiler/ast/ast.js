@@ -1,4 +1,4 @@
-define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement' ], function(operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement) {  
+define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement', 'src/app/compiler/ast/for_statement' ], function(operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement, for_statement) {  
   return {
     createNode: function(astPrototype, params) {
       if (!params) params = { };
@@ -38,6 +38,7 @@ define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app
       INT_LITERAL: int_literal,
       IF: if_statement,
       WHILE: while_statement,
+      FOR: for_statement,
       BOOL_LITERAL: bool_literal,
       STRING_LITERAL: string_literal,
       CALL: call,

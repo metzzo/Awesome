@@ -8,6 +8,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
   var AstWhile      = astModule.AstPrototypes.WHILE;
+  var AstFor        = astModule.AstPrototypes.FOR;
   
   var Parser = function(input) {
     if (!(input instanceof Array)) {
@@ -102,6 +103,22 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     'else': Parser.prototype.parseInvalidKeyword,
     'then': Parser.prototype.parseInvalidKeyword,
     'do': Parser.prototype.parseInvalidKeyword,
+    'in': Parser.prototype.parseInvalidKeyword,
+    'for': function() {
+      this.iterator.next();
+      var variable = this.parseIdentifier();
+      this.iterator.match('in');
+      var collection = this.parseExpression();
+      this.iterator.optMatch('do');
+      var scope = this.parseScope(AstScope.types.LOCAL);
+      this.iterator.optMatch('end');
+      
+      return astModule.createNode(AstFor, {
+        variable: variable,
+        collection: collection,
+        scope: scope
+      });
+    },
     'while': function() {
       this.iterator.next();
       var condition = this.parseExpression();
@@ -210,6 +227,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       });
     } else if (this.isIdentifier()) { // check if identifier?
       return this.parseFuncCall(true);
+    } else if (this.isKeyword()) {
+      this.iterator.riseSyntaxError(errorMessages.UNEXPECTED_KEYWORD);
     } else {
       this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, this.iterator.current().text));
     }

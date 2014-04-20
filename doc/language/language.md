@@ -216,6 +216,7 @@ send new PlayerCreated // sends the event
  * Duck Typing in functions => create new functions as soon as it is used with a new datatype
  * Enums
  * Break / Continue in loops
+ * Multiple Return
 
 #### Not so likely
  * Indexer

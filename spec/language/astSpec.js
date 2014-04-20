@@ -192,6 +192,32 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator'], functio
       });
     });
     
+     describe('For', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'For',
+          params: {
+            variable: { name: 'Stub', params: { } },
+            collection: { name: 'Stub', params: { } },
+            scope: { name: 'Stub', params: { } }
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.FOR, {
+          variable: astModule.createNode(stubNode),
+          collection: astModule.createNode(stubNode),
+          scope: astModule.createNode(stubNode)
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
+    
     describe('Call', function() {
       it('is created properly', function() {
         // arrange
