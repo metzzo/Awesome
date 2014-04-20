@@ -57,24 +57,29 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
   
   // SCOPE
   Parser.prototype.parseScope = function(type, endToken) {
-    if (_.isUndefined(endToken)) {
-      endToken = [ ];
-    }
-    endToken.push('end');
-    
-    var scope = astModule.createNode(AstScope, { type: type, nodes: [ ] });
-    this.iterator.iterate(_.bind(function() {
-      if (endToken.indexOf(this.iterator.current().text) != -1) {
-        return true;
-      } else {
-        var line = this.parseLine();
-        if (!!line) {
-          scope.params.nodes.push(line);
-        }
-        return false;
+    // if no \n => it is a one line scope, kinda like if(yolo) swag;
+    if (!this.iterator.is('\n') && type === AstScope.types.LOCAL) {
+      return astModule.createNode(AstScope, { type: type, nodes: [ this.parseLine() ] });
+    } else {
+      if (_.isUndefined(endToken)) {
+        endToken = [ ];
       }
-    }, this));
-    return scope;
+      endToken.push('end');
+      
+      var scope = astModule.createNode(AstScope, { type: type, nodes: [ ] });
+      this.iterator.iterate(_.bind(function() {
+        if (endToken.indexOf(this.iterator.current().text) != -1) {
+          return true;
+        } else {
+          var line = this.parseLine();
+          if (!!line) {
+            scope.params.nodes.push(line);
+          }
+          return false;
+        }
+      }, this));
+      return scope;
+    }
   };
   
   // KEYWORD
@@ -116,9 +121,8 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
             });
           }
         }
-      } while(!this.iterator.is('end'));
-      this.iterator.match('end');
-      
+      } while(!(this.iterator.is('end') || this.iterator.is('\n')));
+      this.iterator.optMatch('end');
       
       return astModule.createNode(AstIf, {
         cases: cases
