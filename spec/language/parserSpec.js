@@ -286,6 +286,19 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
         })
       },
       {
+        name: 'is parsing invalid if',
+        input: ['if', 'true', 'then', 'then'],
+        output:  new syntaxErrorModule.SyntaxError(errorMessages.UNEXPECTED_KEYWORD, {
+          token: new tokenModule.Token('then', {
+            file: null,
+            lineText: '',
+            line: 0,
+            character: 0
+          })
+        }),
+        fails: true
+      },
+      {
         name: 'is parsing simple function call',
         input: [ 'print', '"Hello World"' ],
         output: astModule.createNode(AstScope, {
@@ -325,7 +338,7 @@ define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/t
         })
       },
       {
-        name: 'is parsing variable addition',
+        name: 'is parsing invalid variable addition',
         input: [ 'yolo', '+', 'swag' ],
         output: new syntaxErrorModule.SyntaxError(errorMessages.EXPECTING_FUNCTIONCALL, {
           token: new tokenModule.Token('+', {

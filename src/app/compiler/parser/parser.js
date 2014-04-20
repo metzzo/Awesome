@@ -94,7 +94,12 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
       this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_KEYWORD, this.iterator.current().text));
     }
   };
+  Parser.prototype.parseInvalidKeyword = function() {
+    this.iterator.riseSyntaxError(errorMessages.UNEXPECTED_KEYWORD);
+  };
   Parser.prototype.keywordsParser = {
+    'else': Parser.prototype.parseInvalidKeyword,
+    'then': Parser.prototype.parseInvalidKeyword,
     'if': function() {
       var cases = [ ];
       
