@@ -56,11 +56,15 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
   };
   
   // SCOPE
-  Parser.prototype.parseScope = function(type) {
+  Parser.prototype.parseScope = function(type, endToken) {
+    if (_.isUndefined(endToken)) {
+      endToken = [ ];
+    }
+    endToken.push('end');
+    
     var scope = astModule.createNode(AstScope, { type: type, nodes: [ ] });
     this.iterator.iterate(_.bind(function() {
-      if (this.iterator.is('end')) {
-        this.iterator.next();
+      if (endToken.indexOf(this.iterator.current().text) != -1) {
         return true;
       } else {
         var line = this.parseLine();
@@ -87,19 +91,37 @@ define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator',
   };
   Parser.prototype.keywordsParser = {
     'if': function() {
-      this.iterator.next();
-      var condition = this.parseExpression();
-      this.iterator.optMatch('then');
+      var cases = [ ];
       
-      var scope = this.parseScope(AstScope.types.LOCAL);
+      do {
+        this.iterator.next();
+        var condition = this.parseExpression();
+        this.iterator.optMatch('then');
+      
+        var scope = this.parseScope(AstScope.types.LOCAL, [ 'else' ]);
+        
+        cases.push({
+          condition: condition,
+          scope: scope
+        });
+        
+        if (this.iterator.is('else')) {
+          this.iterator.next();
+          
+          if (!this.iterator.is('if')) {
+            scope = this.parseScope(AstScope.types.LOCAL);
+            cases.push({
+              condition: null,
+              scope: scope
+            });
+          }
+        }
+      } while(!this.iterator.is('end'));
+      this.iterator.match('end');
+      
       
       return astModule.createNode(AstIf, {
-        cases: [
-          {
-            condition: condition,
-            scope: scope
-          }
-        ]
+        cases: cases
       });
     }
   };

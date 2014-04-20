@@ -19,7 +19,7 @@ define([ 'underscore.string', 'app/compiler/errorMessages', 'app/compiler/syntax
     if (this.is(text)) {
       return this.next();
     } else {
-      this.riseSyntaxError(_.sprintf(errorMessages.UNEXPECTED_TOKEN, this.current().text, text));
+      this.riseSyntaxError(_.sprintf(errorMessages.UNEXPECTED_TOKEN, ''+this.current().text, ''+text));
     }
   };
   
@@ -58,7 +58,7 @@ define([ 'underscore.string', 'app/compiler/errorMessages', 'app/compiler/syntax
       this.position++;
       return this.current();
     } else {
-      this.riseSyntaxError(errorMessages.UNEXPECTED_TOKEN);
+      this.riseSyntaxError(errorMessages.UNEXPECTED_EOF);
     }
   };
 
@@ -127,7 +127,7 @@ define([ 'underscore.string', 'app/compiler/errorMessages', 'app/compiler/syntax
       try {
         stop = func();
 
-        if (this.hasNext()) {
+        if (this.hasNext() && !stop) {
           do {
             this.match('\n');
           } while (this.hasNext() && this.is('\n'));

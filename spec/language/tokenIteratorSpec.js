@@ -1,4 +1,4 @@
-define([ 'app/compiler/parser/tokenIterator', 'app/compiler/syntaxError'], function(tokenIteratorModule, syntaxErrorModule) {
+define([ 'app/compiler/parser/tokenIterator', 'app/compiler/syntaxError', 'app/compiler/errorMessages'], function(tokenIteratorModule, syntaxErrorModule, errorMessages) {
   describe('TokenIterator', function() {
     var iterator;
     
@@ -51,7 +51,7 @@ define([ 'app/compiler/parser/tokenIterator', 'app/compiler/syntaxError'], funct
         iterator.next();
         iterator.next();
         iterator.next();
-      }).toThrow();
+      }).toThrow(new syntaxErrorModule.SyntaxError(errorMessages.UNEXPECTED_EOF, { token: {text: '\n', params: {line: 0, character: 0, file: null, lineText: ''}} }));
     });
     
     it('The "current" function returns correct value A', function() {
