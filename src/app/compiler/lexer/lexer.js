@@ -1,4 +1,4 @@
-define(['app/compiler/lexer/token'], function(tokenModule) {
+define(['src/app/compiler/lexer/token'], function(tokenModule) {
   var delimiter = ' \t\n\r!"§$%&/()=?`´[]{}^°+*#\'-.:,;<>'; // marks the end of a token
   var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';

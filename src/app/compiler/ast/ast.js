@@ -1,4 +1,4 @@
-define([ 'app/compiler/ast/operator', 'app/compiler/ast/scope', 'app/compiler/ast/int_literal', 'app/compiler/ast/if_statement', 'app/compiler/ast/bool_literal', 'app/compiler/ast/string_literal', 'app/compiler/ast/call', 'app/compiler/ast/identifier' ], function(operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier) {  
+define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier' ], function(operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier) {  
   return {
     createNode: function(astPrototype, params) {
       if (!params) params = { };

@@ -1,4 +1,4 @@
-define([ 'underscore', 'underscore.string', 'app/compiler/parser/tokenIterator', 'app/compiler/ast/ast', 'app/compiler/parser/operator', 'app/compiler/lexer/token', 'app/compiler/syntaxError', 'app/compiler/errorMessages' ], function(_,_s, tokenIteratorModule, astModule, operatorModule, tokenModule, syntaxErrorModule, errorMessages) {
+define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterator', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app/compiler/lexer/token', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages' ], function(_,_s, tokenIteratorModule, astModule, operatorModule, tokenModule, syntaxErrorModule, errorMessages) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;

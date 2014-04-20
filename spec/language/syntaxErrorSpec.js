@@ -1,4 +1,4 @@
-define([ 'app/compiler/syntaxError', 'app/compiler/lexer/token' ], function(syntaxErrorModule, tokenModule) {
+define([ 'src/app/compiler/syntaxError', 'src/app/compiler/lexer/token' ], function(syntaxErrorModule, tokenModule) {
   describe('SyntaxError', function() {
     it('is created properly', function() {
       // arrange

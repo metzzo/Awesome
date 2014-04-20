@@ -1,4 +1,4 @@
-define(['app/compiler/parser/dataType'], function(dataTypeModule) {
+define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
   describe('DataType', function() {
     it('is created properly', function() {
       // arrange

@@ -1,4 +1,4 @@
-define(['app/compiler/lexer/lexer', 'app/compiler/lexer/token'], function(lexerModule, tokenModule) {
+define(['src/app/compiler/lexer/lexer', 'src/app/compiler/lexer/token'], function(lexerModule, tokenModule) {
   describe('Lexer', function() {
     it('is created properly', function() {
       // arrange

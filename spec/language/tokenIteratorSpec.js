@@ -1,4 +1,4 @@
-define([ 'app/compiler/parser/tokenIterator', 'app/compiler/syntaxError', 'app/compiler/errorMessages'], function(tokenIteratorModule, syntaxErrorModule, errorMessages) {
+define([ 'src/app/compiler/parser/tokenIterator', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages'], function(tokenIteratorModule, syntaxErrorModule, errorMessages) {
   describe('TokenIterator', function() {
     var iterator;
     

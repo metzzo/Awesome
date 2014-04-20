@@ -42,10 +42,10 @@ module.exports = function(grunt) {
         summary: false,
         templateOptions: {
           requireConfig: {
-            baseUrl: './src',
+            baseUrl: './',
             paths: {
-              'underscore': 'lib/js/underscore',
-              'underscore.string': 'lib/js/underscore.string'
+              'underscore': 'src/lib/js/underscore',
+              'underscore.string': 'src/lib/js/underscore.string'
             },
             shim: {
               'underscore': {

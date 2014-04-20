@@ -1,4 +1,4 @@
-define(['app/compiler/ast/ast', 'app/compiler/parser/operator'], function(astModule, operatorModule) {
+define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator'], function(astModule, operatorModule) {
   describe('AstNode', function() {
     // this node mocks a node for testing purpose only
     var stubNode = {

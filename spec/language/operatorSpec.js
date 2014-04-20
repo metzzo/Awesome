@@ -1,4 +1,4 @@
-define(['app/compiler/parser/operator'], function(operatorModule) {
+define(['src/app/compiler/parser/operator'], function(operatorModule) {
   describe('Operator', function() {
     it('is created properly', function() {
       // arrange

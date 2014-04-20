@@ -1,4 +1,4 @@
-define(['underscore.string', 'app/compiler/parser/parser', 'app/compiler/lexer/token', 'app/compiler/ast/ast', 'app/compiler/parser/operator', 'app/compiler/syntaxError', 'app/compiler/errorMessages'], function(_s, parserModule, tokenModule, astModule, operatorModule, syntaxErrorModule, errorMessages) {
+define(['underscore.string', 'src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages'], function(_s, parserModule, tokenModule, astModule, operatorModule, syntaxErrorModule, errorMessages) {
   describe('Parser', function() {
     it('is created properly', function() {
       // arrange
