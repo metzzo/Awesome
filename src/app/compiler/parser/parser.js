@@ -9,6 +9,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
   var AstWhile      = astModule.AstPrototypes.WHILE;
   var AstFor        = astModule.AstPrototypes.FOR;
+  var AstRepeat     = astModule.AstPrototypes.REPEAT;
   
   var Parser = function(input) {
     if (!(input instanceof Array)) {
@@ -104,6 +105,18 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     'then': Parser.prototype.parseInvalidKeyword,
     'do': Parser.prototype.parseInvalidKeyword,
     'in': Parser.prototype.parseInvalidKeyword,
+    'until': Parser.prototype.parseInvalidKeyword,
+    'end': Parser.prototype.parseInvalidKeyword,
+    'repeat': function() {
+      this.iterator.next();
+      var scope = this.parseScope(AstScope.types.LOCAL, [ 'until' ]);
+      if (!this.iterator.is('\n')) this.iterator.match('until');
+      var condition = this.parseExpression();
+      return astModule.createNode(AstRepeat, {
+        condition: condition,
+        scope: scope
+      });
+    },
     'for': function() {
       this.iterator.next();
       var variable = this.parseIdentifier();

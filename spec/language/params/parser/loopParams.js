@@ -4,6 +4,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
   var AstWhile      = astModule.AstPrototypes.WHILE;
   var AstFor        = astModule.AstPrototypes.FOR;
+  var AstRepeat     = astModule.AstPrototypes.REPEAT;
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
   
   return [
@@ -136,6 +137,55 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'for', 'i', 'in', 'in', 'swag', 'do', '\n', '1', '\n', 'end' ],
       output: new syntaxErrorModule.SyntaxError(errorMessages.UNEXPECTED_KEYWORD, {
         token: new tokenModule.Token('in', {
+          file: null,
+          lineText: '',
+          line: 0,
+          character: 0
+        })
+      }),
+      fails: true
+    },
+    {
+      name: 'is parsing repeat',
+      input: [ 'repeat', '\n', '1', '\n', 'until', 'false' ],
+      output: astModule.createNode(AstScope, {
+        type: AstScope.types.MAIN,
+        nodes: [
+          astModule.createNode(AstRepeat, {
+            condition: astModule.createNode(AstBoolLit, { value: false }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [
+                astModule.createNode(AstIntLit, { value: 1 })
+              ]
+            })
+          })
+        ]
+      })
+    },
+    {
+      name: 'is parsing repeat with no newline',
+      input: [ 'repeat', '1', 'until', 'false', '\n' ],
+      output: astModule.createNode(AstScope, {
+        type: AstScope.types.MAIN,
+        nodes: [
+          astModule.createNode(AstRepeat, {
+            condition: astModule.createNode(AstBoolLit, { value: false }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [
+                astModule.createNode(AstIntLit, { value: 1 })
+              ]
+            })
+          })
+        ]
+      })
+    },
+    {
+      name: 'is not parsing invalid for',
+      input: [ 'repeat', '1', 'end', 'false', '\n' ],
+      output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_TOKEN, 'end', 'until'), {
+        token: new tokenModule.Token('end', {
           file: null,
           lineText: '',
           line: 0,
