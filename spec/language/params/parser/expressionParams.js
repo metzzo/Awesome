@@ -46,6 +46,21 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       ]
     },
     {
+      name: 'is parsing complex term with brackets properly',
+      input: [ '(', '1', '+', '2', ')', '*', '3'],
+      output: [
+        astModule.createNode(AstOperator, {
+          leftOperand: astModule.createNode(AstOperator, {
+            leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+            rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
+            operator: operatorModule.Operators.PLUS_OPERATOR
+          }),
+          rightOperand: astModule.createNode(AstIntLit, { value: 3 }),
+          operator: operatorModule.Operators.MUL_OPERATOR
+        })
+      ]
+    },
+    {
       name: 'is not parsing simple term "1++1"',
       input: [ '1', '+', '+', '2' ],
       output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.EXPECTING_FACTOR, '+'), {

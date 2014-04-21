@@ -247,6 +247,11 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       return astModule.createNode(AstStringLit, {
         value: text.substring(1, text.length-1)
       });
+    } else if (this.iterator.is('(')) {
+      this.iterator.match('(');
+      var result = this.parseExpression();
+      this.iterator.match(')');
+      return result;
     } else if (this.isIdentifier()) { // check if identifier?
       return this.parseFuncCall(true);
     } else if (this.isKeyword()) {
