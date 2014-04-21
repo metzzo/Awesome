@@ -30,6 +30,30 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           value: null
         })
       ]
+    }, 
+    {
+      name: 'is parsing simple variable declaration with datatype declaration and value',
+      input: ['var','yolo', 'is', 'int', '=', '1'],
+      output: [
+        astModule.createNode(AstVarDec, {
+          identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+          dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+          value: astModule.createNode(AstIntLit, { value: 1 })
+        })
+      ]
+    }, 
+    {
+      name: 'is parsing invalid variable declaration',
+      input: ['var','yolo'],
+      output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_TOKEN, '\n', '='), {
+        token: new tokenModule.Token('\n', {
+          file: null,
+          lineText: '',
+          line: 0,
+          character: 0
+        })
+      }),
+      fails: true
     }
   ];
 })
