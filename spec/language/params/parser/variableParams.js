@@ -87,6 +87,38 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           
         })
       ]
+    },
+    {
+      name: 'is parsing var decl inside an expression',
+      input: ['1', '+', 'var', 'i', '=', '1'],
+      output: [
+        astModule.createNode(AstOperator, {
+          leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+          rightOperand: astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'i' }),
+                dataType: null,
+                value: astModule.createNode(AstIntLit, { value: 1 })
+              }
+            ]
+          }),
+          operator: operatorModule.Operators.PLUS_OPERATOR
+        })
+      ]
+    },
+    {
+      name: 'is not parsing multiple var decl inside an expression',
+      input: ['1', '+', 'var', 'i', '=', '1', ',', 'j', '=', '2'],
+      output: new syntaxErrorModule.SyntaxError(errorMessages.TOO_MANY_VARIABLES, {
+        token: new tokenModule.Token('\n', {
+          file: null,
+          lineText: '',
+          line: 0,
+          character: 0
+        })
+      }),
+      fails: true
     }
   ];
 })

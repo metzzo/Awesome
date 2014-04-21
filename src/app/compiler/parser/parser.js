@@ -247,8 +247,6 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       return astModule.createNode(AstStringLit, {
         value: text.substring(1, text.length-1)
       });
-    } else if (this.iterator.is('var')) {
-      return this.parseVariableDeclaration();
     } else if (this.isIdentifier()) { // check if identifier?
       return this.parseFuncCall(true);
     } else if (this.isKeyword()) {
@@ -260,7 +258,11 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   
   Parser.prototype.isIdentifier = function() {
     var text = this.iterator.current().text;
-    return /^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(text) && !this.keywordsParser[this.iterator.current().text];
+    return this.isVariableDeclaration() || (/^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(text) && !this.keywordsParser[this.iterator.current().text]);
+  };
+  
+  Parser.prototype.isVariableDeclaration = function() {
+    return this.iterator.is('var') || this.iterator.is('const');
   };
   
   Parser.prototype.parseVariableDeclaration = function() {
@@ -317,11 +319,19 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   
   Parser.prototype.parseIdentifier = function() {
     if (this.isIdentifier()) {
-      var name = this.iterator.current().text;
-      this.iterator.next();
-      return astModule.createNode(AstIdentifier, {
-        name: name
-      });
+      if (this.isVariableDeclaration()) {
+        var decl = this.parseVariableDeclaration();
+        if (decl.params.variables.length > 1) {
+          this.iterator.riseSyntaxError(errorMessages.TOO_MANY_VARIABLES);
+        }
+        return decl;
+      } else {
+        var name = this.iterator.current().text;
+        this.iterator.next();
+        return astModule.createNode(AstIdentifier, {
+          name: name
+        });
+      }
     } else {
       this.iterator.riseSyntaxError(_s.sprintf(errorMessages.EXPECTING_IDENTIFIER, this.iterator.current().text));
     }

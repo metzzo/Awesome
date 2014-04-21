@@ -7,5 +7,6 @@ define([ ], function() {
     EXPECTING_IDENTIFIER: 'Expecting identifier, not %s',
     EXPECTING_KEYWORD: 'Expecting keyword, not %s',
     EXPECTING_DATATYPE: 'Expecting data type',
+    TOO_MANY_VARIABLES: 'Too many variables in variable declaration'
   };
 });
