@@ -273,27 +273,33 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       isConst = true;
     }
     
-    var identifier = this.parseIdentifier();
-    var dataType = null;
-    var value = null;
-    
-    if (this.iterator.optMatch('is')) {
-      dataType = this.parseDataType();
+    var variables= [ ];
+    do {
       
-      if (this.iterator.optMatch('=')) {
+      var identifier = this.parseIdentifier();
+      var dataType = null;
+      var value = null;
+      
+      if (this.iterator.optMatch('is')) {
+        dataType = this.parseDataType();
+        
+        if (this.iterator.optMatch('=')) {
+          value = this.parseExpression();
+        }
+      } else {
+        this.iterator.match('=');
         value = this.parseExpression();
       }
-    } else {
-      this.iterator.match('=');
-      value = this.parseExpression();
-    }
-    
+      variables.push({
+        identifier: identifier,
+        value: value,
+        dataType: dataType
+      });
+    } while(this.iterator.optMatch(','));
     
     
     return astModule.createNode(AstVarDec, {
-      identifier: identifier,
-      value: value,
-      dataType: dataType
+      variables: variables
     });
   };
   

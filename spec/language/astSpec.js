@@ -271,17 +271,25 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         var expectedAst = {
           name: 'Variable Declaration',
           params: {
-            identifier: [ { name: 'Stub', params: { } } ],
-            value: [ { name: 'Stub', params: { } } ],
-            dataType: null
+            variables: [
+              {
+                identifier: [ { name: 'Stub', params: { } } ],
+                value: [ { name: 'Stub', params: { } } ],
+                dataType: null
+              }
+            ]
           }
         };
         
         // act
         ast = astModule.createNode(astModule.AstPrototypes.VARDEC, {
-          identifier: [ { name: 'Stub', params: { } } ],
-          value: [ { name: 'Stub', params: { } } ],
-          dataType: null
+          variables: [
+            {
+              identifier: [ { name: 'Stub', params: { } } ],
+              value: [ { name: 'Stub', params: { } } ],
+              dataType: null
+            }
+          ]
         });
         
         // assert

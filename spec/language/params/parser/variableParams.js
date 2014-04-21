@@ -14,9 +14,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: ['var','yolo', '=', '1'],
       output: [
         astModule.createNode(AstVarDec, {
-          identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
-          dataType: null,
-          value: astModule.createNode(AstIntLit, { value: 1 })
+          variables: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              dataType: null,
+              value: astModule.createNode(AstIntLit, { value: 1 })
+            }
+          ]
         })
       ]
     }, 
@@ -25,9 +29,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: ['var','yolo', 'is', 'int'],
       output: [
         astModule.createNode(AstVarDec, {
-          identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
-          dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-          value: null
+          variables: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: null
+            }
+          ]
         })
       ]
     }, 
@@ -36,9 +44,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: ['var','yolo', 'is', 'int', '=', '1'],
       output: [
         astModule.createNode(AstVarDec, {
-          identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
-          dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-          value: astModule.createNode(AstIntLit, { value: 1 })
+          variables: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: astModule.createNode(AstIntLit, { value: 1 })
+            }
+          ]
         })
       ]
     }, 
@@ -54,6 +66,27 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         })
       }),
       fails: true
+    },
+    {
+      name: 'is parsing multiple variable declaration',
+      input: ['var','yolo', '=', '1', ',', 'swag', '=', '2'],
+      output: [
+        astModule.createNode(AstVarDec, {
+          variables: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              dataType: null,
+              value: astModule.createNode(AstIntLit, { value: 1 })
+            },
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
+              dataType: null,
+              value: astModule.createNode(AstIntLit, { value: 2 })
+            }
+          ]
+          
+        })
+      ]
     }
   ];
 })
