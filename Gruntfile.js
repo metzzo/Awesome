@@ -61,7 +61,7 @@ module.exports = function(grunt) {
     },
     watch: {
       test: {
-        files: ['spec/**/*Spec.js', 'src/**/*.js', 'Gruntfile.js'],
+        files: ['spec/**/*.js', 'src/**/*.js', 'Gruntfile.js'],
         tasks: ['test']
       }
     },

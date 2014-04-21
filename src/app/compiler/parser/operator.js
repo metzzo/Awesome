@@ -26,6 +26,9 @@ define(['underscore'], function(_) {
       }),
       DIV_OPERATOR: new Operator('/', {
         priority: 20
+      }),
+      ASSIGN_OPERATOR: new Operator('=', {
+        priority: 2
       })
     },
     findOperatorsByPriority: function(priority) {

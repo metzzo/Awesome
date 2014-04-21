@@ -1,4 +1,4 @@
-define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterator', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app/compiler/lexer/token', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages' ], function(_,_s, tokenIteratorModule, astModule, operatorModule, tokenModule, syntaxErrorModule, errorMessages) {
+define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterator', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app/compiler/lexer/token', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages', 'src/app/compiler/parser/dataType' ], function(_,_s, tokenIteratorModule, astModule, operatorModule, tokenModule, syntaxErrorModule, errorMessages, dataTypeModule) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
@@ -10,6 +10,9 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstWhile      = astModule.AstPrototypes.WHILE;
   var AstFor        = astModule.AstPrototypes.FOR;
   var AstRepeat     = astModule.AstPrototypes.REPEAT;
+  var AstVarDec     = astModule.AstPrototypes.VARDEC;
+  var AstDataType   = astModule.AstPrototypes.DATATYPE;
+
   
   var Parser = function(input) {
     if (!(input instanceof Array)) {
@@ -107,6 +110,12 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     'in': Parser.prototype.parseInvalidKeyword,
     'until': Parser.prototype.parseInvalidKeyword,
     'end': Parser.prototype.parseInvalidKeyword,
+    'var': function() {
+      return this.parseVariableDeclaration();
+    },
+    'const': function() {
+      return this.parseVariableDeclaration();
+    },
     'repeat': function() {
       this.iterator.next();
       var scope = this.parseScope(AstScope.types.LOCAL, [ 'until' ]);
@@ -238,6 +247,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       return astModule.createNode(AstStringLit, {
         value: text.substring(1, text.length-1)
       });
+    } else if (this.iterator.is('var')) {
+      return this.parseVariableDeclaration();
     } else if (this.isIdentifier()) { // check if identifier?
       return this.parseFuncCall(true);
     } else if (this.isKeyword()) {
@@ -250,6 +261,52 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   Parser.prototype.isIdentifier = function() {
     var text = this.iterator.current().text;
     return /^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(text) && !this.keywordsParser[this.iterator.current().text];
+  };
+  
+  Parser.prototype.parseVariableDeclaration = function() {
+    var isConst;
+    if (!this.iterator.is('const')) {
+      this.iterator.match('var');
+      isConst = false;
+    } else {
+      this.iterator.optMatch('const');
+      isConst = true;
+    }
+    
+    var identifier = this.parseIdentifier();
+    var dataType = null;
+    var value = null;
+    
+    if (this.iterator.optMatch('is')) {
+      dataType = this.parseDataType();
+      
+      if (this.iterator.optMatch('=')) {
+        value = this.parseExpression();
+      }
+    } else {
+      this.iterator.match('=');
+      value = this.parseExpression();
+    }
+    
+    
+    
+    return astModule.createNode(AstVarDec, {
+      identifier: identifier,
+      value: value,
+      dataType: dataType
+    });
+  };
+  
+  Parser.prototype.parseDataType = function() {
+    var dataType = dataTypeModule.findPrimitiveDataTypeByName(this.iterator.current().text);
+    if (!!dataType) {
+      this.iterator.next();
+      return astModule.createNode(AstDataType, {
+        dataType: dataType
+      });
+    } else {
+      this.iterator.riseSyntaxError(errorMessages.EXPECTING_DATATYPE);
+    }
   };
   
   Parser.prototype.parseIdentifier = function() {
@@ -265,6 +322,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   };
   
   Parser.prototype.parseFuncCall = function(requireBrackets) {
+    var position = this.iterator.position;
+    
     var identifier = this.parseIdentifier();
     var hasBrackets;
     
@@ -275,7 +334,10 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     }
     
     if (!requireBrackets && this.isOperator()) {
-      this.iterator.riseSyntaxError(errorMessages.EXPECTING_FUNCTIONCALL);
+      this.iterator.position = position // nope is just an expression
+      return this.parseExpression();
+      
+      // this.iterator.riseSyntaxError(errorMessages.EXPECTING_FUNCTIONCALL);
     }
     
     if (!hasBrackets && requireBrackets) {

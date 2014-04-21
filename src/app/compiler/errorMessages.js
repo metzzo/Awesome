@@ -6,6 +6,6 @@ define([ ], function() {
     EXPECTING_FACTOR: 'Expecting literal or variable, not "%s"',
     EXPECTING_IDENTIFIER: 'Expecting identifier, not %s',
     EXPECTING_KEYWORD: 'Expecting keyword, not %s',
-    EXPECTING_FUNCTIONCALL: 'Expecting function call',
+    EXPECTING_DATATYPE: 'Expecting data type',
   };
 });

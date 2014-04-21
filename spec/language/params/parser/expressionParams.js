@@ -77,7 +77,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstOperator, {
           leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
           rightOperand: astModule.createNode(AstOperator, {
-            leftOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
+            leftOperand: astModule.createNode(AstIdentifier, { name: 'swag' }), 
             rightOperand: astModule.createNode(AstCall, {
               func: astModule.createNode(AstIdentifier, { name: 'hallo' }),
               params: [
@@ -92,17 +92,26 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       ]
     },
     {
-      name: 'is parsing invalid variable addition',
+      name: 'is parsing variable addition',
       input: [ 'yolo', '+', 'swag' ],
-      output: new syntaxErrorModule.SyntaxError(errorMessages.EXPECTING_FUNCTIONCALL, {
-        token: new tokenModule.Token('+', {
-          file: null,
-          lineText: '',
-          line: 0,
-          character: 0
+      output: [
+        astModule.createNode(AstOperator, {
+          leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+          rightOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
+          operator: operatorModule.Operators.PLUS_OPERATOR
         })
-      }),
-      fails: true
+      ]
+    },
+    {
+      name: 'is parsing simple term properly',
+      input: [ 'swag', '=', '2'],
+      output: [
+        astModule.createNode(AstOperator, {
+          leftOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
+          rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
+          operator: operatorModule.Operators.ASSIGN_OPERATOR
+        })
+      ]
     }
   ];
 });

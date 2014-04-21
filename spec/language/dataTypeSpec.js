@@ -15,5 +15,18 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
       expect(dataType.params).not.toBeNull();
       expect(dataType.params).toEqual(params);
     });
+    
+    it('finds datatype by name', function() {
+      // arrange
+      var dataType;
+      var expectedDataType = dataTypeModule.PrimitiveDataTypes.INT;
+      
+      // act
+      dataType = dataTypeModule.findPrimitiveDataTypeByName('int');
+      
+      // assert
+      expect(dataType).not.toBeNull();
+      expect(dataType).toEqual(expectedDataType);
+    });
   })
 });

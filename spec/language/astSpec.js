@@ -1,4 +1,4 @@
-define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator'], function(astModule, operatorModule) {
+define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app/compiler/parser/dataType'], function(astModule, operatorModule, dataTypeModule) {
   describe('AstNode', function() {
     // this node mocks a node for testing purpose only
     var stubNode = {
@@ -256,6 +256,54 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator'], functio
         // act
         ast = astModule.createNode(astModule.AstPrototypes.IDENTIFIER, {
           name: 'yolo'
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
+    
+    describe('Variable Declaration', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'Variable Declaration',
+          params: {
+            identifier: [ { name: 'Stub', params: { } } ],
+            value: [ { name: 'Stub', params: { } } ],
+            dataType: null
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.VARDEC, {
+          identifier: [ { name: 'Stub', params: { } } ],
+          value: [ { name: 'Stub', params: { } } ],
+          dataType: null
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
+    
+    describe('DataType', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'DataType',
+          params: {
+            dataType: dataTypeModule.PrimitiveDataTypes.INT
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.DATATYPE, {
+          dataType: dataTypeModule.PrimitiveDataTypes.INT
         });
         
         // assert
