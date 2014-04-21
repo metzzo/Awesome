@@ -1,4 +1,7 @@
-define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'spec/language/params/parser/expressionParams', 'spec/language/params/parser/ifParams', 'spec/language/params/parser/loopParams'], function(parserModule, tokenModule, expressionParams, ifParams, loopParams) {
+define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/app/compiler/ast/ast', 'spec/language/params/parser/expressionParams', 'spec/language/params/parser/ifParams', 'spec/language/params/parser/loopParams', 'spec/language/params/parser/variableParams'], function(parserModule, tokenModule, astModule, expressionParams, ifParams, loopParams, variableParams) {
+  var AstScope      = astModule.AstPrototypes.SCOPE;
+
+  
   describe('Parser', function() {
     it('is created properly', function() {
       // arrange
@@ -30,9 +33,11 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'spec/
     });
     
     var params = [ ];
-    params = params.concat(expressionParams);
-    params = params.concat(ifParams);
-    params = params.concat(loopParams);
+    params = params
+      .concat(expressionParams)
+      .concat(ifParams)
+      .concat(loopParams)
+      .concat(variableParams);
     
     for (var testCase = 0; testCase < params.length; testCase++) {
       var test = params[testCase];
@@ -42,8 +47,8 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'spec/
           var parser;
           var input = [ ];
           var output;
-          var expectedOutput = test.output;
           var fails = test.fails;
+          var expectedOutput = !fails ? astModule.createNode(AstScope, { type: AstScope.types.MAIN, nodes: test.output }) : test.output;
           
           for (var inputToken = 0; inputToken < test.input.length; inputToken++) {
             var token = test.input[inputToken];

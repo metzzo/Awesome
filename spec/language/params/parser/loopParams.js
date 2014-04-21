@@ -11,56 +11,47 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
     {
       name: 'is parsing while',
       input: [ 'while', 'true', '\n', '1', '\n', 'end' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstWhile, {
-            condition: astModule.createNode(AstBoolLit, { value: true }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstWhile, {
+          condition: astModule.createNode(AstBoolLit, { value: true }),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
       name: 'is parsing while with do',
       input: [ 'while', 'true', 'do', '\n', '1', '\n', 'end' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstWhile, {
-            condition: astModule.createNode(AstBoolLit, { value: true }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstWhile, {
+          condition: astModule.createNode(AstBoolLit, { value: true }),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
       name: 'is parsing while with no newline',
       input: [ 'while', 'true', '1', '\n' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstWhile, {
-            condition: astModule.createNode(AstBoolLit, { value: true }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstWhile, {
+          condition: astModule.createNode(AstBoolLit, { value: true }),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
       name: 'is not parsing invalid while',
@@ -78,59 +69,50 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
     {
       name: 'is parsing for',
       input: [ 'for', 'i', 'in', 'swag', '\n', '1', '\n', 'end' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstFor, {
-            variable: astModule.createNode(AstIdentifier, { name: 'i'}),
-            collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstFor, {
+          variable: astModule.createNode(AstIdentifier, { name: 'i'}),
+          collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
       name: 'is parsing for with do',
       input: [ 'for', 'i', 'in', 'swag', 'do', '\n', '1', '\n', 'end' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstFor, {
-            variable: astModule.createNode(AstIdentifier, { name: 'i'}),
-            collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstFor, {
+          variable: astModule.createNode(AstIdentifier, { name: 'i'}),
+          collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
       name: 'is parsing for with no newline',
       input: [ 'for', 'i', 'in', 'swag', '1', '\n' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstFor, {
-            variable: astModule.createNode(AstIdentifier, { name: 'i'}),
-            collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstFor, {
+          variable: astModule.createNode(AstIdentifier, { name: 'i'}),
+          collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })    
+        })
+      ]
     },
     {
       name: 'is not parsing invalid for',
@@ -148,41 +130,35 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
     {
       name: 'is parsing repeat',
       input: [ 'repeat', '\n', '1', '\n', 'until', 'false' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstRepeat, {
-            condition: astModule.createNode(AstBoolLit, { value: false }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstRepeat, {
+          condition: astModule.createNode(AstBoolLit, { value: false }),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
       name: 'is parsing repeat with no newline',
       input: [ 'repeat', '1', 'until', 'false', '\n' ],
-      output: astModule.createNode(AstScope, {
-        type: AstScope.types.MAIN,
-        nodes: [
-          astModule.createNode(AstRepeat, {
-            condition: astModule.createNode(AstBoolLit, { value: false }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
+      output: [
+        astModule.createNode(AstRepeat, {
+          condition: astModule.createNode(AstBoolLit, { value: false }),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstIntLit, { value: 1 })
+            ]
           })
-        ]
-      })
+        })
+      ]
     },
     {
-      name: 'is not parsing invalid for',
+      name: 'is not parsing invalid repeat',
       input: [ 'repeat', '1', 'end', 'false', '\n' ],
       output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_TOKEN, 'end', 'until'), {
         token: new tokenModule.Token('end', {
