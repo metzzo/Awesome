@@ -271,13 +271,13 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   };
   
   Parser.prototype.parseVariableDeclaration = function() {
-    var isConst;
+    var varitype;
     if (!this.iterator.is('const')) {
       this.iterator.match('var');
-      isConst = false;
+      varitype = AstVarDec.types.VARIABLE;
     } else {
       this.iterator.optMatch('const');
-      isConst = true;
+      varitype = AstVarDec.types.CONSTANT;
     }
     
     var defaultDataType;
@@ -313,7 +313,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       variables.push({
         identifier: identifier,
         value: value,
-        dataType: dataType
+        dataType: dataType,
+        type: varitype
       });
     } while(this.iterator.optMatch(','));
     

@@ -18,7 +18,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
               dataType: null,
-              value: astModule.createNode(AstIntLit, { value: 1 })
+              value: astModule.createNode(AstIntLit, { value: 1 }),
+              type: AstVarDec.types.VARIABLE
             }
           ]
         })
@@ -33,7 +34,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-              value: null
+              value: null,
+              type: AstVarDec.types.VARIABLE
             }
           ]
         })
@@ -48,7 +50,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-              value: astModule.createNode(AstIntLit, { value: 1 })
+              value: astModule.createNode(AstIntLit, { value: 1 }),
+              type: AstVarDec.types.VARIABLE
             }
           ]
         })
@@ -76,12 +79,14 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
               dataType: null,
-              value: astModule.createNode(AstIntLit, { value: 1 })
+              value: astModule.createNode(AstIntLit, { value: 1 }),
+              type: AstVarDec.types.VARIABLE
             },
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
               dataType: null,
-              value: astModule.createNode(AstIntLit, { value: 2 })
+              value: astModule.createNode(AstIntLit, { value: 2 }),
+              type: AstVarDec.types.VARIABLE
             }
           ]
           
@@ -99,7 +104,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               {
                 identifier: astModule.createNode(AstIdentifier, { name: 'i' }),
                 dataType: null,
-                value: astModule.createNode(AstIntLit, { value: 1 })
+                value: astModule.createNode(AstIntLit, { value: 1 }),
+                type: AstVarDec.types.VARIABLE
               }
             ]
           }),
@@ -129,15 +135,33 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-              value: null
+              value: null,
+              type: AstVarDec.types.VARIABLE
             },
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-              value: null
+              value: null,
+              type: AstVarDec.types.VARIABLE
             }
           ]
           
+        })
+      ]
+    },
+    {
+      name: 'is parsing simple const declaration',
+      input: ['const','yolo', '=', '1'],
+      output: [
+        astModule.createNode(AstVarDec, {
+          variables: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              dataType: null,
+              value: astModule.createNode(AstIntLit, { value: 1 }),
+              type: AstVarDec.types.CONSTANT
+            }
+          ]
         })
       ]
     }

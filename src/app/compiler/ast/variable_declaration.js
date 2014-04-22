@@ -6,6 +6,10 @@ define([ ], function() {
     },
     functions: {
       
+    },
+    types: {
+      VARIABLE: 'vari',
+      CONSTANT: 'const'
     }
   };
 });

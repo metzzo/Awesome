@@ -275,7 +275,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
               {
                 identifier: [ { name: 'Stub', params: { } } ],
                 value: [ { name: 'Stub', params: { } } ],
-                dataType: null
+                dataType: null,
+                type: astModule.AstPrototypes.VARDEC.types.VARIABLE
               }
             ]
           }
@@ -287,7 +288,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
             {
               identifier: [ { name: 'Stub', params: { } } ],
               value: [ { name: 'Stub', params: { } } ],
-              dataType: null
+              dataType: null,
+              type: astModule.AstPrototypes.VARDEC.types.VARIABLE
             }
           ]
         });
