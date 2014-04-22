@@ -119,7 +119,13 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     },
     'function': function() {
       this.iterator.next();
-      var identifier = this.parseIdentifier();
+      var identifier;
+      if (this.isIdentifier()) {
+        identifier = this.parseIdentifier();
+      } else {
+        identifier = null;
+      }
+      
       var dataType;
       if (this.iterator.optMatch('is')) {
         dataType = this.parseDataType();
@@ -134,7 +140,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
             this.iterator.match(',');
           }
           parameters.push(this.parseSimpleVariableDeclaration({
-            varitype: AstVarDec.type.VARIABLE,
+            varitype: AstVarDec.types.VARIABLE,
             defaultDataType: null
           }));
           
@@ -145,20 +151,25 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       var scope = this.parseScope(AstScope.types.FUNCTION);
       this.iterator.optMatch('end');
       
-      return astModule.createNode(AstVarDec, {
-        variables: [
-          {
-            identifier: identifier,
-            dataType: null,
-            value: astModule.createNode(AstFunction, {
-              params: parameters,
-              returnDataType: dataType,
-              scope: scope
-            }),
-            type: AstVarDec.types.CONSTANT
-          }
-        ]
+      var func = astModule.createNode(AstFunction, {
+        params: parameters,
+        returnDataType: dataType,
+        scope: scope
       });
+      if (identifier) {
+        return astModule.createNode(AstVarDec, {
+          variables: [
+            {
+              identifier: identifier,
+              dataType: null,
+              value: func,
+              type: AstVarDec.types.CONSTANT
+            }
+          ]
+        });
+      } else {
+        return func;
+      }
     },
     'repeat': function() {
       this.iterator.next();
@@ -296,6 +307,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       var result = this.parseExpression();
       this.iterator.match(')');
       return result;
+    } else if (this.iterator.is('function')) {
+      return this.parseKeyword(); // parse it bitch
     } else if (this.isIdentifier()) { // check if identifier?
       return this.parseFuncCall(true);
     } else if (this.isKeyword()) {
