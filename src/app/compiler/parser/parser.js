@@ -12,6 +12,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstRepeat     = astModule.AstPrototypes.REPEAT;
   var AstVarDec     = astModule.AstPrototypes.VARDEC;
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
+  var AstFunction   = astModule.AstPrototypes.FUNCTION;
 
   
   var Parser = function(input) {
@@ -70,7 +71,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       if (_.isUndefined(endToken)) {
         endToken = [ ];
       }
-      endToken.push('end');
+      if (type !== AstScope.types.MAIN) endToken.push('end');
       
       var scope = astModule.createNode(AstScope, { type: type, nodes: [ ] });
       this.iterator.iterate(_.bind(function() {
@@ -115,6 +116,49 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     },
     'const': function() {
       return this.parseVariableDeclaration();
+    },
+    'function': function() {
+      this.iterator.next();
+      var identifier = this.parseIdentifier();
+      var dataType;
+      if (this.iterator.optMatch('is')) {
+        dataType = this.parseDataType();
+      } else {
+        dataType = null;
+      }
+      var parameters = [ ];
+      if (this.iterator.optMatch('(')) {
+        var first = true;
+        while (!this.iterator.optMatch(')')) {
+          if (!first) {
+            this.iterator.match(',');
+          }
+          parameters.push(this.parseSimpleVariableDeclaration({
+            varitype: AstVarDec.type.VARIABLE,
+            defaultDataType: null
+          }));
+          
+          first = false;
+        }
+      }
+      
+      var scope = this.parseScope(AstScope.types.FUNCTION);
+      this.iterator.optMatch('end');
+      
+      return astModule.createNode(AstVarDec, {
+        variables: [
+          {
+            identifier: identifier,
+            dataType: null,
+            value: astModule.createNode(AstFunction, {
+              params: parameters,
+              returnDataType: dataType,
+              scope: scope
+            }),
+            type: AstVarDec.types.CONSTANT
+          }
+        ]
+      });
     },
     'repeat': function() {
       this.iterator.next();
@@ -287,41 +331,50 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     
     var variables= [ ];
     do {
-      
-      var identifier = this.parseIdentifier();
-      var dataType = null;
-      var value = null;
-      
-      if (this.iterator.optMatch('is')) {
-        dataType = this.parseDataType();
-        
-        if (this.iterator.optMatch('=')) {
-          value = this.parseExpression();
-        }
-      } else {
-        if (!defaultDataType) {
-          this.iterator.match('=');
-          value = this.parseExpression();
-        } else {
-          if (this.iterator.optMatch('=')) {
-            value = this.parseExpression();
-          } else {
-            dataType = defaultDataType;
-          }
-        }
-      }
-      variables.push({
-        identifier: identifier,
-        value: value,
-        dataType: dataType,
-        type: varitype
-      });
+      variables.push(this.parseSimpleVariableDeclaration({
+        defaultDataType: defaultDataType,
+        varitype: varitype
+      }));
     } while(this.iterator.optMatch(','));
     
     
     return astModule.createNode(AstVarDec, {
       variables: variables
     });
+  };
+  
+  Parser.prototype.parseSimpleVariableDeclaration = function(params) {
+    var defaultDataType = params.defaultDataType;
+    var varitype = params.varitype;
+    
+    var identifier = this.parseIdentifier();
+    var dataType = null;
+    var value = null;
+    
+    if (this.iterator.optMatch('is')) {
+      dataType = this.parseDataType();
+      
+      if (this.iterator.optMatch('=')) {
+        value = this.parseExpression();
+      }
+    } else {
+      if (!defaultDataType) {
+        this.iterator.match('=');
+        value = this.parseExpression();
+      } else {
+        if (this.iterator.optMatch('=')) {
+          value = this.parseExpression();
+        } else {
+          dataType = defaultDataType;
+        }
+      }
+    }
+    return {
+      identifier: identifier,
+      value: value,
+      dataType: dataType,
+      type: varitype
+    };
   };
   
   Parser.prototype.parseDataType = function() {

@@ -13,6 +13,19 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       output: [ ]
     },
     {
+      name: 'is not parsing just "end"',
+      input: [ 'end' ],
+      output: new syntaxErrorModule.SyntaxError(errorMessages.UNEXPECTED_KEYWORD, {
+        token: new tokenModule.Token('end', {
+          file: null,
+          lineText: '',
+          line: 0,
+          character: 0
+        })
+      }),
+      fails: true
+    },
+    {
       name: 'is parsing literal input properly',
       input: [ '42' ],
       output: [

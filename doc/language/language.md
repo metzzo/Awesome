@@ -104,7 +104,7 @@ var myAddFunction = function(param1 as int, param2 as int)
   return param1 + param2
 end
 
-var mySubFunction is function(int, int) = (p1, p2) -> return p1-p2
+var mySubFunction is (int, int) = (p1 is int, p2 is int) -> return p1-p2
 
 myAddFunction = mySubFunction -- works because they both have the same signature
 

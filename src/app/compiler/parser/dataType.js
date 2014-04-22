@@ -16,7 +16,8 @@ define(['underscore'], function(_) {
       STRING: new DataType('string', { }),
       OBJECT: new DataType('object', { }),
       FUNCTION: new DataType('function', { }),
-      BOOL: new DataType('bool', { })
+      BOOL: new DataType('bool', { }),
+      VOID: new DataType('void', { })
     },
     findPrimitiveDataTypeByName: function(name) {
       var result = null;

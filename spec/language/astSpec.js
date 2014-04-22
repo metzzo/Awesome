@@ -321,5 +321,31 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         expect(ast).toEqual(expectedAst);
       });
     });
+    
+    describe('Function Declaration', function() {
+      it('is created properly', function() {
+        // arrange
+        var ast;
+        var expectedAst = {
+          name: 'Function Declaration',
+          params: {
+            returnDataType: [ { name: 'Stub', params: { } } ],
+            params: [ ],
+            scope: [ { name: 'Stub', params: { } } ]
+          }
+        };
+        
+        // act
+        ast = astModule.createNode(astModule.AstPrototypes.FUNCTION, {
+          returnDataType: [ { name: 'Stub', params: { } } ],
+          params: [ ],
+          scope: [ { name: 'Stub', params: { } } ]
+        });
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+    });
   });
 });

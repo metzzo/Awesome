@@ -1,4 +1,4 @@
-define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/app/compiler/ast/ast', 'spec/language/params/parser/expressionParams', 'spec/language/params/parser/ifParams', 'spec/language/params/parser/loopParams', 'spec/language/params/parser/variableParams'], function(parserModule, tokenModule, astModule, expressionParams, ifParams, loopParams, variableParams) {
+define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/app/compiler/ast/ast', 'spec/language/params/parser/expressionParams', 'spec/language/params/parser/ifParams', 'spec/language/params/parser/loopParams', 'spec/language/params/parser/variableParams', 'spec/language/params/parser/functionParams'], function(parserModule, tokenModule, astModule, expressionParams, ifParams, loopParams, variableParams, functionParams) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
 
   
@@ -37,7 +37,8 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/a
       .concat(expressionParams)
       .concat(ifParams)
       .concat(loopParams)
-      .concat(variableParams);
+      .concat(variableParams)
+      .concat(functionParams);
     
     for (var testCase = 0; testCase < params.length; testCase++) {
       var test = params[testCase];
