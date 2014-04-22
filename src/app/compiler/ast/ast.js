@@ -24,8 +24,11 @@ define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app
           
         },
         traverse: {
-          value: function() {
-            
+          value: function(cb) {
+            if (!!cb) cb(this);
+            if (this.functions.traverse) {
+              this.functions.traverse.call(this, cb);
+            }
           },
           enumerable: false,
           writeable: false

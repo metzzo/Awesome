@@ -5,7 +5,9 @@ define([ ], function() {
       value: 0
     },
     functions: {
-      
+      traverse: function(cb) {
+        
+      }
     }
   };
 });

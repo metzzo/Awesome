@@ -1,4 +1,4 @@
-define([ ], function() {
+define([], function() {
   return {
     name: 'Call',
     params: {
@@ -6,7 +6,19 @@ define([ ], function() {
       params: [ ]
     },
     functions: {
-      
+      traverse: function(cb) {
+        if (this.params.func) {
+          this.params.func.traverse(cb);
+        }
+        
+        if (this.params.params) {
+          for (var i = 0; i < this.params.params.length; i++) {
+            if (this.params.params[i]) {
+              this.params.params[i].traverse(cb);
+            }
+          }
+        } 
+      }
     }
   };
 });

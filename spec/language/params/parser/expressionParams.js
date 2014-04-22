@@ -142,7 +142,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       ]
     },
     {
-      name: 'supports ";" as NL',
+      name: 'is parsing with ";" as NL support',
       input: [ '1', ';', '2'],
       output: [
         astModule.createNode(AstIntLit, { value: 1 }),
