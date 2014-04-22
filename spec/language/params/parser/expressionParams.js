@@ -140,6 +140,14 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           operator: operatorModule.Operators.ASSIGN_OPERATOR
         })
       ]
+    },
+    {
+      name: 'supports ";" as NL',
+      input: [ '1', ';', '2'],
+      output: [
+        astModule.createNode(AstIntLit, { value: 1 }),
+        astModule.createNode(AstIntLit, { value: 2 })
+      ]
     }
   ];
 });

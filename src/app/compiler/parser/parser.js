@@ -65,7 +65,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   // SCOPE
   Parser.prototype.parseScope = function(type, endToken) {
     // if no \n => it is a one line scope, kinda like if(yolo) swag;
-    if (!this.iterator.is('\n') && type === AstScope.types.LOCAL) {
+    if (!this.iterator.isNL() && type === AstScope.types.LOCAL) {
       return astModule.createNode(AstScope, { type: type, nodes: [ this.parseLine() ] });
     } else {
       if (_.isUndefined(endToken)) {
@@ -174,7 +174,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     'repeat': function() {
       this.iterator.next();
       var scope = this.parseScope(AstScope.types.LOCAL, [ 'until' ]);
-      if (!this.iterator.is('\n')) this.iterator.match('until');
+      if (!this.iterator.isNL()) this.iterator.match('until');
       var condition = this.parseExpression();
       return astModule.createNode(AstRepeat, {
         condition: condition,
@@ -234,7 +234,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
             });
           }
         }
-      } while(!(this.iterator.is('end') || this.iterator.is('\n')));
+      } while(!(this.iterator.is('end') || this.iterator.isNL()));
       this.iterator.optMatch('end');
       
       return astModule.createNode(AstIf, {
@@ -485,7 +485,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       // parse parameters
       var first = true;
       var params = [ ];
-      while (!(this.iterator.is('\n') || this.iterator.is(')'))) {
+      while (!(this.iterator.isNL() || this.iterator.is(')'))) {
         if (!first) {
           this.iterator.match(',');
         }

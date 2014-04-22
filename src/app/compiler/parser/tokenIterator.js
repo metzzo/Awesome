@@ -95,12 +95,12 @@ define([ 'underscore.string', 'src/app/compiler/errorMessages', 'src/app/compile
   TokenIterator.prototype.restore = function () {
     // restore state => continue until \n is reached, and then skip the \n
     var hasSkipped = false;
-    while (this.hasNext() && !this.is('\n')) {
+    while (this.hasNext() && !this.isNL()) {
       this.next();
       hasSkipped = true;
     }
     if (this.hasNext()) this.next();
-    while (this.hasNext() && this.is('\n')) this.next();
+    while (this.hasNext() && this.isNL()) this.next();
   };
 
   /**
@@ -113,6 +113,13 @@ define([ 'underscore.string', 'src/app/compiler/errorMessages', 'src/app/compile
       token: this.current()
     });
   };
+  
+  /**
+   * Check whether the current token is a newline token
+   */
+  TokenIterator.prototype.isNL = function() {
+    return this.is('\n') || this.is(';');
+  };
 
   /**
    * Iterates through the source code
@@ -120,7 +127,7 @@ define([ 'underscore.string', 'src/app/compiler/errorMessages', 'src/app/compile
    */
   TokenIterator.prototype.iterate = function(func) {
     // if \n skip!!
-    while (this.hasNext() && this.is("\n")) this.next();
+    while (this.hasNext() && this.isNL()) this.next();
     
     var stop = false;
     while (this.hasNext() && !stop) {
@@ -129,8 +136,10 @@ define([ 'underscore.string', 'src/app/compiler/errorMessages', 'src/app/compile
 
         if (this.hasNext() && !stop) {
           do {
-            this.match('\n');
-          } while (this.hasNext() && this.is('\n'));
+            if (!this.optMatch(';')) {
+              this.match('\n');
+            }
+          } while (this.hasNext() && this.is(this.isNL()));
         }
       } catch (ex) {
         if (typeof ex == 'string') {
