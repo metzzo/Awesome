@@ -2,9 +2,9 @@
 Awsome is an awesome programming language written in JavaScript.
 It aims to achieve the following goals:
  * Powerful syntax, but yet easy to learn and understand
- * Wide range of possible backends
+ * Wide range of possible backends. Currently there is just one backend in development: JavaScript
 
-The language is case insensitive.
+The language is case insensitive. Instead of \n you can also use ; as a line seperator.
 
 ## Type Concept
 Awesome is a strongly typed programming language. 
@@ -86,6 +86,7 @@ var myVariable = 10 -- Implicit data types
 var myVariable2 is int -- explicit data types
 var myVariable3 is float -- explicit data types
 var myVariable4 is string -- explicit data types
+var as int a, b, c -- use one default datatype for all
 
 const myConst = 100 -- not mutatable
 
@@ -184,26 +185,75 @@ class Vector
 end
 ```
 
-### Message Oriented Programming
-Awesome has a flexible messaging system built in. Not sure if it will be implemented in this current iteration
+### Autonomous Variables/Functions
+This is a new conecpt I would like to implement into Awesome. It is a concept that has some similarities to data-flow based programming.
+It basically states, that variables recalculate their value depending on the value of other variables or functions are called whenever the value changes. This system basically removed the need of function/method/variable pointers int he language, while still maintaining a powerful syntax.
+Example:
 ```
-class PlayerCreated
-  
-end
+var a as int, b as int
+a => b
+a = 10
+```
+This is a very basic example of this programming style. Whenever the value of a changes, the value of b automatically adjust - b is an autonomous variable.
+The return type of '=>' is a handle containing the object that references to the connection.
 
--- is always called if the PlayerCreated message is sent
-var myMessageHandler1 = function(param1 as int, param2 as int) receives PlayerCreated
-  print "Player Created 1"
-end 
 
--- is always called if the PlayerCreated message is sent
-var myMessageHandler1 = function(param1 as int, param2 as int) receives PlayerCreated
-  print "Player Created 1"
-end 
+Of course this is not useful, as it is right now, let me give you a more useful example:
+```
+var a, b
+a => (a) -> print "Value of a " + a
+a = 10
+```
+Whenever the value of 'a' changes, the lambda is called with the parameter of the value of a.
 
-send new PlayerCreated // sends the event
+Chaining of autonomous variables is also possible:
+```
+var as int a, b
+a => ((x) -> sleep(1000); return x) => b
+a = 1000
+```
+Whenever a is assigned a value, b also is assigned the value, after 1 second of waiting time.
+ 
+This system is very system vor games or UI based applications, here is an example
+```
+-- some UI application
+var as UIButton myButton = new UIButton, otherButton = new UIButton
+myButton.clicked => ((x) -> print "Hello World")
+
+-- some game application
+var myPlayer as Player = new Player
+
+input.key_left => myPlayer.x = myPlayer.x - 2
+input.key_right => myPlayer.x = myPlayer.x + 2
+```
+
+Another useful feature this can be used for, is the block chaining function, which allows threaded operations:
+```
+var as int a
+a => {
+  (x) -> sleep(20); return 20
+  (y) -> sleep(200); return 200
+  (z) -> sleep(300); return 300
+} => (a) -> print "x: "+a
+```
+The block chains are multiple commands, that are executed parallel in another thread. The results of the functions are collected in an array which are given as an argument to the lambda function.
+You have to keep in mind that this feature could be too complex to implement given the strict nature of JavaScripts WebWorker.
+
+
+Removing auotnomous variables is also possible
+```
+var as int a, b
+var handle = a => b
+handle.unlink -- unlinks the connection
+handle.trigger -- triggers the connection, causing b to be recalculated
+handle.add -- adds a connection to this connection, which are then autonomous
 
 ```
+
+Possible connections are:
+ * variable -> variable: Whenever the value of the left operand changes, it is automatically set to the right operand.
+ * variable -> function: Whenever the value of the left operand changes, the function of the right operand called, the parameter being the value of the left operand
+ * function -> function: Whenever the value of the left operand is called and the execution is ended, the function on the right operand is called with the parameter being the return type of the left operand. You can combine this with yield return
 
 ### Possible Features
 #### Likely
