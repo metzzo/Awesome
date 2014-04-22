@@ -280,6 +280,11 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       isConst = true;
     }
     
+    var defaultDataType;
+    if (this.iterator.optMatch('is')) {
+      defaultDataType = this.parseDataType();
+    };
+    
     var variables= [ ];
     do {
       
@@ -294,8 +299,16 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
           value = this.parseExpression();
         }
       } else {
-        this.iterator.match('=');
-        value = this.parseExpression();
+        if (!defaultDataType) {
+          this.iterator.match('=');
+          value = this.parseExpression();
+        } else {
+          if (this.iterator.optMatch('=')) {
+            value = this.parseExpression();
+          } else {
+            dataType = defaultDataType;
+          }
+        }
       }
       variables.push({
         identifier: identifier,

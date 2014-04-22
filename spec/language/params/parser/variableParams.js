@@ -119,6 +119,27 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         })
       }),
       fails: true
+    },
+    {
+      name: 'is parsing multiple variable declaration with default datatype',
+      input: ['var', 'is', 'int', 'yolo', ',', 'swag', 'is', 'int'],
+      output: [
+        astModule.createNode(AstVarDec, {
+          variables: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: null
+            },
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: null
+            }
+          ]
+          
+        })
+      ]
     }
   ];
 })
