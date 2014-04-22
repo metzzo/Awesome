@@ -214,7 +214,7 @@ a = 1000
 ```
 Whenever a is assigned a value, b also is assigned the value, after 1 second of waiting time.
  
-This system is very system vor games or UI based applications, here is an example
+This system is very useful for games or UI based applications, here is an example
 ```
 -- some UI application
 var as UIButton myButton = new UIButton, otherButton = new UIButton
