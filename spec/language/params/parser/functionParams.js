@@ -162,6 +162,40 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           })
         })
       ]
+    },
+    {
+      name: 'is parsing lambda function with begin end scope',
+      input: ['(', 'x' ,'is', 'int', ',', 'y', '=', '0', ')', '->', 'begin',';', '1', ';', 'end'],
+      output: [
+        astModule.createNode(AstFunction, {
+          params: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'x' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: null,
+              type: AstVarDec.types.VARIABLE
+            },
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'y' }),
+              dataType: null,
+              value: astModule.createNode(AstIntLit, { value: 0 }),
+              type: AstVarDec.types.VARIABLE
+            }
+          ],
+          returnDataType: null,
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.FUNCTION,
+            nodes: [
+              astModule.createNode(AstScope, {
+                type: AstScope.types.LOCAL,
+                nodes: [
+                  astModule.createNode(AstIntLit, { value: 1 })
+                ]
+              })
+            ]
+          })
+        })
+      ]
     }
   ];
 });

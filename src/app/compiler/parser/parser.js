@@ -117,6 +117,12 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     'const': function() {
       return this.parseVariableDeclaration();
     },
+    'begin': function() {
+      this.iterator.next();
+      var scope = this.parseScope(AstScope.types.LOCAL);
+      this.iterator.optMatch('end');
+      return scope;
+    },
     'function': function() {
       this.iterator.next();
       var identifier;

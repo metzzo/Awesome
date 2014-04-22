@@ -139,7 +139,7 @@ define([ 'underscore.string', 'src/app/compiler/errorMessages', 'src/app/compile
             if (!this.optMatch(';')) {
               this.match('\n');
             }
-          } while (this.hasNext() && this.is(this.isNL()));
+          } while (this.hasNext() && this.isNL());
         }
       } catch (ex) {
         if (typeof ex == 'string') {
