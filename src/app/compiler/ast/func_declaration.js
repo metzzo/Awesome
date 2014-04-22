@@ -14,7 +14,16 @@ define([ ], function() {
         if (this.params.params) {
           for (var i = 0; i < this.params.params.length; i++) {
             if (this.params.params[i]) {
-              this.params.params[i].traverse(cb);
+              var param = this.params.params[i];
+              if (param.identifier) {
+                param.identifier.traverse(cb);
+              }
+              if (param.dataType) {
+                param.dataType.traverse(cb);
+              }
+              if (param.value) {
+                param.value.traverse(cb);
+              }
             }
           }
         }

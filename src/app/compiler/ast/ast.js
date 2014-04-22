@@ -6,16 +6,20 @@ define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app
         throw 'Invalid Parameter';
       }
       
-      return Object.create({ }, {
+      var obj = Object.create({}, {
         name: {
           value: astPrototype.name,
           enumerable: true,
-          writeable: false
+          writable: false
+        },
+        parent: {
+          enumerable: false,
+          writable: true
         },
         params: {
           value: params,
           enumerable: true,
-          writeable: true
+          writable: false
         },
         functions: {
           value: astPrototype.functions,
@@ -25,15 +29,27 @@ define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app
         },
         traverse: {
           value: function(cb) {
-            if (!!cb) cb(this);
-            if (this.functions.traverse) {
-              this.functions.traverse.call(this, cb);
+            if (cb) {
+              if (!cb(this)) {
+                // dont stop
+                if (this.functions && this.functions.traverse) {
+                  this.functions.traverse.call(this, cb);
+                }
+              }
             }
           },
           enumerable: false,
           writeable: false
         }
       });
+      obj.traverse(function(traversingObject) {
+        // set parent
+        if (traversingObject !== obj) {
+          traversingObject.parent = obj;
+          return true;
+        }
+      });
+      return obj;
     },
     AstPrototypes: {
       SCOPE: scope,

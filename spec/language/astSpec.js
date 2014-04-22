@@ -5,7 +5,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
       name: 'Stub',
       params: { },
       functions: {
-        traverse: function() { }
+        traverse: function() {
+          if (this.name !== 'Stub') {
+            throw 'Stub has invalid this';
+          }
+        }
       }
     };
     
@@ -57,6 +61,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         
         // assert
         expect(traverseCount).toBe(3);
+      });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.leftOperand.parent).toBe(ast);
+        expect(ast.params.rightOperand.parent).toBe(ast);
       });
     });
     
@@ -205,6 +214,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         // assert
         expect(traverseCount).toBe(2);
       });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.nodes[0].parent).toBe(ast);
+      });
     });
     
     describe('If', function() {
@@ -251,6 +264,12 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         // assert
         expect(traverseCount).toBe(3);
       });
+      
+      it('has parent properly set', function() {
+        var ifCase = ast.params.cases[0];
+        expect(ifCase.scope.parent).toBe(ast);
+        expect(ifCase.condition.parent).toBe(ast);
+      });
     });
     
     describe('While', function() {
@@ -288,6 +307,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         
         // assert
         expect(traverseCount).toBe(3);
+      });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.condition.parent).toBe(ast);
+        expect(ast.params.scope.parent).toBe(ast);
       });
     });
     
@@ -329,6 +353,12 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         // assert
         expect(traverseCount).toBe(4);
       });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.variable.parent).toBe(ast);
+        expect(ast.params.collection.parent).toBe(ast);
+        expect(ast.params.scope.parent).toBe(ast);
+      });
     });
     
     describe('Call', function() {
@@ -366,6 +396,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         
         // assert
         expect(traverseCount).toBe(3);
+      });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.func.parent).toBe(ast);
+        expect(ast.params.params[0].parent).toBe(ast);
       });
     });
     
@@ -453,6 +488,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         // assert
         expect(traverseCount).toBe(3);
       });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.variables[0].identifier.parent).toBe(ast);
+        expect(ast.params.variables[0].value.parent).toBe(ast);
+      });
     });
     
     describe('DataType', function() {
@@ -528,6 +568,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/parser/operator', 'src/app
         
         // assert
         expect(traverseCount).toBe(3);
+      });
+      
+      it('has parent properly set', function() {
+        expect(ast.params.returnDataType.parent).toBe(ast);
+        expect(ast.params.scope.parent).toBe(ast);
       });
     });
   });
