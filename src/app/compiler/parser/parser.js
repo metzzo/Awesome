@@ -303,9 +303,22 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         value: text.substring(1, text.length-1)
       });
     } else if (this.iterator.is('(')) {
-      this.iterator.match('(');
+      var pos = this.iterator.position;
+      this.iterator.match('('); 
+      if (this.iterator.is(')')) {
+        this.iterator.position = pos;
+        return this.parseLambda();
+      }
       var result = this.parseExpression();
+      if (!this.iterator.is(')')) {
+        this.iterator.position = pos;
+        return this.parseLambda();
+      }
       this.iterator.match(')');
+      if (this.iterator.is('->')) {
+        this.iterator.position = pos;
+        return this.parseLambda();
+      }
       return result;
     } else if (this.iterator.is('function')) {
       return this.parseKeyword(); // parse it bitch
@@ -422,6 +435,32 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     }
   };
   
+  Parser.prototype.parseLambda = function() {
+    var parameters = [ ];
+    this.iterator.match('(');
+    var first = true;
+    while (!this.iterator.optMatch(')')) {
+      if (!first) {
+        this.iterator.match(',');
+      }
+      parameters.push(this.parseSimpleVariableDeclaration({
+        varitype: AstVarDec.types.VARIABLE,
+        defaultDataType: null
+      }));
+      
+      first = false;
+    }
+    
+    this.iterator.match('->');
+    var scope = this.parseScope(AstScope.types.FUNCTION);
+    
+    return astModule.createNode(AstFunction, {
+      params: parameters,
+      returnDataType: null,
+      scope: scope
+    });
+  };
+  
   Parser.prototype.parseFuncCall = function(requireBrackets) {
     var position = this.iterator.position;
     
@@ -437,8 +476,6 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     if (!requireBrackets && this.isOperator()) {
       this.iterator.position = position // nope is just an expression
       return this.parseExpression();
-      
-      // this.iterator.riseSyntaxError(errorMessages.EXPECTING_FUNCTIONCALL);
     }
     
     if (!hasBrackets && requireBrackets) {

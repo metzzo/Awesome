@@ -94,6 +94,74 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           ]
         })
       ]
+    },
+    {
+      name: 'is parsing lambda function',
+      input: ['(', 'x' ,'is', 'int', ')', '->', '1'],
+      output: [
+        astModule.createNode(AstFunction, {
+          params: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'x' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: null,
+              type: AstVarDec.types.VARIABLE
+            }
+          ],
+          returnDataType: null,
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.FUNCTION,
+            nodes: [
+             astModule.createNode(AstIntLit, { value: 1 })
+            ]
+          })
+        })
+      ]
+    },
+    {
+      name: 'is parsing lambda function without parameter',
+      input: ['(', ')', '->', '1'],
+      output: [
+        astModule.createNode(AstFunction, {
+          params: [ ],
+          returnDataType: null,
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.FUNCTION,
+            nodes: [
+             astModule.createNode(AstIntLit, { value: 1 })
+            ]
+          })
+        })
+      ]
+    },
+    {
+      name: 'is parsing lambda function with 2 parameter',
+      input: ['(', 'x' ,'is', 'int', ',', 'y', '=', '0', ')', '->', '1'],
+      output: [
+        astModule.createNode(AstFunction, {
+          params: [
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'x' }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+              value: null,
+              type: AstVarDec.types.VARIABLE
+            },
+            {
+              identifier: astModule.createNode(AstIdentifier, { name: 'y' }),
+              dataType: null,
+              value: astModule.createNode(AstIntLit, { value: 0 }),
+              type: AstVarDec.types.VARIABLE
+            }
+          ],
+          returnDataType: null,
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.FUNCTION,
+            nodes: [
+             astModule.createNode(AstIntLit, { value: 1 })
+            ]
+          })
+        })
+      ]
     }
   ];
 });
