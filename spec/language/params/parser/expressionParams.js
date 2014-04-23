@@ -6,6 +6,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
   
+  var t = function(name) {
+    return new tokenModule.Token(name, {
+      file: null,
+      lineText: '',
+      line: 0,
+      character: 0
+    });
+  };
+  
   return [
     {
       name: 'is parsing empty input properly',
@@ -29,7 +38,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       name: 'is parsing literal input properly',
       input: [ '42' ],
       output: [
-        astModule.createNode(AstIntLit, { value: 42 })
+        astModule.createNode(AstIntLit, { value: 42, token: t('42') })
       ]
     },
     {
@@ -37,9 +46,10 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ '1', '+', '2'],
       output: [
         astModule.createNode(AstOperator, {
-          leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
-          rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
-          operator: operatorModule.Operators.PLUS_OPERATOR
+          leftOperand: astModule.createNode(AstIntLit, { value: 1, token: t('1') }),
+          rightOperand: astModule.createNode(AstIntLit, { value: 2, token: t('2') }),
+          operator: operatorModule.Operators.PLUS_OPERATOR,
+          token: t('+')
         })
       ]
     },
@@ -48,13 +58,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ '1', '+', '2', '*', '3'],
       output: [
         astModule.createNode(AstOperator, {
-          leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+          leftOperand: astModule.createNode(AstIntLit, { value: 1, token: t('1') }),
           rightOperand: astModule.createNode(AstOperator, {
-            leftOperand: astModule.createNode(AstIntLit, { value: 2 }),
-            rightOperand: astModule.createNode(AstIntLit, { value: 3 }),
-            operator: operatorModule.Operators.MUL_OPERATOR
+            leftOperand: astModule.createNode(AstIntLit, { value: 2, token: t('2') }),
+            rightOperand: astModule.createNode(AstIntLit, { value: 3, token: t('3') }),
+            operator: operatorModule.Operators.MUL_OPERATOR,
+            token: t('*')
           }),
-          operator: operatorModule.Operators.PLUS_OPERATOR
+          operator: operatorModule.Operators.PLUS_OPERATOR,
+          token: t('+')
         })
       ]
     },
@@ -64,12 +76,14 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       output: [
         astModule.createNode(AstOperator, {
           leftOperand: astModule.createNode(AstOperator, {
-            leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
-            rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
-            operator: operatorModule.Operators.PLUS_OPERATOR
+            leftOperand: astModule.createNode(AstIntLit, { value: 1, token: t('1') }),
+            rightOperand: astModule.createNode(AstIntLit, { value: 2, token: t('2') }),
+            operator: operatorModule.Operators.PLUS_OPERATOR,
+            token: t('+')
           }),
-          rightOperand: astModule.createNode(AstIntLit, { value: 3 }),
-          operator: operatorModule.Operators.MUL_OPERATOR
+          rightOperand: astModule.createNode(AstIntLit, { value: 3, token: t('3') }),
+          operator: operatorModule.Operators.MUL_OPERATOR,
+          token: t('*')
         })
       ]
     },
@@ -91,10 +105,11 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'print', '"Hello World"' ],
       output: [
         astModule.createNode(AstCall, {
-          func: astModule.createNode(AstIdentifier, { name: 'print' }),
+          func: astModule.createNode(AstIdentifier, { name: 'print', token: t('print') }),
           params: [
-            astModule.createNode(AstStringLit, { value: 'Hello World' })
-          ]
+            astModule.createNode(AstStringLit, { value: 'Hello World', token: t('"Hello World"') })
+          ],
+          token: t('print')
         })
       ]
     },
@@ -103,19 +118,22 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ '1', '+', 'swag', '*', 'hallo', '(', 'true', ',', 'false', ')' ],
       output: [
         astModule.createNode(AstOperator, {
-          leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+          leftOperand: astModule.createNode(AstIntLit, { value: 1, token:t('1') }),
           rightOperand: astModule.createNode(AstOperator, {
-            leftOperand: astModule.createNode(AstIdentifier, { name: 'swag' }), 
+            leftOperand: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag') }), 
             rightOperand: astModule.createNode(AstCall, {
-              func: astModule.createNode(AstIdentifier, { name: 'hallo' }),
+              func: astModule.createNode(AstIdentifier, { name: 'hallo', token: t('hallo') }),
               params: [
-                astModule.createNode(AstBoolLit, { value: true }),
-                astModule.createNode(AstBoolLit, { value: false }),
-              ]
+                astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
+                astModule.createNode(AstBoolLit, { value: false, token: t('false') }),
+              ],
+              token: t('hallo')
             }),
-            operator: operatorModule.Operators.MUL_OPERATOR
+            operator: operatorModule.Operators.MUL_OPERATOR,
+            token: t('*')
           }),
-          operator: operatorModule.Operators.PLUS_OPERATOR
+          operator: operatorModule.Operators.PLUS_OPERATOR,
+          token: t('+')
         })
       ]
     },
@@ -124,9 +142,10 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'yolo', '+', 'swag' ],
       output: [
         astModule.createNode(AstOperator, {
-          leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo' }),
-          rightOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
-          operator: operatorModule.Operators.PLUS_OPERATOR
+          leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo', token: t('yolo') }),
+          rightOperand: astModule.createNode(AstIdentifier, { name: 'swag',token: t('swag') }),
+          operator: operatorModule.Operators.PLUS_OPERATOR,
+          token: t('+')
         })
       ]
     },
@@ -135,9 +154,10 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'swag', '=', '2'],
       output: [
         astModule.createNode(AstOperator, {
-          leftOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
-          rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
-          operator: operatorModule.Operators.ASSIGN_OPERATOR
+          leftOperand: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag') }),
+          rightOperand: astModule.createNode(AstIntLit, { value: 2, token: t('2') }),
+          operator: operatorModule.Operators.ASSIGN_OPERATOR,
+          token: t('=')
         })
       ]
     },
@@ -145,8 +165,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       name: 'is parsing with ";" as NL support',
       input: [ '1', ';', '2'],
       output: [
-        astModule.createNode(AstIntLit, { value: 1 }),
-        astModule.createNode(AstIntLit, { value: 2 })
+        astModule.createNode(AstIntLit, { value: 1, token: t('1') }),
+        astModule.createNode(AstIntLit, { value: 2, token: t('2') })
       ]
     }
   ];

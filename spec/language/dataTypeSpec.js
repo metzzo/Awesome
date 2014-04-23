@@ -28,5 +28,10 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
       expect(dataType).not.toBeNull();
       expect(dataType).toEqual(expectedDataType);
     });
+    
+    it('matches works', function() {
+      expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.INT)).toBe(true);
+      expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(false);
+    });
   })
 });

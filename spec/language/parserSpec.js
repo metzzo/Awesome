@@ -49,7 +49,6 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/a
           var input = [ ];
           var output;
           var fails = test.fails;
-          var expectedOutput = !fails ? astModule.createNode(AstScope, { type: AstScope.types.MAIN, nodes: test.output }) : test.output;
           
           for (var inputToken = 0; inputToken < test.input.length; inputToken++) {
             var token = test.input[inputToken];
@@ -60,6 +59,13 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/a
               character: 0
             }));
           }
+          
+          var expectedOutput = !fails ? astModule.createNode(AstScope, { type: AstScope.types.MAIN, nodes: test.output, token: input.length > 0 ? input[0] : new tokenModule.Token('\n', {
+              file: null,
+              lineText: '',
+              line: 0,
+              character: 0
+            })}) : test.output;
           
           var func = function() {
             // act

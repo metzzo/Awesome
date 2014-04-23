@@ -1,4 +1,4 @@
-define([ ], function() {
+define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
   return {
     name: 'Scope',
     params: {
@@ -14,6 +14,12 @@ define([ ], function() {
             }
           }
         }
+      },
+      getDataType: function(){
+        return dataTypeModule.PrimitiveDataTypes.VOID;
+      },
+      checkDataTypes: function() {
+      
       }
     },
     types: {

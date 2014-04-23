@@ -7,19 +7,30 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstRepeat     = astModule.AstPrototypes.REPEAT;
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
   
+  var t = function(name) {
+    return new tokenModule.Token(name, {
+      file: null,
+      lineText: '',
+      line: 0,
+      character: 0
+    });
+  };
+  
   return [
     {
       name: 'is parsing while',
       input: [ 'while', 'true', '\n', '1', '\n', 'end' ],
       output: [
         astModule.createNode(AstWhile, {
-          condition: astModule.createNode(AstBoolLit, { value: true }),
+          condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('\n')
+          }),
+          token: t('while')
         })
       ]
     },
@@ -28,13 +39,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'while', 'true', 'do', '\n', '1', '\n', 'end' ],
       output: [
         astModule.createNode(AstWhile, {
-          condition: astModule.createNode(AstBoolLit, { value: true }),
+          condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('\n')
+          }),
+          token: t('while')
         })
       ]
     },
@@ -43,13 +56,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'while', 'true', '1', '\n' ],
       output: [
         astModule.createNode(AstWhile, {
-          condition: astModule.createNode(AstBoolLit, { value: true }),
+          condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('1')
+          }),
+          token: t('while')
         })
       ]
     },
@@ -71,14 +86,16 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'for', 'i', 'in', 'swag', '\n', '1', '\n', 'end' ],
       output: [
         astModule.createNode(AstFor, {
-          variable: astModule.createNode(AstIdentifier, { name: 'i'}),
-          collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
+          variable: astModule.createNode(AstIdentifier, { name: 'i', token: t('i')}),
+          collection: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag')}),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('\n')
+          }),
+          token: t('for')
         })
       ]
     },
@@ -87,14 +104,16 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'for', 'i', 'in', 'swag', 'do', '\n', '1', '\n', 'end' ],
       output: [
         astModule.createNode(AstFor, {
-          variable: astModule.createNode(AstIdentifier, { name: 'i'}),
-          collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
+          variable: astModule.createNode(AstIdentifier, { name: 'i', token: t('i')}),
+          collection: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag')}),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('\n')
+          }),
+          token: t('for')
         })
       ]
     },
@@ -103,14 +122,16 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'for', 'i', 'in', 'swag', '1', '\n' ],
       output: [
         astModule.createNode(AstFor, {
-          variable: astModule.createNode(AstIdentifier, { name: 'i'}),
-          collection: astModule.createNode(AstIdentifier, { name: 'swag'}),
+          variable: astModule.createNode(AstIdentifier, { name: 'i', token: t('i')}),
+          collection: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag')}),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('1')
+          }),
+          token: t('for')
         })
       ]
     },
@@ -132,13 +153,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'repeat', '\n', '1', '\n', 'until', 'false' ],
       output: [
         astModule.createNode(AstRepeat, {
-          condition: astModule.createNode(AstBoolLit, { value: false }),
+          condition: astModule.createNode(AstBoolLit, { value: false, token: t('false') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('\n')
+          }),
+          token: t('repeat')
         })
       ]
     },
@@ -147,13 +170,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ 'repeat', '1', 'until', 'false', '\n' ],
       output: [
         astModule.createNode(AstRepeat, {
-          condition: astModule.createNode(AstBoolLit, { value: false }),
+          condition: astModule.createNode(AstBoolLit, { value: false, token: t('false') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.LOCAL,
             nodes: [
-              astModule.createNode(AstIntLit, { value: 1 })
-            ]
-          })
+              astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+            ],
+            token: t('1')
+          }),
+          token: t('repeat')
         })
       ]
     },

@@ -4,6 +4,15 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstIf         = astModule.AstPrototypes.IF;
   var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
   
+  var t = function(name) {
+    return new tokenModule.Token(name, {
+      file: null,
+      lineText: '',
+      line: 0,
+      character: 0
+    });
+  };
+  
   return [
     {
       name: 'is parsing if',
@@ -12,15 +21,17 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstIf, {
           cases: [
             {
-              condition: astModule.createNode(AstBoolLit, { value: true }),
+              condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 1 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+                ],
+                token: t('\n')
               })
             }
-          ]
+          ],
+          token: t('if')
         })
       ]
     },
@@ -31,15 +42,17 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstIf, {
           cases: [
             {
-              condition: astModule.createNode(AstBoolLit, { value: true }),
+              condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 1 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 1, token: t('1') })
+                ],
+                token: t('\n')
               })
             }
-          ]
+          ],
+          token: t('if')
         })
       ]
     },
@@ -50,24 +63,27 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstIf, {
           cases: [
             {
-              condition: astModule.createNode(AstBoolLit, { value: true }),
+              condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 42 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 42, token: t('42') })
+                ],
+                token: t('\n')
               })
             },
             {
-              condition: astModule.createNode(AstBoolLit, { value: false }),
+              condition: astModule.createNode(AstBoolLit, { value: false, token: t('false') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 1337 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 1337, token: t('1337') })
+                ],
+                token: t('\n')
               })
             }
-          ]
+          ],
+          token: t('if')
         })
       ]
     },
@@ -78,12 +94,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstIf, {
           cases: [
             {
-              condition: astModule.createNode(AstBoolLit, { value: true }),
+              condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 42 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 42, token: t('42') })
+                ],
+                token: t('\n')
               })
             },
             {
@@ -91,11 +108,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 1337 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 1337, token: t('1337') })
+                ],
+                token: t('\n')
               })
             }
-          ]
+          ],
+          token: t('if')
         })
       ]
     },
@@ -106,21 +125,23 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstIf, {
           cases: [
             {
-              condition: astModule.createNode(AstBoolLit, { value: true }),
+              condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 42 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 42, token: t('42') })
+                ],
+                token: t('\n')
               })
             },
             {
-              condition: astModule.createNode(AstBoolLit, { value: false }),
+              condition: astModule.createNode(AstBoolLit, { value: false, token: t('false') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 1337 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 1337, token: t('1337') })
+                ],
+                token: t('\n')
               })
             },
             {
@@ -128,11 +149,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 9001 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 9001, token: t('9001') })
+                ],
+                token: t('\n')
               })
             }
-          ]
+          ],
+          token: t('if')
         })
       ]
     },
@@ -143,21 +166,23 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstIf, {
           cases: [
             {
-              condition: astModule.createNode(AstBoolLit, { value: true }),
+              condition: astModule.createNode(AstBoolLit, { value: true, token: t('true') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 42 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 42, token: t('42') })
+                ],
+                token: t('42')
               })
             },
             {
-              condition: astModule.createNode(AstBoolLit, { value: false }),
+              condition: astModule.createNode(AstBoolLit, { value: false, token: t('false') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 1337 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 1337, token: t('1337') })
+                ],
+                token: t('1337')
               })
             },
             {
@@ -165,11 +190,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
-                  astModule.createNode(AstIntLit, { value: 9001 })
-                ]
+                  astModule.createNode(AstIntLit, { value: 9001, token: t('9001') })
+                ],
+                token: t('9001')
               })
             }
-          ]
+          ],
+          token: t('if')
         })
       ]
     },

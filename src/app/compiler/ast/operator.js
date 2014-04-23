@@ -1,4 +1,4 @@
-define([ ], function() {
+define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
   return {
     name: 'Operator',
     params: {
@@ -14,6 +14,12 @@ define([ ], function() {
         if (this.params.rightOperand) {
           this.params.rightOperand.traverse(cb);
         }
+      },
+      getDataType: function(){
+        return dataTypeModule.PrimitiveDataTypes.VOID;
+      },
+      checkDataTypes: function() {
+      
       }
     }
   };

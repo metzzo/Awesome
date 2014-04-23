@@ -1,4 +1,4 @@
-define([ ], function() {
+define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
   return {
     name: 'String Literal',
     params: {
@@ -7,6 +7,12 @@ define([ ], function() {
     functions: {
       traverse: function(cb) {
         
+      },
+      getDataType: function(){
+        return dataTypeModule.PrimitiveDataTypes.VOID;
+      },
+      checkDataTypes: function() {
+      
       }
     }
   };

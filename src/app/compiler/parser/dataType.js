@@ -7,6 +7,10 @@ define(['underscore'], function(_) {
     this.params = { };
   };
   
+  DataType.prototype.matches = function(dt) {
+    return this.name === dt.name;
+  };
+  
   var dataTypes;
   return {
     DataType: DataType,

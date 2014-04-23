@@ -1,4 +1,4 @@
-define([ ], function() {
+define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
   return {
     name: 'For',
     params: {
@@ -17,6 +17,12 @@ define([ ], function() {
         if (this.params.scope) {
           this.params.scope.traverse(cb);
         }
+      },
+      getDataType: function(){
+        return dataTypeModule.PrimitiveDataTypes.VOID;
+      },
+      checkDataTypes: function() {
+      
       }
     }
   };

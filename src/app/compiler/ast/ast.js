@@ -1,9 +1,29 @@
-define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement', 'src/app/compiler/ast/for_statement', 'src/app/compiler/ast/repeat_statement', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/ast/datatype', 'src/app/compiler/ast/func_declaration' ], function(operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement, for_statement, repeat_statement, variable_declaration, datatype, func_declaration) {  
+define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement', 'src/app/compiler/ast/for_statement', 'src/app/compiler/ast/repeat_statement', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/ast/datatype', 'src/app/compiler/ast/func_declaration' ], function(operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement, for_statement, repeat_statement, variable_declaration, datatype, func_declaration) {
+  var iterator;
+  var current;
+  
   return {
+    setIterator: function(it) {
+      iterator = it;
+    },
+    mark: function() {
+      current = iterator.current();
+    },
     createNode: function(astPrototype, params) {
       if (!params) params = { };
       if (!astPrototype) {
         throw 'Invalid Parameter';
+      }
+      var token;
+      if (!!iterator) {
+        token = current;
+      } else {
+        current = null;
+      }
+      
+      if (params.token) {
+        token = params.token;
+        delete params.token;
       }
       
       var obj = Object.create({}, {
@@ -11,6 +31,11 @@ define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app
           value: astPrototype.name,
           enumerable: true,
           writable: false
+        },
+        token: {
+          value: token,
+          enumerable: true,
+          writable: true
         },
         parent: {
           enumerable: false,
@@ -40,8 +65,27 @@ define([ 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app
           },
           enumerable: false,
           writeable: false
+        },
+        getDataType: {
+          value: function() {
+            if (this.functions && this.functions.getDataType) {
+               return this.functions.getDataType.call(this);
+            }
+          },
+          enumerable: false,
+          writeable: false
+        },
+        checkDataTypes: {
+          value: function() {
+            if (this.functions && this.functions.checkDataTypes) {
+               this.functions.checkDataTypes.call(this);
+            }
+          },
+          enumerable: false,
+          writeable: false
         }
       });
+      
       obj.traverse(function(traversingObject) {
         // set parent
         if (traversingObject !== obj) {

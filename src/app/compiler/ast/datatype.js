@@ -7,6 +7,12 @@ define([ ], function() {
     functions: {
       traverse: function(cb) {
         
+      },
+      getDataType: function(){
+        return dataType;
+      },
+      checkDataTypes: function() {
+        
       }
     }
   };
