@@ -5,7 +5,8 @@ module.exports = function(grunt) {
     'curl-dir': {
       'src/lib/js': [
         'http://underscorejs.org/underscore.js',
-        'http://epeli.github.io/underscore.string/lib/underscore.string.js'
+        'http://epeli.github.io/underscore.string/lib/underscore.string.js',
+        'https://raw.github.com/dragonworx/jsel/master/jsel.js'
       ],
       'src/lib/css': [
         
@@ -53,8 +54,12 @@ module.exports = function(grunt) {
               },
               'underscore.string': {
                 deps: ['underscore']
+              },
+              'src/lib/js/jsel': {
+                exports: 'jsel'
               }
             }
+            // , waitSeconds: 0
           }
         }
       }

@@ -12,6 +12,7 @@
     "grunt-jasmine-runner": "~0.6.0",
     "grunt-jsdoc": "~0.5.1",
     "grunt-jsvalidate": "0.2.2",
+    "jsel": "^1.0.0",
     "requirejs": "~2.1.11"
   }
 }
