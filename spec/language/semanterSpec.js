@@ -1,4 +1,4 @@
-define(['src/app/compiler/semanter/semanter', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/dataType'], function(semanterModule, astModule, dataTypeModule) {
+define(['underscore.string', 'src/app/compiler/semanter/semanter', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/dataType', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages', 'src/app/compiler/lexer/token'], function(_s, semanterModule, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
@@ -14,6 +14,13 @@ define(['src/app/compiler/semanter/semanter', 'src/app/compiler/ast/ast', 'src/a
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   
+  var defaultToken = new tokenModule.Token('then', {
+    file: null,
+    lineText: '',
+    line: 0,
+    character: 0
+  });
+  
   describe('Semanter', function() {
     it('is created properly', function() {
       // arrange
@@ -27,27 +34,52 @@ define(['src/app/compiler/semanter/semanter', 'src/app/compiler/ast/ast', 'src/a
     });
   });
   
-  describe('"if" has correct type check for valid boolean', function() {
-    // arrange
-    var semanter;
-    var ast;
-    // act
-    semanter = new semanterModule.Semanter(ast = astModule.createNode(AstIf, {
-        cases: [
-          {
-            condition: astModule.createNode(AstBoolLit, { value: true }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [
-                astModule.createNode(AstIntLit, { value: 1 })
-              ]
-            })
-          }
-        ]
-    }));
-    semanter.semant();
+  describe('AstNode If', function() {
+    describe('has correct type check for valid boolean', function() {
+      // arrange
+      var semanter;
+      var ast, condition;
+      // act
+      semanter = new semanterModule.Semanter(ast = astModule.createNode(AstIf, {
+          cases: [
+            {
+              condition: condition = astModule.createNode(AstBoolLit, { value: true }),
+              scope: astModule.createNode(AstScope, {
+                type: AstScope.types.LOCAL,
+                nodes: [ ]
+              })
+            }
+          ]
+      }));
+      semanter.semant();
+      
+      // assert
+      expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.VOID);
+      expect(condition.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.BOOL);
+    });
     
-    // assert
-    expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.VOID);
+    describe('has correct type check for invalid int', function() {
+      // arrange
+      var semanter;
+      var ast, condition;
+      // act
+      semanter = new semanterModule.Semanter(ast = astModule.createNode(AstIf, {
+          cases: [
+            {
+              condition: condition = astModule.createNode(AstIntLit, { value: 42 }),
+              scope: astModule.createNode(AstScope, {
+                type: AstScope.types.LOCAL,
+                nodes: [ ]
+              })
+            }
+          ]
+      }));
+      ast.traverse(function(node) {
+        node.token = defaultToken;
+      });
+      
+      expect(function() { semanter.semant() }).toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_DATATYPE, 'bool', 'int'), { token: defaultToken }));
+    });
   });
+  
 });

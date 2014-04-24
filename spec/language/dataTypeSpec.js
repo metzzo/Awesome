@@ -33,5 +33,9 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
       expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.INT)).toBe(true);
       expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(false);
     });
+    
+    it('toString works', function() {
+      expect(dataTypeModule.PrimitiveDataTypes.INT.toString()).toBe('int');
+    })
   })
 });

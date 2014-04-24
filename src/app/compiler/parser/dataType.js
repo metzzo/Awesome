@@ -11,6 +11,10 @@ define(['underscore'], function(_) {
     return this.name === dt.name;
   };
   
+  DataType.prototype.toString = function() {
+    return this.name
+  };
+  
   var dataTypes;
   return {
     DataType: DataType,

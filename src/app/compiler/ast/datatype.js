@@ -1,4 +1,4 @@
-define([ ], function() {
+define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
   return {
     name: 'DataType',
     params: {
