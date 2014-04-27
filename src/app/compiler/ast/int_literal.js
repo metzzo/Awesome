@@ -11,9 +11,7 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.INT;
       },
-      checkDataTypes: function() {
-      
-      }
+      checkDataTypes: function() { }
     }
   };
 });

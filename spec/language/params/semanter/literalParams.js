@@ -23,40 +23,25 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   
   return [
     {
-      name: 'has correct type check for valid boolean',
-      input: astModule.createNode(AstIf, {
-        cases: [
-          {
-            condition: condition = astModule.createNode(AstBoolLit, { value: true }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [ ]
-            })
-          }
-        ]
-      }),
+      name: 'has correct data type for bool',
+      input: astModule.createNode(AstBoolLit, { value: true }),
       check: function(ast, semanter) {
-        expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.VOID);
-        expect(jsel(ast).select('//params/cases/*[1]/condition').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.BOOL);
+        expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.BOOL);
       }
     },
     {
-      name: 'has correct type check for invalid int',
-      input: astModule.createNode(AstIf, {
-        cases: [
-          {
-            condition: condition = astModule.createNode(AstIntLit, { value: 42 }),
-            scope: astModule.createNode(AstScope, {
-              type: AstScope.types.LOCAL,
-              nodes: [ ]
-            })
-          }
-        ]
-      }),
-      check: function(expect) {
-        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_DATATYPE, 'bool', 'int'), { token: defaultToken }));
-      },
-      fails: true
+      name: 'has correct data type for int',
+      input: astModule.createNode(AstIntLit, { value: 42 }),
+      check: function(ast, semanter) {
+        expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.INT);
+      }
+    },
+    {
+      name: 'has correct data type for string',
+      input: astModule.createNode(AstStringLit, { value: 'YOLO' }),
+      check: function(ast, semanter) {
+        expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.STRING);
+      }
     }
   ]
 });

@@ -11,9 +11,7 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
       getDataType: function(){
         return dataType;
       },
-      checkDataTypes: function() {
-        
-      }
+      checkDataTypes: function() { }
     }
   };
 });

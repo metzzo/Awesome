@@ -23,8 +23,11 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.VOID;
       },
+      getVariables: function() {
+        return this.variables;
+      },
       checkDataTypes: function() {
-      
+        
       }
     },
     types: {

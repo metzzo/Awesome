@@ -76,6 +76,8 @@ define([ 'src/app/compiler/syntaxError', 'src/app/compiler/ast/operator', 'src/a
           enumerable: false,
           writable: false
         },
+        
+        // DATATYPE:
         getDataType: {
           value: function() {
             if (this.functions && this.functions.getDataType) {
@@ -89,6 +91,17 @@ define([ 'src/app/compiler/syntaxError', 'src/app/compiler/ast/operator', 'src/a
           value: function() {
             if (this.functions && this.functions.checkDataTypes) {
                this.functions.checkDataTypes.call(this);
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
+        
+        // VARIABLE:
+        getVariables: {
+          value: function() {
+            if (this.functions && this.functions.getVariables) {
+               return this.functions.getVariables.call(this);
             }
           },
           enumerable: false,

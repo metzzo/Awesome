@@ -19,7 +19,7 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
         return dataTypeModule.PrimitiveDataTypes.VOID;
       },
       checkDataTypes: function() {
-      
+        
       }
     }
   };
