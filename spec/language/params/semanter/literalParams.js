@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/parser/dataType', 'src/app/compiler/syntaxError', 'src/app/compiler/errorMessages', 'src/app/compiler/lexer/token'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule) {
+define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;

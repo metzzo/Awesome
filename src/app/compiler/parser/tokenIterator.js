@@ -1,4 +1,4 @@
-define([ 'underscore.string', 'src/app/compiler/errorMessages', 'src/app/compiler/syntaxError' ], function(_, errorMessages, syntaxErrorModule) {
+define([ 'underscore.string', 'src/app/compiler/data/errorMessages', 'src/app/compiler/data/syntaxError' ], function(_, errorMessages, syntaxErrorModule) {
   /**
    * Creates an iterator that iterates through a token array.
    * It also features some useful methods

@@ -1,4 +1,4 @@
-define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
+define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
   return {
     name: 'Variable Declaration',
     params: {
@@ -24,7 +24,7 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
         return dataTypeModule.PrimitiveDataTypes.VOID;
       },
       getVariables: function() {
-        return this.variables;
+        return this.params.variables;
       },
       checkDataTypes: function() {
         

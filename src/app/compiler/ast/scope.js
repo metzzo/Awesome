@@ -1,4 +1,4 @@
-define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
+define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
   var scope_node;
   return scope_node = {
     name: 'Scope',
@@ -36,7 +36,7 @@ define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
           }
           
           beforeScope = scope
-          scope = scope.getParent();
+          scope = scope.parent;
         } while(scope && (scope.params.type === scope_node.types.LOCAL || (beforeScope.params.type === scope_node.types.LOCAL && (beforeScope.params.type === scope_node.types.MAIN || beforeScope.params.type === scope_node.types.FUNCTION))));
         
         return varis;

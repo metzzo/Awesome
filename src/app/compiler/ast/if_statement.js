@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/app/compiler/parser/dataType', 'src/app/compiler/errorMessages'], function(_s, dataTypeModule, errorMessages) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, errorMessages) {
   return {
     name: 'If',
     params: {

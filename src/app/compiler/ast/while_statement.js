@@ -1,4 +1,4 @@
-define(['src/app/compiler/parser/dataType'], function(dataTypeModule) {
+define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
   return {
     name: 'While',
     params: {
