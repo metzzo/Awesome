@@ -8,15 +8,9 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     },
     functions: {
       traverse: function(cb) {
-        if (this.params.variable) {
-          this.params.variable.traverse(cb);
-        }
-        if (this.params.collection) {
-          this.params.collection.traverse(cb);
-        }
-        if (this.params.scope) {
-          this.params.scope.traverse(cb);
-        }
+        this.params.variable.traverse(cb);
+        this.params.collection.traverse(cb);
+        this.params.scope.traverse(cb);
       },
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.VOID;

@@ -13,6 +13,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   var AstVarDec     = astModule.AstPrototypes.VARDEC;
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
+  var AstEmpty      = astModule.AstPrototypes.EMPTY;
   
   var defaultToken = new tokenModule.Token('test', {
     file: null,
@@ -32,13 +33,13 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
               {
                 identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
                 dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-                value: null,
+                value: astModule.createNode(AstEmpty, { }),
                 type: AstVarDec.types.VARIABLE
               },
               {
                 identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
                 dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
-                value: null,
+                value: astModule.createNode(AstEmpty, { }),
                 type: AstVarDec.types.VARIABLEyyolo
               }
             ]

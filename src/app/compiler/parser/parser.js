@@ -13,6 +13,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstVarDec     = astModule.AstPrototypes.VARDEC;
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
+  var AstEmpty      = astModule.AstPrototypes.EMPTY;
 
   
   var Parser = function(input) {
@@ -136,14 +137,14 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       if (this.isIdentifier()) {
         identifier = this.parseIdentifier();
       } else {
-        identifier = null;
+        identifier = astModule.createNode(AstEmpty, { });
       }
       
       var dataType;
       if (this.iterator.optMatch('is')) {
         dataType = this.parseDataType();
       } else {
-        dataType = null;
+        dataType = astModule.createNode(AstEmpty, { });;
       }
       var parameters = [ ];
       if (this.iterator.optMatch('(')) {
@@ -170,12 +171,12 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         scope: scope,
         token: token
       });
-      if (identifier) {
+      if (identifier.name !== AstEmpty.name) {
         return astModule.createNode(AstVarDec, {
           variables: [
             {
               identifier: identifier,
-              dataType: null,
+              dataType: astModule.createNode(AstEmpty, { }),
               value: func,
               type: AstVarDec.types.CONSTANT
             }
@@ -250,7 +251,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
           if (!this.iterator.is('if')) {
             scope = this.parseScope(AstScope.types.LOCAL);
             cases.push({
-              condition: null,
+              condition: astModule.createNode(AstEmpty, { }),
               scope: scope
             });
           }
@@ -408,9 +409,9 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     var defaultDataType = params.defaultDataType;
     var varitype = params.varitype;
     
+    var dataType = astModule.createNode(AstEmpty, { });
+    var value = astModule.createNode(AstEmpty, { });
     var identifier = this.parseIdentifier();
-    var dataType = null;
-    var value = null;
     
     if (this.iterator.optMatch('is')) {
       dataType = this.parseDataType();
@@ -496,7 +497,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     
     return astModule.createNode(AstFunction, {
       params: parameters,
-      returnDataType: null,
+      returnDataType: astModule.createNode(AstEmpty, { }),
       scope: scope,
       token: token
     });

@@ -25,7 +25,10 @@ define(['underscore'], function(_) {
       OBJECT: new DataType('object', { }),
       FUNCTION: new DataType('function', { }),
       BOOL: new DataType('bool', { }),
-      VOID: new DataType('void', { })
+      VOID: new DataType('void', { }),
+    },
+    MetaDataTypes: {
+      UNKNOWN: new DataType('unknown', { })
     },
     findPrimitiveDataTypeByName: function(name) {
       var result = null;

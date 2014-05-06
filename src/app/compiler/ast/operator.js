@@ -8,12 +8,8 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     },
     functions: {
       traverse: function(cb) {
-        if (this.params.leftOperand) {
-          this.params.leftOperand.traverse(cb);
-        }
-        if (this.params.rightOperand) {
-          this.params.rightOperand.traverse(cb);
-        }
+        this.params.leftOperand.traverse(cb);
+        this.params.rightOperand.traverse(cb);
       },
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.VOID;

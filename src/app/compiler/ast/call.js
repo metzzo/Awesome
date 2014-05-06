@@ -7,16 +7,10 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     },
     functions: {
       traverse: function(cb) {
-        if (this.params.func) {
-          this.params.func.traverse(cb);
-        }
+        this.params.func.traverse(cb);
         
-        if (this.params.params) {
-          for (var i = 0; i < this.params.params.length; i++) {
-            if (this.params.params[i]) {
-              this.params.params[i].traverse(cb);
-            }
-          }
+        for (var i = 0; i < this.params.params.length; i++) {
+          this.params.params[i].traverse(cb);
         } 
       },
       getDataType: function(){

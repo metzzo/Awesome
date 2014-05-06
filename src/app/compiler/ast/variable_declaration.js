@@ -6,18 +6,10 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     },
     functions: {
       traverse: function(cb) {
-        if (this.params.variables) {
-          for (var i = 0; i < this.params.variables.length; i++) {
-            var vari = this.params.variables[i];
-            if (vari) {
-              if (vari.identifier) {
-                vari.identifier.traverse(cb);
-              }
-              if (vari.value) {
-                vari.value.traverse(cb);
-              }
-            }
-          }
+        for (var i = 0; i < this.params.variables.length; i++) {
+          var vari = this.params.variables[i];
+          vari.identifier.traverse(cb);
+          vari.value.traverse(cb);
         }
       },
       getDataType: function(){
@@ -31,7 +23,7 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       }
     },
     types: {
-      VARIABLE: 'vari',
+      VARIABLE: 'variable',
       CONSTANT: 'const'
     }
   };

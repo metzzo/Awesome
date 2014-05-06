@@ -8,12 +8,8 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     },
     functions: {
       traverse: function(cb) {
-        if (this.params.nodes) {
-          for (var i = 0; i < this.params.nodes.length; i++) {
-            if(this.params.nodes[i]) {
-              this.params.nodes[i].traverse(cb);
-            }
-          }
+        for (var i = 0; i < this.params.nodes.length; i++) {
+          this.params.nodes[i].traverse(cb);
         }
       },
       getDataType: function(){

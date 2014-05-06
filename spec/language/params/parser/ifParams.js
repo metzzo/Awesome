@@ -3,6 +3,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
   var AstIf         = astModule.AstPrototypes.IF;
   var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
+  var AstEmpty      = astModule.AstPrototypes.EMPTY;
   
   var t = function(name) {
     return new tokenModule.Token(name, {
@@ -104,7 +105,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               })
             },
             {
-              condition: null,
+              condition: astModule.createNode(AstEmpty, { token: t('1337') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
@@ -145,7 +146,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               })
             },
             {
-              condition: null,
+              condition: astModule.createNode(AstEmpty, { token: t('9001') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
@@ -186,7 +187,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               })
             },
             {
-              condition: null,
+              condition: astModule.createNode(AstEmpty, { token: t('9001') }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
                 nodes: [
