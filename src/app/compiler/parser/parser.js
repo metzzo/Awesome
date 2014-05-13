@@ -132,6 +132,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     },
     'function': function() {
       var token = this.iterator.current();
+      var dataType = astModule.createNode(AstEmpty, { });
+      
       this.iterator.next();
       var identifier;
       if (this.isIdentifier()) {
@@ -153,6 +155,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
           if (!first) {
             this.iterator.match(',');
           }
+          astModule.mark();
+          
           parameters.push(this.parseSimpleVariableDeclaration({
             varitype: AstVarDec.types.VARIABLE,
             defaultDataType: null
@@ -176,7 +180,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
           variables: [
             {
               identifier: identifier,
-              dataType: astModule.createNode(AstEmpty, { }),
+              dataType: dataType,
               value: func,
               type: AstVarDec.types.CONSTANT
             }
@@ -441,7 +445,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   
   Parser.prototype.parseDataType = function() {
     var token = this.iterator.current();
-    var dataType = dataTypeModule.findPrimitiveDataTypeByName(this.iterator.current().text);
+    var dataType = dataTypeModule.findPrimitiveDataTypeByName(token.text);
     if (!!dataType) {
       this.iterator.next();
       return astModule.createNode(AstDataType, {
@@ -484,6 +488,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       if (!first) {
         this.iterator.match(',');
       }
+      astModule.mark();
+      
       parameters.push(this.parseSimpleVariableDeclaration({
         varitype: AstVarDec.types.VARIABLE,
         defaultDataType: null
@@ -532,6 +538,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         if (!first) {
           this.iterator.match(',');
         }
+        astModule.mark();
+        
         params.push(this.parseExpression());
         
         first = false;

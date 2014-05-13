@@ -25,7 +25,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           variables: [
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'hello', token: t('hello') }),
-              dataType: astModule.createNode(AstEmpty, { token: t('1') }),
+              dataType: astModule.createNode(AstEmpty, { token: t('function') }),
               value: astModule.createNode(AstFunction, {
                 params: [ ],
                 returnDataType: astModule.createNode(AstEmpty, { token: t('function') }),
@@ -53,7 +53,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           variables: [
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'hello', token: t('hello') }),
-              dataType: astModule.createNode(AstEmpty, { token: t('1') }),
+              dataType: astModule.createNode(AstEmpty, { token: t('function') }),
               value: astModule.createNode(AstFunction, {
                 params: [
                   {
@@ -94,10 +94,10 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           variables: [
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'i', token: t('i') }),
-              dataType: astModule.createNode(AstEmpty, { token: t('i') }),
+              dataType: astModule.createNode(AstEmpty, { token: t('var') }),
               value: astModule.createNode(AstFunction, {
                 params: [ ],
-                returnDataType: astModule.createNode(AstEmpty, { }),
+                returnDataType: astModule.createNode(AstEmpty, { token: t('function') }),
                 scope: astModule.createNode(AstScope, {
                   type: AstScope.types.FUNCTION,
                   nodes: [
@@ -123,11 +123,11 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'x', token: t('x') }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: t('int') }),
-              value: astModule.createNode(AstEmpty, { }),
+              value: astModule.createNode(AstEmpty, { token: t('x') }),
               type: AstVarDec.types.VARIABLE
             }
           ],
-          returnDataType: astModule.createNode(AstEmpty, { }),
+          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -145,7 +145,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       output: [
         astModule.createNode(AstFunction, {
           params: [ ],
-          returnDataType: astModule.createNode(AstEmpty, { }),
+          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -166,17 +166,17 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'x', token: t('x') }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: t('int') }),
-              value: astModule.createNode(AstEmpty, { }),
+              value: astModule.createNode(AstEmpty, { token: t('x') }),
               type: AstVarDec.types.VARIABLE
             },
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'y', token: t('y') }),
-              dataType: astModule.createNode(AstEmpty, { }),
+              dataType: astModule.createNode(AstEmpty, { token: t('y') }),
               value: astModule.createNode(AstIntLit, { value: 0, token: t('0') }),
               type: AstVarDec.types.VARIABLE
             }
           ],
-          returnDataType: astModule.createNode(AstEmpty, { }),
+          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -197,17 +197,17 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'x', token: t('x') }),
               dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: t('int') }),
-              value: astModule.createNode(AstEmpty, { }),
+              value: astModule.createNode(AstEmpty, { token: t('x') }),
               type: AstVarDec.types.VARIABLE
             },
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'y', token: t('y') }),
-              dataType: astModule.createNode(AstEmpty, { }),
+              dataType: astModule.createNode(AstEmpty, { token: t('y') }),
               value: astModule.createNode(AstIntLit, { value: 0, token: t('0') }),
               type: AstVarDec.types.VARIABLE
             }
           ],
-          returnDataType: astModule.createNode(AstEmpty, { }),
+          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [

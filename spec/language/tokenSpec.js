@@ -32,7 +32,7 @@ define(['src/app/compiler/lexer/token'], function(tokenModule) {
       };
       
       // act / assert
-      expect(function() { new tokenModule.Token(tokenText, tokenParams); }).toThrow("Invalid Parameter");
+      expect(function() { new tokenModule.Token(tokenText, tokenParams); }).toThrow('Invalid Parameter');
     });
     
     it('is created properly and returns correct toString', function() {

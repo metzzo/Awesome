@@ -40,14 +40,29 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
                 identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
                 dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
                 value: astModule.createNode(AstEmpty, { }),
-                type: AstVarDec.types.VARIABLEyyolo
+                type: AstVarDec.types.VARIABLE
               }
             ]
           })
         ]
       }),
       check: function(ast, semanter) {
-        expect(ast.getVariables()).toEqual('YOLO');
+        expect(ast.getVariables()).toEqual([
+          {
+            name: astModule.createNode(AstIdentifier, { name: 'yolo', token: defaultToken }),
+            params: {
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+              type: AstVarDec.types.VARIABLE
+            }
+          },
+          {
+            name: astModule.createNode(AstIdentifier, { name: 'swag', token: defaultToken }),
+            params: {
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+              type: AstVarDec.types.VARIABLE
+            }
+          }
+        ]);
       }
     }
   ]

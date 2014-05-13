@@ -448,7 +448,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
             {
               identifier: astModule.createNode(stubNode),
               value: astModule.createNode(stubNode),
-              dataType: null,
+              dataType: astModule.createNode(stubNode),
               type: astModule.AstPrototypes.VARDEC.types.VARIABLE
             }
           ]
@@ -467,7 +467,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
               {
                 identifier: { name: 'Stub', params: { } },
                 value: { name: 'Stub', params: { } },
-                dataType: null,
+                dataType: { name: 'Stub', params: { } },
                 type: astModule.AstPrototypes.VARDEC.types.VARIABLE
               }
             ]
@@ -486,7 +486,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         });
         
         // assert
-        expect(traverseCount).toBe(3);
+        expect(traverseCount).toBe(4);
       });
       
       it('has parent properly set', function() {
