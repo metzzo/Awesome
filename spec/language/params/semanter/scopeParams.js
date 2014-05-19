@@ -67,6 +67,107 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         ]
       }),
       check: function(ast, semanter) { }
+    },
+    {
+      name: 'nested scopes have correct variable lists',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              },
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstScope, {
+            type: AstScope.types.LOCAL,
+            nodes: [
+              astModule.createNode(AstVarDec, {
+                variables: [
+                  {
+                    identifier: astModule.createNode(AstIdentifier, { name: 'yolo2' }),
+                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+                    value: astModule.createNode(AstEmpty, { }),
+                    type: AstVarDec.types.VARIABLE
+                  },
+                  {
+                    identifier: astModule.createNode(AstIdentifier, { name: 'swag2' }),
+                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+                    value: astModule.createNode(AstEmpty, { }),
+                    type: AstVarDec.types.VARIABLE
+                  }
+                ]
+              }),
+              astModule.createNode(AstEmpty, {
+                check: function(ast) {
+                   expect(ast.getScope().getVariables()).toEqual([
+                    {
+                      name: 'yolo',
+                      params: {
+                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                        type: AstVarDec.types.VARIABLE
+                      }
+                    },
+                    {
+                      name: 'swag',
+                      params: {
+                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                        type: AstVarDec.types.VARIABLE
+                      }
+                    },
+                    {
+                      name: 'yolo2',
+                      params: {
+                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                        type: AstVarDec.types.VARIABLE
+                      }
+                    },
+                    {
+                      name: 'swag2',
+                      params: {
+                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                        type: AstVarDec.types.VARIABLE
+                      }
+                    }
+                  ]);
+                }
+              })
+              
+            ]
+          }),
+          astModule.createNode(AstEmpty, {
+            check: function(ast) {
+               expect(ast.getScope().getVariables()).toEqual([
+                {
+                  name: 'yolo',
+                  params: {
+                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                    type: AstVarDec.types.VARIABLE
+                  }
+                },
+                {
+                  name: 'swag',
+                  params: {
+                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                    type: AstVarDec.types.VARIABLE
+                  }
+                }
+              ]);
+            }
+          })
+        ]
+      }),
+      check: function(ast, semanter) { }
     }
   ]
 });
