@@ -1,4 +1,4 @@
-define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/compiler/data/dataType'], function(astModule, operatorModule, dataTypeModule) {
+define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/compiler/data/dataType', 'src/app/compiler/data/identifier'], function(astModule, operatorModule, dataTypeModule, identifierModule) {
   describe('AstNode', function() {
     // this node mocks a node for testing purpose only
     var stubNode = {
@@ -196,7 +196,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           name: 'Scope',
           params: {
             type: astModule.AstPrototypes.SCOPE.types.MAIN,
-            nodes: [ { name: 'Stub', params: { } } ]
+            nodes: [ { name: 'Stub', params: { } } ],
+            variables: [ ]
           }
         };
          
@@ -446,7 +447,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         ast = astModule.createNode(astModule.AstPrototypes.VARDEC, {
           variables: [
             {
-              identifier: astModule.createNode(stubNode),
+              identifier: astModule.createNode(stubNode, { name: 'yolo' }),
               value: astModule.createNode(stubNode),
               dataType: astModule.createNode(stubNode),
               type: astModule.AstPrototypes.VARDEC.types.VARIABLE
@@ -463,9 +464,15 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         var expectedAst = {
           name: 'Variable Declaration',
           params: {
+            realVariables: [
+              {
+                name: 'yolo',
+                params: { dataType: astModule.createNode(stubNode), type: astModule.AstPrototypes.VARDEC.types.VARIABLE}
+              }
+            ],
             variables: [
               {
-                identifier: { name: 'Stub', params: { } },
+                identifier: { name: 'Stub', params: { name: 'yolo' } },
                 value: { name: 'Stub', params: { } },
                 dataType: { name: 'Stub', params: { } },
                 type: astModule.AstPrototypes.VARDEC.types.VARIABLE

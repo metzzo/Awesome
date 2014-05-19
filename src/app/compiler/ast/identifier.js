@@ -1,17 +1,39 @@
-define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope'], function(dataTypeModule, scopeModule) {
   return {
     name: 'Identifier',
     params: {
-      name: null
+      name: null,
+      identifier: null
     },
     functions: {
       traverse: function(cb) {
         
       },
-      getDataType: function(){
-        return dataTypeModule.PrimitiveDataTypes.VOID;
+      getDataType: function() {
+        if (this.params.identifier) {
+          return this.params.identifier.params.dataType.params.dataType;
+        } else {
+          return dataTypeModule.MetaDataTypes.UNKNOWN;
+        }
       },
-      checkDataTypes: function() { }
+      eraseDataTypes: function() {
+        // try to find my data type pl0x
+        // to do so backtrace all expressions before this identifier until there is a variable declaration
+        var scope = this.getScope();
+        var variables = scope.getVariables();
+        
+        // am I one of these variables?
+        for(var i = 0; i < variables.length; i++) {
+          var variable = variables[i];
+          if (variable.name === this.params.name) {
+            this.params.identifier = variable; // yes I AM \o/
+            break;
+          }
+        }
+      },
+      checkDataTypes: function() {
+        
+      }
     }
   };
 });

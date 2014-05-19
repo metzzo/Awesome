@@ -14,7 +14,7 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         } 
       },
       getDataType: function(){
-        return dataTypeModule.PrimitiveDataTypes.VOID;
+        return dataTypeModule.MetaDataTypes.UNKNOWN;
       },
       checkDataTypes: function() {
         

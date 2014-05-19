@@ -42,6 +42,13 @@ define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/l
             if (!test.fails) {
               func();
               test.check(test.input, semanter);
+              
+              // check nodes
+              test.input.traverse(function(ast) {
+                if (ast.params.check) {
+                  ast.params.check(ast);
+                }
+              });
             } else {
               test.check(expect(func), test.input, semanter);
             }

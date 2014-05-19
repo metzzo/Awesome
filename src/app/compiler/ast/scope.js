@@ -4,38 +4,38 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     name: 'Scope',
     params: {
       nodes: [ ],
-      type: 'main'
+      type: 'main',
+      variables: [ ]
     },
     functions: {
+      init: function() {
+        this.params.variables = [ ];
+      },
       traverse: function(cb) {
-        for (var i = 0; i < this.params.nodes.length; i++) {
-          this.params.nodes[i].traverse(cb);
+        // keep track of current possible variables
+        var oldVariables = this.params.variables;
+        this.params.variables = [ ];
+        // add variables from parent scope but only if the current scope is a LOCAL scope
+        if (this.parent && this.params.type === scope_node.types.LOCAL) {
+          this.params.variables = this.params.variables.concat(this.parent.getVariables());
+        }
+        
+        try {
+          for (var i = 0; i < this.params.nodes.length; i++) {
+            this.params.nodes[i].traverse(cb);
+          }
+        } finally {
+          this.params.variables = oldVariables; // set old variables
         }
       },
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.VOID;
       },
-      checkDataTypes: function() { },
-      getVariables: function() {
-        // TODO: cache the return of this function
-        var varis = [ ];
-        var scope = this, beforeScope = null;
-        do {
-          for (var i = 0; i < this.params.nodes.length; i++) {
-            var node = this.params.nodes[i];
-            if (node && node.name !== 'Scope') {
-              var currentVaris = node.getVariables();
-              if (currentVaris && currentVaris.length > 0) {
-                varis = varis.concat(currentVaris);
-              }
-            }
-          }
-          
-          beforeScope = scope
-          scope = scope.parent;
-        } while(scope && (scope.params.type === scope_node.types.LOCAL || (beforeScope.params.type === scope_node.types.LOCAL && (beforeScope.params.type === scope_node.types.MAIN || beforeScope.params.type === scope_node.types.FUNCTION))));
+      checkDataTypes: function() {
         
-        return varis;
+      },
+      getVariables: function() {
+        return this.params.variables;
       }
     },
     types: {

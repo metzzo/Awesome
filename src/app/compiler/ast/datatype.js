@@ -9,7 +9,7 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         
       },
       getDataType: function(){
-        return dataType;
+        return this.params.dataType;
       },
       checkDataTypes: function() { }
     }

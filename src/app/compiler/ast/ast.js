@@ -2,7 +2,8 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
   var iterator;
   var current;
   
-  return {
+  var moduleData
+  return moduleData = {
     setIterator: function(it) {
       iterator = it;
     },
@@ -52,12 +53,31 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
           writeable: false
           
         },
+        copy: {
+          value: function() {
+            return moduleData.createNode(astPrototype, JSON.parse(JSON.stringify(this.params)));
+          }
+        },
         riseSyntaxError: {
           value: function(msg, fatality) {
             throw new syntaxErrorModule.SyntaxError(msg, {
               fatality: fatality,
               token: this.token
             });
+          },
+          enumerable: false,
+          writable: false
+        },
+        backTraverse: {
+          value: function(cb) {
+            if (cb) {
+              var continueTraversing;
+              var current = this;
+              do {
+                continueTraversing = !cb(current);
+                current = current.parent;
+              } while(continueTraversing && current);
+            }
           },
           enumerable: false,
           writable: false
@@ -76,12 +96,28 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
           enumerable: false,
           writable: false
         },
+        getScope: {
+          value: function(cb) {
+            var returnValue = null;
+            this.backTraverse(function(astNode) {
+              if (astNode.name === scope.name) {
+                returnValue = astNode;
+                return true;
+              } else {
+                return false;
+              }
+            });
+            return returnValue;
+          },
+          enumerable: false,
+          writable: false
+        },
         
         // DATATYPE:
         getDataType: {
           value: function() {
             if (this.functions && this.functions.getDataType) {
-               return this.functions.getDataType.call(this);
+              return this.functions.getDataType.call(this);
             }
           },
           enumerable: false,
@@ -90,7 +126,16 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
         checkDataTypes: {
           value: function() {
             if (this.functions && this.functions.checkDataTypes) {
-               this.functions.checkDataTypes.call(this);
+              this.functions.checkDataTypes.call(this);
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
+        eraseDataTypes: {
+          value: function() {
+            if (this.functions && this.functions.eraseDataTypes) {
+              this.functions.eraseDataTypes.call(this);
             }
           },
           enumerable: false,
@@ -98,10 +143,13 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
         },
         
         // VARIABLE:
+        /**
+         * Returns an array of all variables declared in the current node
+         */
         getVariables: {
           value: function() {
             if (this.functions && this.functions.getVariables) {
-               return this.functions.getVariables.call(this);
+              return this.functions.getVariables.call(this);
             }
           },
           enumerable: false,
@@ -113,9 +161,15 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
         // set parent
         if (traversingObject !== obj) {
           traversingObject.parent = obj;
-          return true;
+          return true; // true says "yo homie skip my children pl0x"
         }
       });
+      
+      // call init function if it exists
+      if (!!obj.functions.init) {
+        obj.functions.init.call(obj);
+      }
+      
       return obj;
     },
     AstPrototypes: {

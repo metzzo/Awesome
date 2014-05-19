@@ -4,7 +4,7 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     params: { },
     functions: {
       traverse: function(cb) { },
-      getDataType: function() { return dataTypeModule.MetaDataTypes.UNKNOWN; },
+      getDataType: function() { return dataTypeModule.PrimitiveDataTypes.VOID; },
       checkDataTypes: function() { }
     }
   };
