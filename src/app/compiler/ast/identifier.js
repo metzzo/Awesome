@@ -16,7 +16,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope'], functio
           return dataTypeModule.MetaDataTypes.UNKNOWN;
         }
       },
-      eraseDataTypes: function() {
+      processDataTypes: function() {
         // try to find my data type pl0x
         // to do so backtrace all expressions before this identifier until there is a variable declaration
         var scope = this.getScope();

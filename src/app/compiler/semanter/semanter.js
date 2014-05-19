@@ -11,7 +11,7 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
     do {
       anyUnknown = false;
       this.mainNode.traverse(function(obj) {
-        obj.eraseDataTypes();
+        obj.processDataTypes();
         
         var dataType = obj.getDataType();
         if (dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN)) {

@@ -132,10 +132,10 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
           enumerable: false,
           writable: false
         },
-        eraseDataTypes: {
+        processDataTypes: {
           value: function() {
-            if (this.functions && this.functions.eraseDataTypes) {
-              this.functions.eraseDataTypes.call(this);
+            if (this.functions && this.functions.processDataTypes) {
+              this.functions.processDataTypes.call(this);
             }
           },
           enumerable: false,
