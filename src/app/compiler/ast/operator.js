@@ -18,7 +18,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages']
       checkDataTypes: function() {
         var myType = this.getDataType();
         if (myType.matches(dataTypeModule.MetaDataTypes.AMBIGUOUS)) {
-          this.riseSyntaxError(errorMessages.AMBIGUOUS_TYPE);
+          this.riseSyntaxError(errorMessages.AMBIGUOUS_DATATYPE);
         }
       }
     }

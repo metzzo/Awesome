@@ -32,6 +32,18 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       check: function(ast, semanter) {
         expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.INT);
       }
+    },
+    {
+      name: 'simple type check in operator fails',
+      input: astModule.createNode(AstOperator, {
+        leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+        rightOperand: astModule.createNode(AstStringLit, { value: 'YOLO' }),
+        operator: operatorModule.Operators.PLUS_OPERATOR
+      }),
+      check: function(expect) {
+        expect.toThrow(new syntaxErrorModule.SyntaxError(errorMessages.AMBIGUOUS_DATATYPE, { token: defaultToken }));
+      },
+      fails: true
     }
   ]
 });
