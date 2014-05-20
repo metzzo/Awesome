@@ -96,6 +96,16 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
         ]
       }),
       output: 'var yolo = 42, swag = 0'
+    },
+    {
+      name: 'generates identifier',
+      input: astModule.createNode(AstIdentifier, { name: 'swag' }),
+      output: 'swag'
+    },
+    {
+      name: 'generates Empty',
+      input: astModule.createNode(AstEmpty, { }),
+      output: ''
     }
   ]
 });
