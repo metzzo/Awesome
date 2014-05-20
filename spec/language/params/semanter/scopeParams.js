@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule) {
+define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token', 'src/app/compiler/data/identifier'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule, identifierModule) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
@@ -47,20 +47,14 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
           astModule.createNode(AstEmpty, {
             check: function(ast) {
                expect(ast.getScope().getVariables()).toEqual([
-                {
-                  name: 'yolo',
-                  params: {
-                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                    type: AstVarDec.types.VARIABLE
-                  }
-                },
-                {
-                  name: 'swag',
-                  params: {
-                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                    type: AstVarDec.types.VARIABLE
-                  }
-                }
+                new identifierModule.Identifier('yolo', {
+                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  type: AstVarDec.types.VARIABLE
+                }),
+                new identifierModule.Identifier('swag', {
+                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  type: AstVarDec.types.VARIABLE
+                })
               ]);
             }
           })
@@ -111,34 +105,22 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
               astModule.createNode(AstEmpty, {
                 check: function(ast) {
                    expect(ast.getScope().getVariables()).toEqual([
-                    {
-                      name: 'yolo',
-                      params: {
-                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                        type: AstVarDec.types.VARIABLE
-                      }
-                    },
-                    {
-                      name: 'swag',
-                      params: {
-                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                        type: AstVarDec.types.VARIABLE
-                      }
-                    },
-                    {
-                      name: 'yolo2',
-                      params: {
-                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                        type: AstVarDec.types.VARIABLE
-                      }
-                    },
-                    {
-                      name: 'swag2',
-                      params: {
-                        dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                        type: AstVarDec.types.VARIABLE
-                      }
-                    }
+                    new identifierModule.Identifier('yolo', {
+                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      type: AstVarDec.types.VARIABLE
+                    }),
+                    new identifierModule.Identifier('swag', {
+                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      type: AstVarDec.types.VARIABLE
+                    }),
+                    new identifierModule.Identifier('yolo2', {
+                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      type: AstVarDec.types.VARIABLE
+                    }),
+                    new identifierModule.Identifier('swag2', {
+                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      type: AstVarDec.types.VARIABLE
+                    })
                   ]);
                 }
               })
@@ -148,20 +130,14 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
           astModule.createNode(AstEmpty, {
             check: function(ast) {
                expect(ast.getScope().getVariables()).toEqual([
-                {
-                  name: 'yolo',
-                  params: {
-                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                    type: AstVarDec.types.VARIABLE
-                  }
-                },
-                {
-                  name: 'swag',
-                  params: {
-                    dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
-                    type: AstVarDec.types.VARIABLE
-                  }
-                }
+                new identifierModule.Identifier('yolo', {
+                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  type: AstVarDec.types.VARIABLE
+                }),
+                new identifierModule.Identifier('swag', {
+                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  type: AstVarDec.types.VARIABLE
+                })
               ]);
             }
           })

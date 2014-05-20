@@ -3,23 +3,16 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/ast/ast', 'src/app/
     it('is created properly', function() {
       // arrange
       var identifier;
-      var expectedIdentifier = {
-        name: astModule.createNode(identifierAstModule, { name: 'yolo' }),
-        params: {
-          dataType: dataTypeModule.MetaDataTypes.UNKNOWN,
-          type: 'swagtype'
-        }
-      };
       
       // act
-      identifier = new identifierModule.Identifier(astModule.createNode(identifierAstModule, { name: 'yolo' }), {
+      identifier = new identifierModule.Identifier('yolo', {
         dataType: dataTypeModule.MetaDataTypes.UNKNOWN,
         type: 'swagtype'
       });
       
       // assert
       expect(identifier).not.toBeNull();
-      expect(identifier).toEqual(expectedIdentifier);
+      expect(identifier.name).toBe('yolo');
     });
     
     it('is not created properly', function() {
@@ -27,6 +20,20 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/ast/ast', 'src/app/
           type: identifierModule.Types.LOCAL
         })
       }).toThrow('Invalid Parameter');
+    });
+    
+    it('can be proposed properly', function() {
+      // arrange
+      var identifier = new identifierModule.Identifier('yolo', {
+        dataType: dataTypeModule.MetaDataTypes.UNKNOWN,
+        type: 'swagtype'
+      });
+      
+      // act
+      identifier.proposeDataType(dataTypeModule.PrimitiveDataTypes.INT);
+      
+      // assert
+      expect(identifier.params.dataType).toBe(dataTypeModule.PrimitiveDataTypes.INT);
     });
   });
 });

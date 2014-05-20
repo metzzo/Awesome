@@ -465,10 +465,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           name: 'Variable Declaration',
           params: {
             realVariables: [
-              {
-                name: 'yolo',
-                params: { dataType: astModule.createNode(stubNode), type: astModule.AstPrototypes.VARDEC.types.VARIABLE}
-              }
+              new identifierModule.Identifier('yolo', {
+                dataType: astModule.createNode(stubNode), type: astModule.AstPrototypes.VARDEC.types.VARIABLE
+              })
+              
             ],
             variables: [
               {

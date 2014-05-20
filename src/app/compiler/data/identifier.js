@@ -1,4 +1,4 @@
-define([ 'underscore' ], function(_) {
+define([ 'underscore', 'src/app/compiler/data/dataType' ], function(_, dataTypeModule) {
   var module;
   
   var Identifier = function(name, params) {
@@ -6,7 +6,16 @@ define([ 'underscore' ], function(_) {
       throw 'Invalid Parameter';
     }
     this.name   = name;
-    this.params = params;
+    this.params = {
+      dataType: params.dataType,
+      type: params.type
+    };
+  };
+  
+  Identifier.prototype.proposeDataType = function(dataType) {
+    if (this.params.dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN)) {
+      this.params.dataType = dataType;
+    }
   };
   
   return module = {
