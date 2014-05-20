@@ -44,7 +44,7 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
           gen.emit('if (');
           gen.emitNode(ifCase.condition);
           gen.emit(') ');
-        } else if (ifCase.condition.name === AstEmpty.name) {
+        } else if (ifCase.condition.name !== AstEmpty.name) {
           gen.emit('else if (');
           gen.emitNode(ifCase.condition);
           gen.emit(') ');
@@ -58,7 +58,9 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
       gen.emit(node.params.value);
     },
     'Operator': function(gen, node) {
-      
+      gen.emitNode(node.params.leftOperand);
+      gen.emit(' ' + node.params.operator.name + ' ');
+      gen.emitNode(node.params.rightOperand);
     },
     'Repeat': function(gen, node) {
       

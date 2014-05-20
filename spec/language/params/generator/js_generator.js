@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token', 'src/app/compiler/data/identifier'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule, identifierModule) {
+define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token', 'src/app/compiler/data/identifier', 'src/app/compiler/data/operator'], function(astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule, identifierModule, operatorModule) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
@@ -17,12 +17,65 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   
   return [
     {
-      name: 'generates scope properly',
+      name: 'generates empty scope properly',
       input: astModule.createNode(AstScope, {
         type: AstScope.types.LOCAL,
         nodes: [ ]
       }),
       output: '{ }\n'
+    },
+    {
+      name: 'generates simple if properly',
+      input: astModule.createNode(AstIf, {
+        cases: [
+          {
+            condition: astModule.createNode(AstBoolLit, { value: true }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          }
+        ]
+      }),
+      output: 'if (true) { }\n'
+    },
+    {
+      name: 'generates complex if properly',
+      input: astModule.createNode(AstIf, {
+        cases: [
+          {
+            condition: astModule.createNode(AstBoolLit, { value: true }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          },
+          {
+            condition: astModule.createNode(AstBoolLit, { value: false }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          },
+          {
+            condition: astModule.createNode(AstEmpty),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          },
+        ]
+      }),
+      output: 'if (true) { }\nelse if (false) { }\nelse { }\n'
+    },
+    {
+      name: 'generates simple operator',
+      input: astModule.createNode(AstOperator, {
+        leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
+        rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
+        operator: operatorModule.Operators.PLUS_OPERATOR
+      }),
+      output: '1 + 2'
     }
   ]
 });

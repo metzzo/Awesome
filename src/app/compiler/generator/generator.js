@@ -1,4 +1,4 @@
-define([ 'src/app/compiler/generator/js_generator' ], function(jsGeneratorModule) {
+define([ 'underscore', 'src/app/compiler/generator/js_generator' ], function(_, jsGeneratorModule) {
   var Generator = function(mainNode) {
     this.mainNode = mainNode;
     this.lines = [ ];
@@ -28,7 +28,7 @@ define([ 'src/app/compiler/generator/js_generator' ], function(jsGeneratorModule
   };
   
   Generator.prototype.emit = function(content) {
-    content = !!content ? content : '';
+    content = !_.isUndefined(content) ? content : '';
     
     if (this.lines.length === 0) {
       this.lines.push('');
@@ -37,7 +37,7 @@ define([ 'src/app/compiler/generator/js_generator' ], function(jsGeneratorModule
   };
   
   Generator.prototype.emitLine = function(content) {
-    content = !!content ? content : '';
+    content = !_.isUndefined(content) ? content : '';
     
     var line = '';
     for (var i = 0; i < this.indentationLevel; i++) {
