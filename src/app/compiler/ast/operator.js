@@ -13,7 +13,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages']
       },
       getDataType: function() {
         var left = this.params.leftOperand.getDataType(), right = this.params.rightOperand.getDataType();
-        return left.balance(right);
+        return this.params.operator.balance(left, right);
       },
       checkDataTypes: function() {
         var myType = this.getDataType();

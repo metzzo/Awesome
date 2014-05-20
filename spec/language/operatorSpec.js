@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/operator'], function(operatorModule) {
+define(['src/app/compiler/data/operator', 'src/app/compiler/data/dataType'], function(operatorModule, dataTypeModule) {
   describe('Operator', function() {
     it('is created properly', function() {
       // arrange
@@ -17,6 +17,34 @@ define(['src/app/compiler/data/operator'], function(operatorModule) {
       expect(operator.params).not.toBeNull();
       expect(operator.params).toEqual(params);
     });
+    it('is balancing properly', function() {
+      // arrange
+      var operator = operatorModule.Operators.PLUS_OPERATOR;
+      var left = dataTypeModule.PrimitiveDataTypes.INT;
+      var right = dataTypeModule.PrimitiveDataTypes.FLOAT;
+      var result;
+      // act
+      result = operator.balance(left, right);
+      
+      // assert
+      expect(result).not.toBeNull();
+      expect(result).toBe(dataTypeModule.PrimitiveDataTypes.FLOAT);
+    });
+    
+    it('is not balancing properly', function() {
+      // arrange
+      var operator = operatorModule.Operators.PLUS_OPERATOR;
+      var left = dataTypeModule.PrimitiveDataTypes.INT;
+      var right = dataTypeModule.PrimitiveDataTypes.STRING;
+      var result;
+      // act
+      result = operator.balance(left, right);
+      
+      // assert
+      expect(result).not.toBeNull();
+      expect(result).toBe(dataTypeModule.MetaDataTypes.AMBIGUOUS);
+    });
+    
     it('findOperatorsByPriority returns correct value', function() {
       // arrange
       var expectedOperators = [operatorModule.Operators.PLUS_OPERATOR, operatorModule.Operators.MINUS_OPERATOR];
