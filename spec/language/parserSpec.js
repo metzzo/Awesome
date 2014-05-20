@@ -70,7 +70,7 @@ define(['src/app/compiler/parser/parser', 'src/app/compiler/lexer/token', 'src/a
           var func = function() {
             // act
             parser = new parserModule.Parser(input);
-            output = parser.parse(input);
+            output = parser.parse();
             
           };
           if (fails) {
