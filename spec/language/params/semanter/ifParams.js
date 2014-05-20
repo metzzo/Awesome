@@ -28,7 +28,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       input: astModule.createNode(AstIf, {
         cases: [
           {
-            condition: condition = astModule.createNode(AstBoolLit, { value: true }),
+            condition: astModule.createNode(AstBoolLit, { value: true }),
             scope: astModule.createNode(AstScope, {
               type: AstScope.types.LOCAL,
               nodes: [ ]
@@ -46,7 +46,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       input: astModule.createNode(AstIf, {
         cases: [
           {
-            condition: condition = astModule.createNode(AstIntLit, { value: 42 }),
+            condition: astModule.createNode(AstIntLit, { value: 42 }),
             scope: astModule.createNode(AstScope, {
               type: AstScope.types.LOCAL,
               nodes: [ ]
@@ -88,6 +88,40 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         ]
       }),
       check: function(ast, semanter) { }
+    },
+    {
+      name: 'has correct type check for multiple conditions',
+      input: astModule.createNode(AstIf, {
+        cases: [
+          {
+            condition: astModule.createNode(AstBoolLit, { value: true }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          },
+          {
+            condition: astModule.createNode(AstBoolLit, { value: false }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          },
+          {
+            condition: astModule.createNode(AstEmpty),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.LOCAL,
+              nodes: [ ]
+            })
+          },
+        ]
+      }),
+      check: function(ast, semanter) {
+        expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.VOID);
+        expect(jsel(ast).select('//params/cases/*[1]/condition').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.BOOL);
+        expect(jsel(ast).select('//params/cases/*[2]/condition').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.BOOL);
+        expect(jsel(ast).select('//params/cases/*[3]/condition').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.VOID);
+      } 
     }
   ]
 });

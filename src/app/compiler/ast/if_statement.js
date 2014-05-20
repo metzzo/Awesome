@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, errorMessages) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages', 'src/app/compiler/ast/empty'], function(_s, dataTypeModule, errorMessages, emptyModule) {
   return {
     name: 'If',
     params: {
@@ -34,7 +34,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           var ifCase = this.params.cases[i];
           if (ifCase.condition) {
             var dt = ifCase.condition.getDataType();
-            if (!dt.matches(dataTypeModule.PrimitiveDataTypes.BOOL)) {
+            if (ifCase.condition.name !== emptyModule.name && !dt.matches(dataTypeModule.PrimitiveDataTypes.BOOL)) {
               this.riseSyntaxError(_s.sprintf(errorMessages.UNEXPECTED_DATATYPE, dataTypeModule.PrimitiveDataTypes.BOOL.toString(), dt.toString()))
             }
           }

@@ -6,9 +6,6 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope'], functio
       identifier: null
     },
     functions: {
-      traverse: function(cb) {
-        
-      },
       getDataType: function() {
         if (this.params.identifier) {
           return this.params.identifier.params.dataType;
@@ -32,9 +29,6 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope'], functio
             break;
           }
         }
-      },
-      checkDataTypes: function() {
-        
       }
     }
   };

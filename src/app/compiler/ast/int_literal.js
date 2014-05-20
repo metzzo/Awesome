@@ -5,13 +5,9 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       value: 0
     },
     functions: {
-      traverse: function(cb) {
-        
-      },
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.INT;
-      },
-      checkDataTypes: function() { }
+      }
     }
   };
 });

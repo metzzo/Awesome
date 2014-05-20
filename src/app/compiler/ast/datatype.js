@@ -5,13 +5,9 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       dataType: null
     },
     functions: {
-      traverse: function(cb) {
-        
-      },
-      getDataType: function(){
+      getDataType: function() {
         return this.params.dataType;
-      },
-      checkDataTypes: function() { }
+      }
     }
   };
 });
