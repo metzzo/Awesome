@@ -1,39 +1,37 @@
 define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages' ], function(dataTypeModule, errorMessages) {
-  var MAX_TYPE_ERASURE_STEPS = 10; // try to resolve types up to 10 times.
-  
   var Semanter = function(mainNode) {
     this.mainNode = mainNode
   };
   
   Semanter.prototype.semant = function() {
     // type erasure
-    var anyUnknown, steps = 0;
+    var anyUnknown, oldAnyUnknown;
     do {
-      anyUnknown = false;
+      oldAnyUnknown = anyUnknown;
+      anyUnknown = 0;
       this.mainNode.traverse(function(obj) {
         obj.processDataTypes();
         
         var dataType = obj.getDataType();
         if (dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN)) {
-          anyUnknown = true;
+          anyUnknown++;
         }
       });
-      steps ++;
-    } while(anyUnknown && steps < MAX_TYPE_ERASURE_STEPS);
+    } while(anyUnknown != oldAnyUnknown && anyUnknown !== 0); // as long as it is able to resolve data types, repeat this step
     
-    if (steps >= MAX_TYPE_ERASURE_STEPS) {
+    if (anyUnknown != 0) {
       this.mainNode.traverse(function(obj) {
         var dataType = obj.getDataType();
-        if (dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN)) {
+        if (dataType.isKnown()) {
           obj.riseSyntaxError(errorMessages.CANNOT_RESOLVE_DATATYPE);
         }
       });
+    } else { // no problem with the types (so far)
+      // check data Types
+      this.mainNode.traverse(function(obj) {
+        obj.checkDataTypes();
+      });
     }
-    
-    // check data Types
-    this.mainNode.traverse(function(obj) {
-      obj.checkDataTypes();
-    });
   };
   
   return {

@@ -15,6 +15,20 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.VOID;
       },
+      processDataTypes: function() {
+        for (var i = 0; i < this.params.cases.length; i++) {
+          var ifCase = this.params.cases[i];
+          if (ifCase.condition) {
+            var dataType = ifCase.condition.getDataType();
+            if (!dataType.isKnown()) {
+              var identifier = ifCase.condition.getIdentifier();
+              if (identifier) {
+                identifier.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
+              }
+            }
+          }
+        }
+      },
       checkDataTypes: function() {
         for (var i = 0; i < this.params.cases.length; i++) {
           var ifCase = this.params.cases[i];

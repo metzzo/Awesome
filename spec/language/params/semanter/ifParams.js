@@ -13,6 +13,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   var AstVarDec     = astModule.AstPrototypes.VARDEC;
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
+  var AstEmpty      = astModule.AstPrototypes.EMPTY;
   
   var defaultToken = new tokenModule.Token('test', {
     file: null,
@@ -57,6 +58,36 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_DATATYPE, 'bool', 'int'), { token: defaultToken }));
       },
       fails: true
+    },
+    {
+      name: 'sets implicit data types properly',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstIf, {
+            cases: [
+              {
+                condition: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                scope: astModule.createNode(AstScope, {
+                  type: AstScope.types.LOCAL,
+                  nodes: [ ]
+                })
+              }
+            ]
+          })
+        ]
+      }),
+      check: function(ast, semanter) { }
     }
   ]
 });
