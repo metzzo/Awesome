@@ -37,5 +37,10 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     it('toString works', function() {
       expect(dataTypeModule.PrimitiveDataTypes.INT.toString()).toBe('int');
     })
+    
+    it('balances works', function() {
+      expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.INT)).toBe(dataTypeModule.PrimitiveDataTypes.INT);
+      expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(dataTypeModule.MetaDataTypes.AMBIGUOUS);
+    });
   })
 });

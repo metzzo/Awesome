@@ -1,4 +1,4 @@
-define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/lexer/token', 'spec/language/params/semanter/ifParams', 'spec/language/params/semanter/literalParams', 'spec/language/params/semanter/scopeParams'], function(_, semanterModule, tokenModule, ifParams, literalParams, scopeParams) {
+define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/lexer/token', 'spec/language/params/semanter/ifParams', 'spec/language/params/semanter/literalParams', 'spec/language/params/semanter/scopeParams', 'spec/language/params/semanter/expressionParams'], function(_, semanterModule, tokenModule, ifParams, literalParams, scopeParams, expressionParams) {
   var defaultToken = new tokenModule.Token('test', {
     file: null,
     lineText: '',
@@ -21,7 +21,8 @@ define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/l
     var params = {
       'If': ifParams,
       'Literal': literalParams,
-      'Scope': scopeParams
+      'Scope': scopeParams,
+      'Expression': expressionParams
     };
     
     _.each(params, function(testParams, testName) {

@@ -9,6 +9,7 @@ define([ ], function() {
     EXPECTING_DATATYPE: 'Expecting data type',
     TOO_MANY_VARIABLES: 'Too many variables in variable declaration',
     UNEXPECTED_DATATYPE: 'Unexpected datatype, expecting %s, got %s',
-    CANNOT_RESOLVE_DATATYPE: 'Cannot resolve data type'
+    CANNOT_RESOLVE_DATATYPE: 'Cannot resolve data type',
+    AMBIGUOUS_TYPE: 'Cannot identify type'
   };
 });

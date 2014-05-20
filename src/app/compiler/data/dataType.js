@@ -15,7 +15,16 @@ define(['underscore'], function(_) {
     return this.name
   };
   
-  var dataTypes;
+  DataType.prototype.balance = function(other) {
+    if (this.matches(other)) {
+      return this;
+    } else {
+      // TODO: add maybe some conversions?
+      return metaTypes.AMBIGUOUS
+    }
+  };
+  
+  var dataTypes, metaTypes;
   return {
     DataType: DataType,
     PrimitiveDataTypes: dataTypes = {
@@ -27,8 +36,9 @@ define(['underscore'], function(_) {
       BOOL: new DataType('bool', { }),
       VOID: new DataType('void', { }),
     },
-    MetaDataTypes: {
-      UNKNOWN: new DataType('unknown', { })
+    MetaDataTypes: metaTypes = {
+      UNKNOWN: new DataType('unknown', { }), // this is the data type of ast nodes that are not known yet, but may be known in future
+      AMBIGUOUS: new DataType('ambiguous', { }) // this is the data type of ast nodes where the data type cannot be traced definitely
     },
     findPrimitiveDataTypeByName: function(name) {
       var result = null;
