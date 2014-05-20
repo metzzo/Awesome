@@ -12,10 +12,16 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
   };
   
   Operator.prototype.balance = function(left, right) {
-    for (var i = 0; i < this.params.conversions.length; i++) {
-      var conversion = this.params.conversions[i];
-      if ((left.matches(conversion.from[0]) && right.matches(conversion.from[1])) || (left.matches(conversion.from[1]) && right.matches(conversion.from[0]))) {
-        return conversion.to;
+    if (this.params.conversions.length == 0) {
+      if (left.matches(right)) {
+        // strict type check!
+      }
+    } else {
+      for (var i = 0; i < this.params.conversions.length; i++) {
+        var conversion = this.params.conversions[i];
+        if ((left.matches(conversion.from[0]) && right.matches(conversion.from[1]))) {
+          return conversion.to;
+        }
       }
     }
     return dataTypeModule.MetaDataTypes.AMBIGUOUS;
@@ -36,6 +42,33 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     },
     {
       from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT],
+      to: dataTypeModule.PrimitiveDataTypes.FLOAT
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.FLOAT, dataTypeModule.PrimitiveDataTypes.INT],
+      to: dataTypeModule.PrimitiveDataTypes.FLOAT
+    }
+  ];
+  
+  var assignOperatorConversions = [
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.INT],
+      to: dataTypeModule.PrimitiveDataTypes.INT
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.FLOAT, dataTypeModule.PrimitiveDataTypes.FLOAT],
+      to: dataTypeModule.PrimitiveDataTypes.FLOAT
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.STRING, dataTypeModule.PrimitiveDataTypes.STRING],
+      to: dataTypeModule.PrimitiveDataTypes.STRING
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT],
+      to: dataTypeModule.PrimitiveDataTypes.INT
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.FLOAT, dataTypeModule.PrimitiveDataTypes.INT],
       to: dataTypeModule.PrimitiveDataTypes.FLOAT
     }
   ];
@@ -63,7 +96,7 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
       }),
       ASSIGN_OPERATOR: new Operator('=', {
         priority: 2,
-        conversions: [ ]
+        conversions: assignOperatorConversions
       })
     },
     findOperatorsByPriority: function(priority) {

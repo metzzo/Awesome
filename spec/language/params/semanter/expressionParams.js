@@ -13,6 +13,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   var AstVarDec     = astModule.AstPrototypes.VARDEC;
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
+  var AstEmpty      = astModule.AstPrototypes.EMPTY;
   
   var defaultToken = new tokenModule.Token('test', {
     file: null,
@@ -39,6 +40,59 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
         rightOperand: astModule.createNode(AstStringLit, { value: 'YOLO' }),
         operator: operatorModule.Operators.PLUS_OPERATOR
+      }),
+      check: function(expect) {
+        expect.toThrow(new syntaxErrorModule.SyntaxError(errorMessages.AMBIGUOUS_DATATYPE, { token: defaultToken }));
+      },
+      fails: true
+    },
+    {
+      name: 'assign operator works',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstOperator, {
+            leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+            rightOperand: astModule.createNode(AstIntLit, { value: 42 }),
+            operator: operatorModule.Operators.ASSIGN_OPERATOR
+          })
+        ]
+      }),
+      check: function(ast, semanter) {
+        expect(jsel(ast).select('//params/nodes/*[2]').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.INT);
+      }
+    },
+    {
+      name: 'assign operator does not work',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstOperator, {
+            leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+            rightOperand: astModule.createNode(AstStringLit, { value: 'swag' }),
+            operator: operatorModule.Operators.ASSIGN_OPERATOR
+          })
+        ]
       }),
       check: function(expect) {
         expect.toThrow(new syntaxErrorModule.SyntaxError(errorMessages.AMBIGUOUS_DATATYPE, { token: defaultToken }));
