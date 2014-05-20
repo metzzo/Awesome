@@ -42,7 +42,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         operator: operatorModule.Operators.PLUS_OPERATOR
       }),
       check: function(expect) {
-        expect.toThrow(new syntaxErrorModule.SyntaxError(errorMessages.AMBIGUOUS_DATATYPE, { token: defaultToken }));
+        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, 'int', 'string'), { token: defaultToken }));
       },
       fails: true
     },
@@ -95,7 +95,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         ]
       }),
       check: function(expect) {
-        expect.toThrow(new syntaxErrorModule.SyntaxError(errorMessages.AMBIGUOUS_DATATYPE, { token: defaultToken }));
+        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, 'int', 'string'), { token: defaultToken }));
       },
       fails: true
     },
@@ -134,6 +134,57 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       check: function(ast, semanter) {
         expect(jsel(ast).select('//params/nodes/*[2]').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.STRING);
       }
+    },
+    {
+      name: 'data type is correctly inferred from variable declaration',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+                value: astModule.createNode(AstIntLit, { value: 42 }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstEmpty, {
+            check: function(ast) {
+              expect(ast.getScope().getVariables()).toEqual([
+                new identifierModule.Identifier('yolo', {
+                  dataType: dataTypeModule.PrimitiveDataTypes.INT,
+                  type: AstVarDec.types.VARIABLE 
+                })
+              ]);
+            }
+          })
+        ]
+      }),
+      check: function(ast, semanter) { }
+    },
+    {
+      name: 'data types are not the same var a is int = "hello"',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.STRING}),
+                value: astModule.createNode(AstIntLit, { value: 42 }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          })
+        ]
+      }),
+      check: function(expect) {
+        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, 'string', 'int'), { token: defaultToken }));
+      },
+      fails: true
     }
   ]
 });

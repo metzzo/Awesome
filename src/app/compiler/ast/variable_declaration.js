@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty'], function(dataTypeModule, identifierModule, emptyModule) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/data/operator', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, identifierModule, emptyModule, operatorModule, errorMessages) {
   return {
     name: 'Variable Declaration',
     params: {
@@ -46,12 +46,27 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       processDataTypes: function() {
         // update types!
         for (var i = 0; i < this.params.variables.length; i++) {
-          this.params.variables[i].dataType.params.dataType = this.params.realVariables[i].params.dataType;
+          var variable = this.params.variables[i], realVariable = this.params.realVariables[i];
+          if (variable.value.name !== emptyModule.name && variable.value.getDataType().isKnown()) {
+            realVariable.proposeDataType(variable.value.getDataType());
+          }
+          
+          variable.dataType.params.dataType = realVariable.params.dataType;
         }
       },
       checkDataTypes: function() {
-        // check dataTypes and do the implicit type checking
+        // check dataTypes and do the implicit typing
+        var assign_operator = operatorModule.findOperatorByText('=');
         
+        for (var i = 0; i < this.params.variables.length; i++) {
+          var variable = this.params.variables[i];
+          if (variable.value.name !== emptyModule.name) {
+            var dataType = assign_operator.balance(variable.identifier.getDataType(), variable.value.getDataType());
+            if (!dataType.isKnown()) {
+              this.riseSyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, variable.identifier.getDataType().toString(), variable.value.getDataType().toString()));
+            }
+          }
+        }
       }
     },
     types: {

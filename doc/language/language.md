@@ -187,7 +187,7 @@ end
 
 ### Autonomous Variables/Functions
 This is a new conecpt I would like to implement into Awesome. It is a concept that has some similarities to data-flow based programming.
-It basically states, that variables recalculate their value depending on the value of other variables or functions are called whenever the value changes. This system basically removed the need of function/method/variable pointers int he language, while still maintaining a powerful syntax.
+It basically states, that variables recalculate their value depending on the value of other variables or functions are called whenever the value changes. This system basically removed the need of function/method/variable pointers in the language, while still maintaining a powerful syntax.
 Example:
 ```
 var a as int, b as int
@@ -273,3 +273,5 @@ Possible connections are:
  * Operatoroverloading
  * Static classes
  * Annotations
+ * Inmutable Objects / Classes by language
+ * Metaprogramming

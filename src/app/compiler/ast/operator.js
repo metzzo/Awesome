@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, errorMessages) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, errorMessages) {
   return {
     name: 'Operator',
     params: {
@@ -32,8 +32,8 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages']
       },
       checkDataTypes: function() {
         var myType = this.getDataType();
-        if (myType.matches(dataTypeModule.MetaDataTypes.AMBIGUOUS)) {
-          this.riseSyntaxError(errorMessages.AMBIGUOUS_DATATYPE);
+        if (!myType.isKnown()) {
+          this.riseSyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, this.params.leftOperand.getDataType().toString(), this.params.rightOperand.getDataType().toString()));
         }
       }
     }
