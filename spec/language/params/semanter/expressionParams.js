@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule, operatorModule) {
+define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages', 'src/app/compiler/lexer/token', 'src/app/compiler/data/operator', 'src/app/compiler/data/identifier'], function(_s, jsel, astModule, dataTypeModule, syntaxErrorModule, errorMessages, tokenModule, operatorModule, identifierModule) {
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
@@ -98,6 +98,42 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         expect.toThrow(new syntaxErrorModule.SyntaxError(errorMessages.AMBIGUOUS_DATATYPE, { token: defaultToken }));
       },
       fails: true
+    },
+    {
+      name: 'assign operator sets data type properly',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstOperator, {
+            leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+            rightOperand: astModule.createNode(AstStringLit, { value: 'swag' }),
+            operator: operatorModule.Operators.ASSIGN_OPERATOR
+          }),
+          astModule.createNode(AstEmpty, {
+            check: function(ast) {
+              expect(ast.getScope().getVariables()).toEqual([
+                new identifierModule.Identifier('yolo', {
+                  dataType: dataTypeModule.PrimitiveDataTypes.STRING,
+                  type: AstVarDec.types.VARIABLE 
+                })
+              ]);
+            }
+          })
+        ]
+      }),
+      check: function(ast, semanter) {
+        expect(jsel(ast).select('//params/nodes/*[2]').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.STRING);
+      }
     }
   ]
 });

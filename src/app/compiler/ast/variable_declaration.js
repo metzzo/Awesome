@@ -9,7 +9,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
         this.params.realVariables = [ ];
         for (var i = 0; i < this.params.variables.length; i++) {
           var variable = this.params.variables[i];
-          var dataType = variable.dataType;
+          var dataType = variable.dataType.params.dataType;
           
           // check what we've got
           if (variable.dataType.name === emptyModule.name) {
@@ -42,6 +42,12 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       },
       getVariables: function() {
         return this.params.realVariables;
+      },
+      processDataTypes: function() {
+        // update types!
+        for (var i = 0; i < this.params.variables.length; i++) {
+          this.params.variables[i].dataType.params.dataType = this.params.realVariables[i].params.dataType;
+        }
       },
       checkDataTypes: function() {
         // check dataTypes and do the implicit type checking

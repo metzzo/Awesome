@@ -17,7 +17,7 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/ast/ast', 'src/app/
     
     it('is not created properly', function() {
       expect(function() { new identifierModule.Identifier(null, {
-          type: identifierModule.Types.LOCAL
+          type: 'yolo'
         })
       }).toThrow('Invalid Parameter');
     });

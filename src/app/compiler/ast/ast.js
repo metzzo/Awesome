@@ -143,9 +143,6 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
         },
         
         // VARIABLE:
-        /**
-         * Returns an array of all variables declared in the current node
-         */
         getVariables: {
           value: function() {
             if (this.functions && this.functions.getVariables) {
@@ -154,6 +151,17 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
           },
           enumerable: false,
           writable: false
+        },
+        getIdentifier: {
+          value: function() {
+            if (this.functions && this.functions.getIdentifier) {
+              return this.functions.getIdentifier.call(this);
+            } else {
+              return null;
+            }
+          },
+          enumerable: false,
+          writeable: false
         }
       });
       

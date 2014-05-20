@@ -449,7 +449,9 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
             {
               identifier: astModule.createNode(stubNode, { name: 'yolo' }),
               value: astModule.createNode(stubNode),
-              dataType: astModule.createNode(stubNode),
+              dataType: astModule.createNode(stubNode, {
+                dataType: dataTypeModule.PrimitiveDataTypes.INT
+              }),
               type: astModule.AstPrototypes.VARDEC.types.VARIABLE
             }
           ]
@@ -466,7 +468,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           params: {
             realVariables: [
               new identifierModule.Identifier('yolo', {
-                dataType: astModule.createNode(stubNode), type: astModule.AstPrototypes.VARDEC.types.VARIABLE
+                dataType:dataTypeModule.PrimitiveDataTypes.INT, 
+                type: astModule.AstPrototypes.VARDEC.types.VARIABLE
               })
               
             ],
@@ -474,7 +477,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
               {
                 identifier: { name: 'Stub', params: { name: 'yolo' } },
                 value: { name: 'Stub', params: { } },
-                dataType: { name: 'Stub', params: { } },
+                dataType: { name: 'Stub', params: { dataType: dataTypeModule.PrimitiveDataTypes.INT } },
                 type: astModule.AstPrototypes.VARDEC.types.VARIABLE
               }
             ]

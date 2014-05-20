@@ -48,11 +48,11 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
             check: function(ast) {
                expect(ast.getScope().getVariables()).toEqual([
                 new identifierModule.Identifier('yolo', {
-                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  dataType: dataTypeModule.PrimitiveDataTypes.INT,
                   type: AstVarDec.types.VARIABLE
                 }),
                 new identifierModule.Identifier('swag', {
-                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  dataType: dataTypeModule.PrimitiveDataTypes.INT,
                   type: AstVarDec.types.VARIABLE
                 })
               ]);
@@ -106,19 +106,19 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
                 check: function(ast) {
                    expect(ast.getScope().getVariables()).toEqual([
                     new identifierModule.Identifier('yolo', {
-                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      dataType: dataTypeModule.PrimitiveDataTypes.INT,
                       type: AstVarDec.types.VARIABLE
                     }),
                     new identifierModule.Identifier('swag', {
-                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      dataType: dataTypeModule.PrimitiveDataTypes.INT,
                       type: AstVarDec.types.VARIABLE
                     }),
                     new identifierModule.Identifier('yolo2', {
-                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      dataType: dataTypeModule.PrimitiveDataTypes.INT,
                       type: AstVarDec.types.VARIABLE
                     }),
                     new identifierModule.Identifier('swag2', {
-                      dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                      dataType: dataTypeModule.PrimitiveDataTypes.INT,
                       type: AstVarDec.types.VARIABLE
                     })
                   ]);
@@ -131,11 +131,11 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
             check: function(ast) {
                expect(ast.getScope().getVariables()).toEqual([
                 new identifierModule.Identifier('yolo', {
-                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  dataType: dataTypeModule.PrimitiveDataTypes.INT,
                   type: AstVarDec.types.VARIABLE
                 }),
                 new identifierModule.Identifier('swag', {
-                  dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT, token: defaultToken }),
+                  dataType: dataTypeModule.PrimitiveDataTypes.INT,
                   type: AstVarDec.types.VARIABLE
                 })
               ]);

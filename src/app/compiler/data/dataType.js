@@ -23,6 +23,9 @@ define(['underscore'], function(_) {
       return metaTypes.AMBIGUOUS
     }
   };
+  DataType.prototype.isKnown = function() {
+    return !(this.matches(metaTypes.UNKNOWN) || this.matches(metaTypes.AMBIGUOUS))
+  };
   
   var dataTypes, metaTypes;
   return {

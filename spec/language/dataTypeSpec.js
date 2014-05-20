@@ -42,5 +42,10 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.INT)).toBe(dataTypeModule.PrimitiveDataTypes.INT);
       expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(dataTypeModule.MetaDataTypes.AMBIGUOUS);
     });
+    
+    it('isKnown works', function() {
+      expect(dataTypeModule.PrimitiveDataTypes.INT.isKnown()).toBe(true);
+      expect(dataTypeModule.MetaDataTypes.UNKNOWN.isKnown()).toBe(false);
+    })
   })
 });

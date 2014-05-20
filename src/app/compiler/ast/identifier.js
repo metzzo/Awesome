@@ -11,10 +11,13 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope'], functio
       },
       getDataType: function() {
         if (this.params.identifier) {
-          return this.params.identifier.params.dataType.params.dataType;
+          return this.params.identifier.params.dataType;
         } else {
           return dataTypeModule.MetaDataTypes.UNKNOWN;
         }
+      },
+      getIdentifier: function() {
+        return this.params.identifier;
       },
       processDataTypes: function() {
         // try to find my data type pl0x

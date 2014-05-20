@@ -19,9 +19,6 @@ define([ 'underscore', 'src/app/compiler/data/dataType' ], function(_, dataTypeM
   };
   
   return module = {
-    Identifier: Identifier,
-    Types: {
-      LOCAL: 'local'
-    }
+    Identifier: Identifier
   };
 });
