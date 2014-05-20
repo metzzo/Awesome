@@ -28,7 +28,7 @@ define([ 'underscore', 'src/app/compiler/generator/js_generator' ], function(_, 
   };
   
   Generator.prototype.emit = function(content) {
-    content = !_.isUndefined(content) ? content : '';
+    content = !_.isUndefined(content) ? content : '/* EMPTY?!?! */';
     
     if (this.lines.length === 0) {
       this.lines.push('');

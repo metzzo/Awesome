@@ -76,6 +76,26 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
         operator: operatorModule.Operators.PLUS_OPERATOR
       }),
       output: '1 + 2'
+    },
+    {
+      name: 'generates variable declaration',
+      input: astModule.createNode(AstVarDec, {
+        variables: [
+          {
+            identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+            dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+            value: astModule.createNode(AstIntLit, { value: 42 }),
+            type: AstVarDec.types.VARIABLE
+          },
+          {
+            identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
+            dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT}),
+            value: astModule.createNode(AstEmpty, { }),
+            type: AstVarDec.types.VARIABLE
+          }
+        ]
+      }),
+      output: 'var yolo = 42, swag = 0'
     }
   ]
 });

@@ -15,27 +15,34 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   var AstEmpty      = astModule.AstPrototypes.EMPTY;
   
+  var defaultDataTypeValues = {
+    'int': '0',
+    'float': '0.0',
+    'string': "''"
+  };
+  var getDefaultDataTypeValue = function(dataType) {
+    return defaultDataTypeValues[dataType.name];
+  };
+  
   return {
     'Bool Literal': function(gen, node) {
       gen.emit(node.params.value);
     },
     'Call': function(gen, node) {
-      
+      throw 'Not yet implemented '+node.name;
     },
     'DataType': function(gen, node) {
-      
+      throw 'Not yet implemented '+node.name;
     },
-    'Empty': function(gen, node) {
-      
-    },
+    'Empty': function(gen, node) { },
     'For': function(gen, node) {
-      
+      throw 'Not yet implemented '+node.name;
     },
     'Function Declaration': function(gen, node) {
-      
+      throw 'Not yet implemented '+node.name;
     },
     'Identifier': function(gen, node) {
-      
+      gen.emit(node.params.name);
     },
     'If': function(gen, node) {
       for (var i = 0; i < node.params.cases.length; i++) {
@@ -63,7 +70,7 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
       gen.emitNode(node.params.rightOperand);
     },
     'Repeat': function(gen, node) {
-      
+      throw 'Not yet implemented '+node.name;
     },
     'Scope': function(gen, node) {
       if (node.params.nodes.length > 0) {
@@ -86,10 +93,24 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
       gen.emit(node.params.value);
     },
     'Variable Declaration': function(gen, node) {
-      
+      gen.emit('var ');
+      for (var i = 0; i < node.params.variables.length; i++) {
+        if (i !== 0) {
+          gen.emit(', ');
+        }
+        
+        var variable = node.params.variables[i];
+        gen.emit(variable.identifier.params.name);
+        gen.emit(' = ');
+        if (variable.value.name !== AstEmpty.name) {
+          gen.emitNode(variable.value);
+        } else {
+          gen.emit(getDefaultDataTypeValue(variable.dataType.getDataType()));
+        }
+      }
     },
     'While': function(gen, node) {
-      
+      throw 'Not yet implemented '+node.name;
     },
     'Main': function(gen) {
       return gen.emitNode(gen.mainNode);
