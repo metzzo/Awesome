@@ -21,7 +21,11 @@ define([ 'src/app/compiler/awesome' ], function(awesomeModule) {
       result = awesome.compile();
       
       // assert
-      expect(result).toBe('swag');
+      expect(result).toBe('{\n\
+  if (true) {\n\
+    42;\n\
+  };\n\
+}');
     });
   });
 })
