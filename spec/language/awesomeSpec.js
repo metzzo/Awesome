@@ -11,5 +11,17 @@ define([ 'src/app/compiler/awesome' ], function(awesomeModule) {
       expect(awesome).not.toBeNull();
       expect(awesome.input).toBe('print 42');
     });
+    
+    it('compiles simple if', function() {
+      // arrange
+      var awesome = new awesomeModule.Awesome('if true \n 42 \n end');
+      var result;
+      
+      // act
+      result = awesome.compile();
+      
+      // assert
+      expect(result).toBe('swag');
+    });
   });
 })

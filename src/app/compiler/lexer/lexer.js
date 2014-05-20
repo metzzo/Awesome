@@ -22,41 +22,44 @@ define(['src/app/compiler/lexer/token'], function(tokenModule) {
     this.lineText = this._processLineText();
     
     for (this.position = 0; this.position < this.input.length; this.position++) {
-      var singleToken = this.input.charAt(this.position);
-      var doubleToken = (this.position < this.input.length - 1) ? this.input.substr(this.position, 2) : '';
+      var singleToken = this._getSingleToken();
+      var doubleToken = this._getDoubleToken();
       
       if (doubleToken === comment) {
         // comment!
         this._nextToken();
-        while(this.position < this.input.length && this.input.charAt(this.position) != '\n') {
+        while(this.position < this.input.length && this.input.charAt(this.position) !== '\n') {
           this.position++;
         }
         this.lastPosition = this.position;
         this.position--;
-      } else if (delimiter.indexOf(singleToken) != -1) {
+      } else if (delimiter.indexOf(singleToken) !== -1) {
         // shit just got serious
         this._nextToken();
         
         // add the delimiter itself if it is not silent
-        if (silentDelimiter.indexOf(singleToken) == -1) {
-          this.lastPosition = this.position;
-          this.position++;
+        do {
+          if (silentDelimiter.indexOf(singleToken) === -1) {
+            this.lastPosition = this.position;
+            this.position++;
+            
+            this._nextToken();
+            
+            this.lastPosition = this.position;
+          } else {
+            this.lastPosition = this.position + 1; // current position + singleToken length
+            break;
+          }
           
-          this._nextToken();
+          this._handleNewLine(singleToken);
           
-          this.lastPosition = this.position;
-        } else {
-          this.lastPosition = this.position + 1; // current position + singleToken length
-        }
+          singleToken = this._getSingleToken();
+          doubleToken = this._getDoubleToken();
+        } while(delimiter.indexOf(singleToken) !== -1);
       }
       
-           
-      if (singleToken === newLine) {
-        this.lastNewLine = this.position;
-        this.line++;
-        this.lineText = this._processLineText();
-      }
-    };
+      this._handleNewLine(singleToken);
+    }
     if (this.lastPosition < this.position) {
       this._nextToken()
     }
@@ -78,9 +81,25 @@ define(['src/app/compiler/lexer/token'], function(tokenModule) {
     }
   };
   
+  Lexer.prototype._handleNewLine = function(singleToken) {
+    if (singleToken === newLine) {
+      this.lastNewLine = this.position;
+      this.line++;
+      this.lineText = this._processLineText();
+    }
+  };
+  
+  Lexer.prototype._getSingleToken = function() {
+    return this.input.charAt(this.position);
+  };
+  
+  Lexer.prototype._getDoubleToken = function() {
+    return (this.position < this.input.length - 1) ? this.input.substr(this.position, 2) : '';
+  };
+  
   Lexer.prototype._processLineText = function() {
     var currentPosition = this.position;
-    while (currentPosition < this.input.length && this.input.charAt(currentPosition) != newLine) currentPosition++;
+    while (currentPosition < this.input.length && this.input.charAt(currentPosition) !== newLine) currentPosition++;
     return this.input.substring(this.position, currentPosition);
   };
   

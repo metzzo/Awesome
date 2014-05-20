@@ -381,6 +381,60 @@ define([], function() {
           }
         }
       ]
+    },
+    {
+      name: 'is tokenizing with just 1 space and newlines',
+      input: ['if true \n 42 \n end'],
+      output: [
+        {
+          text: 'if',
+          params: {
+            line: 0,
+            character: 0,
+            lineText: 'if true '
+          }
+        },
+        {
+          text: 'true',
+          params: {
+            line: 0,
+            character: 3,
+            lineText: 'if true '
+          }
+        },
+        {
+          text: '\n',
+          params: {
+            line: 0,
+            character: 8,
+            lineText: 'if true '
+          }
+        },
+        {
+          text: '42',
+          params: {
+            line: 1,
+            character: 1,
+            lineText: ' 42 '
+          }
+        },
+        {
+          text: '\n',
+          params: {
+            line: 1,
+            character: 4,
+            lineText: ' 42 '
+          }
+        },
+        {
+          text: 'end',
+          params: {
+            line: 2,
+            character: 1,
+            lineText: ' end'
+          }
+        }
+      ]
     }
   ]
 });
