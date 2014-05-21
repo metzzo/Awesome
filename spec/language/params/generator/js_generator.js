@@ -66,7 +66,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
           },
         ]
       }),
-      output: 'if (true) { }\nelse if (false) { }\nelse { }\n'
+      output: 'if (true) { }\n else if (false) { }\n else { }\n'
     },
     {
       name: 'generates simple operator',
@@ -75,7 +75,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
         rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
         operator: operatorModule.Operators.PLUS_OPERATOR
       }),
-      output: '1 + 2'
+      output: '(1 + 2)'
     },
     {
       name: 'generates variable declaration',

@@ -71,12 +71,12 @@ define([ 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', '
         backTraverse: {
           value: function(cb) {
             if (cb) {
-              var continueTraversing;
-              var current = this;
-              do {
+              var continueTraversing = true;
+              var current = this.parent;
+              while(continueTraversing && current) {
                 continueTraversing = !cb(current);
                 current = current.parent;
-              } while(continueTraversing && current);
+              } 
             }
           },
           enumerable: false,

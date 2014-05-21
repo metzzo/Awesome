@@ -16,8 +16,8 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         var oldVariables = this.params.variables;
         this.params.variables = [ ];
         // add variables from parent scope but only if the current scope is a LOCAL scope
-        if (this.parent && this.params.type === scope_node.types.LOCAL) {
-          this.params.variables = this.params.variables.concat(this.parent.getVariables());
+        if (this.getScope() && this.params.type === scope_node.types.LOCAL) {
+          this.params.variables = this.params.variables.concat(this.getScope().getVariables());
         }
         
         try {

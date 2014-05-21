@@ -52,11 +52,11 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
           gen.emitNode(ifCase.condition);
           gen.emit(') ');
         } else if (ifCase.condition.name !== AstEmpty.name) {
-          gen.emit('else if (');
+          gen.emit(' else if (');
           gen.emitNode(ifCase.condition);
           gen.emit(') ');
         } else {
-          gen.emit('else ');
+          gen.emit(' else ');
         }
         gen.emitNode(ifCase.scope);
       }
@@ -65,9 +65,11 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
       gen.emit(node.params.value);
     },
     'Operator': function(gen, node) {
+      gen.emit('(');
       gen.emitNode(node.params.leftOperand);
       gen.emit(' ' + node.params.operator.name + ' ');
       gen.emitNode(node.params.rightOperand);
+      gen.emit(')');
     },
     'Repeat': function(gen, node) {
       throw 'Not yet implemented '+node.name;
@@ -79,9 +81,11 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
         gen.emitLine();
         
         for (var i = 0; i < node.params.nodes.length; i++) {
+          if (i !== 0) {
+            gen.emitLine();
+          }
           gen.emitNode(node.params.nodes[i]);
           gen.emit(';');
-          gen.emitLine();
         }
         gen.outdent();
         gen.emitLine('}');
