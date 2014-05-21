@@ -23,8 +23,8 @@ define([ 'src/app/compiler/awesome' ], function(Awesome) {
       // assert
       expect(result).toBe('{\n\
   if (true) {\n\
-    42;\n
-  };\n
+    42;\n\
+  };\n\
 }');
     });
   });
