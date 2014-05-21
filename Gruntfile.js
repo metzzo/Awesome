@@ -6,7 +6,10 @@ module.exports = function(grunt) {
       'src/lib/js': [
         'http://underscorejs.org/underscore.js',
         'http://epeli.github.io/underscore.string/lib/underscore.string.js',
-        'https://raw.github.com/dragonworx/jsel/master/jsel.js'
+        'https://raw.github.com/dragonworx/jsel/master/jsel.js',
+        'http://fb.me/react-0.10.0.js',
+        'http://code.jquery.com/jquery-1.11.1.js',
+        'http://requirejs.org/docs/release/2.1.11/comments/require.js'
       ],
       'src/lib/css': [
         
@@ -42,25 +45,7 @@ module.exports = function(grunt) {
         keepRunner: true,
         summary: false,
         templateOptions: {
-          requireConfig: {
-            baseUrl: './',
-            paths: {
-              'underscore': 'src/lib/js/underscore',
-              'underscore.string': 'src/lib/js/underscore.string'
-            },
-            shim: {
-              'underscore': {
-                exports: '_'
-              },
-              'underscore.string': {
-                deps: ['underscore']
-              },
-              'src/lib/js/jsel': {
-                exports: 'jsel'
-              }
-            }
-            // , waitSeconds: 0
-          }
+          requireConfigFile: 'src/app/config.js'
         }
       }
     },
@@ -68,6 +53,10 @@ module.exports = function(grunt) {
       test: {
         files: ['spec/**/*.js', 'src/**/*.js', 'Gruntfile.js'],
         tasks: ['test']
+      },
+      all: {
+        files: ['spec/**/*.js', 'src/**/*.js', 'Gruntfile.js', 'src/**/*.jsx'],
+        tasks: ['default']
       }
     },
     jsvalidate: {
@@ -93,6 +82,19 @@ module.exports = function(grunt) {
         },
       },
       all: ['Gruntfile.js', 'src/app/**/*.js', 'spec/**/*.js']
+    },
+    react: {
+      dynamic_mappings: {
+        files: [
+          {
+            expand: true,
+            cwd: 'src/app/editor/',
+            src: ['**/*.jsx'],
+            dest: 'src/app/editor/gen/',
+            ext: '.js'
+          }
+        ]
+      }
     }
   });
 
@@ -103,11 +105,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-jsvalidate');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-react');
 
-  grunt.registerTask('default', [ 'jsvalidate', 'jshint', 'connect', 'jasmine' ]);
+  grunt.registerTask('default', [ 'react', 'jsvalidate', 'jshint', 'connect', 'jasmine' ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('http', [ 'connect' ]);
   grunt.registerTask('doc', [ 'jsdoc' ]);
   grunt.registerTask('test', [ 'jsvalidate', 'connect', 'jasmine' ]);
+  
   grunt.registerTask('watchtest', ['watch:test']);
+  grunt.registerTask('watcheditor', ['watch:all']);
 };
