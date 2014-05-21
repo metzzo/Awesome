@@ -2,6 +2,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstScope      = astModule.AstPrototypes.SCOPE;
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
+  var AstFloatLit   = astModule.AstPrototypes.FLOAT_LITERAL;
   var AstIf         = astModule.AstPrototypes.IF;
   var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
   var AstCall       = astModule.AstPrototypes.CALL;
@@ -320,9 +321,18 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       astModule.mark();
       
       this.iterator.next();
-      return astModule.createNode(AstIntLit, {
-        value: +text
-      });
+      if (this.iterator.optMatch('.')) {
+        var text2 = this.iterator.current().text;
+        this.iterator.next();
+        
+        return astModule.createNode(AstFloatLit, {
+          value: +(text+'.'+text2)
+        });
+      } else {
+        return astModule.createNode(AstIntLit, {
+          value: +text
+        });
+      }
     } else if(text === 'true' || text === 'false') {
       astModule.mark();
       

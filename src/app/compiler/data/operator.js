@@ -41,6 +41,10 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
       to: dataTypeModule.PrimitiveDataTypes.STRING
     },
     {
+      from: [dataTypeModule.PrimitiveDataTypes.BOOL, dataTypeModule.PrimitiveDataTypes.BOOL],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
+    },
+    {
       from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT],
       to: dataTypeModule.PrimitiveDataTypes.FLOAT
     },
@@ -62,6 +66,10 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     {
       from: [dataTypeModule.PrimitiveDataTypes.STRING, dataTypeModule.PrimitiveDataTypes.STRING],
       to: dataTypeModule.PrimitiveDataTypes.STRING
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.BOOL, dataTypeModule.PrimitiveDataTypes.BOOL],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
     },
     {
       from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT],

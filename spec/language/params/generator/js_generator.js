@@ -106,6 +106,26 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
       name: 'generates Empty',
       input: astModule.createNode(AstEmpty, { }),
       output: ''
+    },
+    {
+      name: 'generates int',
+      input: astModule.createNode(AstIntLit, { value: 42 }),
+      output: '42'
+    },
+    {
+      name: 'generates float',
+      input: astModule.createNode(AstIntLit, { value: 42.42 }),
+      output: '42.42'
+    },
+    {
+      name: 'generates string',
+      input: astModule.createNode(AstIntLit, { value: '"42"' }),
+      output: '"42"'
+    },
+    {
+      name: 'generates bool',
+      input: astModule.createNode(AstIntLit, { value: true }),
+      output: 'true'
     }
   ]
 });

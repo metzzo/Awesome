@@ -1,6 +1,7 @@
 define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/compiler/data/syntaxError', 'src/app/compiler/data/errorMessages'], function(_s, tokenModule, astModule, operatorModule, syntaxErrorModule, errorMessages) {
   var AstOperator   = astModule.AstPrototypes.OPERATOR;
   var AstIntLit     = astModule.AstPrototypes.INT_LITERAL;
+  var AstFloatLit     = astModule.AstPrototypes.FLOAT_LITERAL;
   var AstBoolLit    = astModule.AstPrototypes.BOOL_LITERAL;
   var AstCall       = astModule.AstPrototypes.CALL;
   var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
@@ -39,6 +40,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       input: [ '42' ],
       output: [
         astModule.createNode(AstIntLit, { value: 42, token: t('42') })
+      ]
+    },
+    {
+      name: 'is parsing literal float input properly',
+      input: [ '42', '.', '42' ],
+      output: [
+        astModule.createNode(AstFloatLit, { value: 42.42, token: t('42') })
       ]
     },
     {
