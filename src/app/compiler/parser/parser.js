@@ -80,19 +80,19 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       }
       if (type !== AstScope.types.MAIN) endToken.push('end');
       
-      var scope = astModule.createNode(AstScope, { type: type, nodes: [ ], token: token });
+      var nodes = [ ];
       this.iterator.iterate(_.bind(function() {
         if (endToken.indexOf(this.iterator.current().text) != -1) {
           return true;
         } else {
           var line = this.parseLine();
           if (!!line) {
-            scope.params.nodes.push(line);
+            nodes.push(line);
           }
           return false;
         }
       }, this));
-      return scope;
+      return astModule.createNode(AstScope, { type: type, nodes: nodes, token: token });
     }
   };
   
@@ -424,15 +424,10 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         value = this.parseExpression();
       }
     } else {
-      if (!defaultDataType) {
-        this.iterator.match('=');
+      if (this.iterator.optMatch('=')) {
         value = this.parseExpression();
-      } else {
-        if (this.iterator.optMatch('=')) {
-          value = this.parseExpression();
-        } else {
-          dataType = defaultDataType;
-        }
+      } else if (defaultDataType) {
+        dataType = defaultDataType;
       }
     }
     return {

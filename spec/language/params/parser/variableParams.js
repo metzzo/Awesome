@@ -67,7 +67,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         })
       ]
     }, 
-    {
+    /*{
       name: 'is parsing invalid variable declaration',
       input: ['var','yolo'],
       output: new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_TOKEN, '\n', '='), {
@@ -79,7 +79,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         })
       }),
       fails: true
-    },
+    },*/
     {
       name: 'is parsing multiple variable declaration',
       input: ['var','yolo', '=', '1', ',', 'swag', '=', '2'],

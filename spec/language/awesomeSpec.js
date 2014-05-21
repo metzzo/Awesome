@@ -1,11 +1,11 @@
-define([ 'src/app/compiler/awesome' ], function(awesomeModule) {
+define([ 'src/app/compiler/awesome' ], function(Awesome) {
   describe('Awesome', function() {
     it('is created properly', function() {
       // arrange
       var awesome;
       
       // act
-      awesome = new awesomeModule.Awesome('print 42');
+      awesome = new Awesome('print 42');
       
       // assert
       expect(awesome).not.toBeNull();
@@ -14,7 +14,7 @@ define([ 'src/app/compiler/awesome' ], function(awesomeModule) {
     
     it('compiles simple if', function() {
       // arrange
-      var awesome = new awesomeModule.Awesome('if true \n 42 \n end');
+      var awesome = new Awesome('if true \n 42 \n end');
       var result;
       
       // act
@@ -23,8 +23,8 @@ define([ 'src/app/compiler/awesome' ], function(awesomeModule) {
       // assert
       expect(result).toBe('{\n\
   if (true) {\n\
-    42;\n\
-  };\n\
+    42;\n    \n\
+  };\n  \n\
 }');
     });
   });

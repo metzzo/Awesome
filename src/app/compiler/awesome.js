@@ -23,7 +23,5 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
     return code;
   };
   
-  return {
-    Awesome: Awesome
-  }
+  return Awesome;
 });

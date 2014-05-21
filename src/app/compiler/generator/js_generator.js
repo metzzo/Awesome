@@ -81,6 +81,7 @@ define([ 'src/app/compiler/ast/ast' ], function(astModule) {
         for (var i = 0; i < node.params.nodes.length; i++) {
           gen.emitNode(node.params.nodes[i]);
           gen.emit(';');
+          gen.emitLine();
         }
         gen.outdent();
         gen.emitLine('}');

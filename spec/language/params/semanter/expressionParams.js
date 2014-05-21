@@ -108,7 +108,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
             variables: [
               {
                 identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
-                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+                dataType: astModule.createNode(AstEmpty, { } ),
                 value: astModule.createNode(AstEmpty, { }),
                 type: AstVarDec.types.VARIABLE
               }
