@@ -111,11 +111,15 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       right = node.params.rightOperand;
       
       var dataType = node.getDataType();
-      
       var innerCast = forceInnerCast.indexOf(node.params.operator.name) !== -1;
       
+      var isUsedAsStatement = node.parent ? node.parent.name === AstScope.name : false;
+      
       var action = function() {
-        gen.emit('(');
+        if (!isUsedAsStatement) {
+          gen.emit('(');
+        }
+        
         if (innerCast) {
           castNode(gen, left, dataType);
         } else {
@@ -127,7 +131,9 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         } else {
           gen.emitNode(right);
         }
-        gen.emit(')');
+        if (!isUsedAsStatement) {
+          gen.emit(')');
+        }
       };
       
       if (forceCast.indexOf(node.params.operator.name) !== -1 && dataType.matches(dataTypeModule.PrimitiveDataTypes.INT)) {

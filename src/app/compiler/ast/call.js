@@ -16,6 +16,9 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       getDataType: function(){
         return dataTypeModule.MetaDataTypes.UNKNOWN;
       },
+      processDataTypes: function() {
+      
+      },
       checkDataTypes: function() {
         
       }
