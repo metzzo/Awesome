@@ -22,7 +22,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
         type: AstScope.types.LOCAL,
         nodes: [ ]
       }),
-      output: '{ }\n'
+      output: '{ }'
     },
     {
       name: 'generates simple if properly',
@@ -37,7 +37,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
           }
         ]
       }),
-      output: 'if (true) { }\n'
+      output: 'if (true) { }'
     },
     {
       name: 'generates complex if properly',
@@ -66,7 +66,18 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
           },
         ]
       }),
-      output: 'if (true) { }\n else if (false) { }\n else { }\n'
+      output: 'if (true) { } else if (false) { } else { }'
+    },
+    {
+      name: 'generates while properly',
+      input: astModule.createNode(AstWhile, {
+        condition: astModule.createNode(AstBoolLit, { value: true }),
+        scope: astModule.createNode(AstScope, {
+          type: AstScope.types.LOCAL,
+          nodes: [ ]
+        })
+      }),
+      output: 'while (true) { }'
     },
     {
       name: 'generates simple operator',

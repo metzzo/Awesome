@@ -156,7 +156,6 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         gen.emitLine('}');
       } else {
         gen.emit('{ }');
-        gen.emitLine();
       }
     },
     'Variable Declaration': function(gen, node) {
@@ -177,7 +176,10 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       }
     },
     'While': function(gen, node) {
-      throw 'Not yet implemented '+node.name;
+      gen.emit('while (');
+      gen.emitNode(node.params.condition);
+      gen.emit(') ');
+      gen.emitNode(node.params.scope);
     },
     'Main': function(gen) {
       return gen.emitNode(gen.mainNode);
