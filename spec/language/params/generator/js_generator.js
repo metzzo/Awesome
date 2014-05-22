@@ -83,7 +83,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
         variables: [
           {
             identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
-            dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+            dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.INT}),
             value: astModule.createNode(AstIntLit, { value: 42 }),
             type: AstVarDec.types.VARIABLE
           },

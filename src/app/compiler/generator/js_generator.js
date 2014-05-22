@@ -15,6 +15,9 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   var AstEmpty      = astModule.AstPrototypes.EMPTY;
   
+  var forceCast = ['*', '/'];
+  var forceInnerCast = ['=']
+  
   var defaultDataTypeValues = {
     'int': '0',
     'float': '0.0',
@@ -24,7 +27,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
     return defaultDataTypeValues[dataType.name];
   };
   
-  var cast = function(gen, targetType, cb, myType) {
+  var cast = function(gen, targetType, myType, cb) {
     if (!myType || !myType.matches(targetType)) {
       if (targetType.matches(dataTypeModule.PrimitiveDataTypes.INT)) {
         gen.emit('~~(');
@@ -38,6 +41,10 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         gen.emit('(\'\'+(');
         cb();
         gen.emit('))');
+      } else if (targetType.matches(dataTypeModule.PrimitiveDataTypes.BOOL)) {
+        gen.emit('!!(');
+        cb();
+        gen.emit(')');
       } else {
         throw 'JS Generator does not know how to cast :(';
       }
@@ -47,9 +54,9 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
   };
   
   var castNode = function(gen, node, targetType) {
-    cast(gen, targetType, function() {
+    cast(gen, targetType, node.getDataType(), function() {
       gen.emitNode(node);
-    }, node.getDataType());
+    });
   };
   
   return {
@@ -105,14 +112,29 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       
       var dataType = node.getDataType();
       
-      cast(gen, dataType, function() {
-        gen.emit('(');
-        castNode(gen, left, dataType);
-        gen.emit(' ' + node.params.operator.name + ' ');
-        castNode(gen, right, dataType);
-        gen.emit(')');
-      }, dataType); // TODO: Change dataType to something else if * or / operator
+      var innerCast = forceInnerCast.indexOf(node.params.operator.name) !== -1;
       
+      var action = function() {
+        gen.emit('(');
+        if (innerCast) {
+          castNode(gen, left, dataType);
+        } else {
+          gen.emitNode(left);
+        }
+        gen.emit(' ' + node.params.operator.name + ' ');
+        if (innerCast) {
+          castNode(gen, right, dataType);
+        } else {
+          gen.emitNode(right);
+        }
+        gen.emit(')');
+      };
+      
+      if (forceCast.indexOf(node.params.operator.name) !== -1 && dataType.matches(dataTypeModule.PrimitiveDataTypes.INT)) {
+        cast(gen, dataType, null, action); 
+      } else {
+        action();
+      }
     },
     'Repeat': function(gen, node) {
       throw 'Not yet implemented '+node.name;
@@ -148,7 +170,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         gen.emit(variable.identifier.params.name);
         gen.emit(' = ');
         if (variable.value.name !== AstEmpty.name) {
-          gen.emitNode(variable.value);
+          castNode(gen, variable.value, variable.dataType.getDataType());
         } else {
           gen.emit(getDefaultDataTypeValue(variable.dataType.getDataType()));
         }

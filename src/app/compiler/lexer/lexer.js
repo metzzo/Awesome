@@ -1,4 +1,4 @@
-define(['src/app/compiler/lexer/token'], function(tokenModule) {
+define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], function(tokenModule, operatorModule) {
   var delimiter = ' \t\n\r!"§$%&/()=?`´[]{}^°+*#\'-.:,;<>'; // marks the end of a token
   var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';
@@ -33,15 +33,17 @@ define(['src/app/compiler/lexer/token'], function(tokenModule) {
         }
         this.lastPosition = this.position;
         this.position--;
-      } else if (delimiter.indexOf(singleToken) !== -1) {
+      } else if (delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken)) {
         // shit just got serious
         this._nextToken();
         
         // add the delimiter itself if it is not silent
         do {
           if (silentDelimiter.indexOf(singleToken) === -1) {
+            var isToken = operatorModule.findOperatorByText(doubleToken);
+            
             this.lastPosition = this.position;
-            this.position++;
+            this.position = this.position + (isToken ? 2 : 1);
             
             this._nextToken();
             
@@ -55,7 +57,7 @@ define(['src/app/compiler/lexer/token'], function(tokenModule) {
           
           singleToken = this._getSingleToken();
           doubleToken = this._getDoubleToken();
-        } while(delimiter.indexOf(singleToken) !== -1);
+        } while(delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken));
       }
       
       this._handleNewLine(singleToken);

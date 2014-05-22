@@ -81,6 +81,33 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     }
   ];
   
+  var comparisonOperatorConversions = [
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.INT],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.FLOAT, dataTypeModule.PrimitiveDataTypes.FLOAT],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
+    },
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.FLOAT, dataTypeModule.PrimitiveDataTypes.INT],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
+    }
+  ];
+  
+  var equalOperatorConversions = comparisonOperatorConversions.slice(0);
+  equalOperatorConversions.push(
+    {
+      from: [dataTypeModule.PrimitiveDataTypes.STRING, dataTypeModule.PrimitiveDataTypes.STRING],
+      to: dataTypeModule.PrimitiveDataTypes.BOOL
+    }
+  );
+  
   var maxPriority;
   var operators;
   return {
@@ -105,6 +132,30 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
       ASSIGN_OPERATOR: new Operator('=', {
         priority: 2,
         conversions: assignOperatorConversions
+      }),
+      GREATER_THAN_OPERATOR: new Operator('>', {
+        priority: 8,
+        conversions: comparisonOperatorConversions
+      }),
+      LESS_THAN_OPERATOR: new Operator('<', {
+        priority: 8,
+        conversions: comparisonOperatorConversions
+      }),
+      GREATER_THAN_OR_EQUAL_OPERATOR: new Operator('>=', {
+        priority: 8,
+        conversions: comparisonOperatorConversions
+      }),
+      LESS_THAN_OR_EQUAL_OPERATOR: new Operator('<=', {
+        priority: 8,
+        conversions: comparisonOperatorConversions
+      }),
+      EQUAL_OPERATOR: new Operator('==', {
+        priority: 6,
+        conversions: equalOperatorConversions
+      }),
+      NOT_EQUAL_OPERATOR: new Operator('!=', {
+        priority: 6,
+        conversions: equalOperatorConversions
       })
     },
     findOperatorsByPriority: function(priority) {

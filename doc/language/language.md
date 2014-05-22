@@ -267,6 +267,7 @@ Possible connections are:
  * Enums
  * Break / Continue in loops
  * Multiple Return
+ * Compile Time Null Check
 
 #### Not so likely
  * Indexer
@@ -275,3 +276,6 @@ Possible connections are:
  * Annotations
  * Inmutable Objects / Classes by language
  * Metaprogramming
+ * Contracts
+ * Nullable / Not Nullable Data Types
+ * Dynamic Typing
