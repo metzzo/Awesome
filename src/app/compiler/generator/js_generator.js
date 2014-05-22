@@ -137,7 +137,11 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       }
     },
     'Repeat': function(gen, node) {
-      throw 'Not yet implemented '+node.name;
+      gen.emit('do ');
+      gen.emitNode(node.params.scope);
+      gen.emit(' while (!(');
+      gen.emitNode(node.params.condition);
+      gen.emit('))');
     },
     'Scope': function(gen, node) {
       if (node.params.nodes.length > 0) {

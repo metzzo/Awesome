@@ -80,6 +80,17 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/dataType', 'src/app/c
       output: 'while (true) { }'
     },
     {
+      name: 'generates repeat properly',
+      input: astModule.createNode(AstRepeat, {
+        condition: astModule.createNode(AstBoolLit, { value: true }),
+        scope: astModule.createNode(AstScope, {
+          type: AstScope.types.LOCAL,
+          nodes: [ ]
+        })
+      }),
+      output: 'do { } while (!(true))'
+    },
+    {
       name: 'generates simple operator',
       input: astModule.createNode(AstOperator, {
         leftOperand: astModule.createNode(AstIntLit, { value: 1 }),

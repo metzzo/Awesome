@@ -24,7 +24,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   
   return [
     {
-      name: 'has correct type check for valid boolean',
+      name: 'while has correct type check for valid boolean',
       input: astModule.createNode(AstWhile, {
         condition: astModule.createNode(AstBoolLit, { value: true }),
         scope: astModule.createNode(AstScope, {
@@ -38,7 +38,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       }
     },
     {
-      name: 'has correct type check for invalid int',
+      name: 'while has correct type check for invalid int',
       input: astModule.createNode(AstWhile, {
         condition: astModule.createNode(AstIntLit, { value: 42 }),
         scope: astModule.createNode(AstScope, {
@@ -52,7 +52,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       fails: true
     },
     {
-      name: 'sets implicit data types properly',
+      name: 'while sets implicit data types properly',
       input: astModule.createNode(AstScope, {
         type: AstScope.types.LOCAL,
         nodes: [
@@ -67,6 +67,60 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
             ]
           }),
           astModule.createNode(AstWhile, {
+              condition: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              scope: astModule.createNode(AstScope, {
+                type: AstScope.types.LOCAL,
+                nodes: [ ]
+              })
+          })
+        ]
+      }),
+      check: function(ast, semanter) { }
+    },
+    {
+      name: 'repeat has correct type check for valid boolean',
+      input: astModule.createNode(AstRepeat, {
+        condition: astModule.createNode(AstBoolLit, { value: true }),
+        scope: astModule.createNode(AstScope, {
+          type: AstScope.types.LOCAL,
+          nodes: [ ]
+        })
+      }),
+      check: function(ast, semanter) {
+        expect(ast.getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.VOID);
+        expect(jsel(ast).select('//params/condition').getDataType()).toBe(dataTypeModule.PrimitiveDataTypes.BOOL);
+      }
+    },
+    {
+      name: 'repeat has correct type check for invalid int',
+      input: astModule.createNode(AstRepeat, {
+        condition: astModule.createNode(AstIntLit, { value: 42 }),
+        scope: astModule.createNode(AstScope, {
+          type: AstScope.types.LOCAL,
+          nodes: [ ]
+        })
+      }),
+      check: function(expect) {
+        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.UNEXPECTED_DATATYPE, 'bool', 'int'), { token: defaultToken }));
+      },
+      fails: true
+    },
+    {
+      name: 'repeat sets implicit data types properly',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstRepeat, {
               condition: astModule.createNode(AstIdentifier, { name: 'yolo' }),
               scope: astModule.createNode(AstScope, {
                 type: AstScope.types.LOCAL,
