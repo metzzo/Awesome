@@ -138,6 +138,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       this.iterator.next();
       var identifier;
       if (this.isIdentifier()) {
+        astModule.mark();
         identifier = this.parseIdentifier();
       } else {
         identifier = astModule.createNode(AstEmpty, { });
@@ -170,27 +171,13 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       var scope = this.parseScope(AstScope.types.FUNCTION);
       this.iterator.optMatch('end');
       
-      var func = astModule.createNode(AstFunction, {
+      return astModule.createNode(AstFunction, {
         params: parameters,
         returnDataType: dataType,
         scope: scope,
-        token: token
+        token: token,
+        name: identifier
       });
-      if (identifier.name !== AstEmpty.name) {
-        return astModule.createNode(AstVarDec, {
-          variables: [
-            {
-              identifier: identifier,
-              dataType: dataType,
-              value: func,
-              type: AstVarDec.types.CONSTANT
-            }
-          ],
-          token: token
-        });
-      } else {
-        return func;
-      }
     },
     'repeat': function() {
       var token = this.iterator.current();

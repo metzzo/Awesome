@@ -4,7 +4,8 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     params: {
       params: [ ],
       returnDataType: null,
-      scope: null
+      scope: null,
+      name: null // if first class function: empty, if normal: identifier
     },
     functions: {
       traverse: function(cb) {
