@@ -28,7 +28,7 @@ The conversation between data types follow the following rules:
  * object converts to string (calling toString)
  
 ## Scoping
-The scoping of awesome is using the traditional Java / C# system in which a function starts a new scope and every statement (if, for, while, ...) too. Variables declared in a function are only acessible within the function and they cannot access any "upper" variables.
+The scoping of awesome is using the traditional Java / C# system in which a function starts a new scope and every statement (if, for, while, ...) too. Variables declared in a function are only acessible within the function and they cannot access any "upper" variables. Closures may be supported in future releases.
  
  
 ## Syntax
@@ -112,14 +112,14 @@ myAddFunction = mySubFunction -- works because they both have the same signature
 
 
 var myCoroutine = function()
-  yield return 1 -- yield return tells the compilter/environment that the current execution of this function should be stopped and can be continued at a later time. yield return cannot be used in properties/constructors/.. 
-  yield return 2
-  yield return 3
+  yield 1 -- yield tells the compilter/environment that the current execution of this function should be stopped and can be continued at a later time. yield cannot be used in properties/constructors/.. 
+  yield 2
+  yield 3
 end
 
 
 -- using coroutines
-for i in myCoroutine()
+for i in myCoroutine() -- if given an object / array /.. it automatically calls the 'iterate' function/method of this object
   print "Value "+i
 end
 
@@ -152,9 +152,9 @@ class SuperCar extends Car
     end
     
     function iterate() -- this function is called whenever this object is used in a "for in" loop
-      yield return 1
-      yield return 2
-      yield return 3
+      yield 1
+      yield 2
+      yield 3
     end
 end
 
@@ -162,10 +162,10 @@ var swagCar = new SuperCar
 swagCar.drive 10
 swagCar.drive 20
 --cast:
-var normalCar is car = car(swagcar) // cast SuperCar to car
+var normalCar is car = swagcar.toCar -- every object has the implicit "toXYZ" methods that cast to the expected class
 
 -- Property Example
-class Vector
+class Vector is final, public -- "is acces_modifier" says how this class can be access
   private
     var x is float, y is float
   
@@ -181,6 +181,27 @@ class Vector
       set
         y = value
       end
+    end
+end
+
+class List<Type>
+  private
+    var data, ptr
+  
+  public 
+    function new()
+      data = new array of Type(100)
+    end
+  
+    function push(value)
+      data[ptr] = value
+      ptr = ptr + 1
+    end
+    
+    function pop()
+      var result = data[ptr]
+      ptr = ptr - 1
+      return result
     end
 end
 ```
@@ -253,12 +274,75 @@ handle.add -- adds a connection to this connection, which are then autonomous
 Possible connections are:
  * variable -> variable: Whenever the value of the left operand changes, it is automatically set to the right operand.
  * variable -> function: Whenever the value of the left operand changes, the function of the right operand called, the parameter being the value of the left operand
- * function -> function: Whenever the value of the left operand is called and the execution is ended, the function on the right operand is called with the parameter being the return type of the left operand. You can combine this with yield return
+ * function -> function: Whenever the value of the left operand is called and the execution is ended, the function on the right operand is called with the parameter being the return type of the left operand. You can combine this with yield
+
+### Extern
+Extern allows to interface with code from the "outside" - other libraries, frameworks, ...
+In extern blocks every data type has to be explicitely defined, no type inference is performed.
+You can define 3 different types of data in an extern statement:
+ - function: Normal functions that are callable by awesome
+ - interface: Interfaces that may be used by awesome, if you want to create an interface create a function
+ - variables: Normal variables that are setable and readable by awesome
+
+extern
+  var randomVariable is int
+  
+  function array_length_int(array is array of int) named by "arr_len_int"
+  
+  function create_MyOtherObject is MyOtherObject() named by "c_my_othr_obj"
+  
+  interface MyOtherObject
+    function attr1()
+    function attr2()
+    function attr3()
+  end
+end
+
+### Extension Methods
+This system is used to provide some convenience methods for existing classes or primitive datatypes
+
+extend int
+  function toFloat()
+    var floatVal = this
+    return floatVal
+  end
+  function toInt()
+    return this
+  end
+  function toString()
+    return int_to_string_func(this) // native function call
+  end
+end
+
+extend array of int
+  property this[position]
+    get
+      return access_intarray(this, position) // native function call
+    end
+    set
+      set_intarray(this, position, value) // native function call
+    end
+  end
+  function toFloatArray()
+    // convert to float array
+  end
+  function toStringArray()
+    // convert to string array
+  end
+  function iterate()
+    for i in range(this.length)
+      yield this[i]
+    end
+  end
+  function length()
+    return array_length(this) // native function call
+  end
+end
 
 ### Possible Features
 #### Likely
+ * Indexer
  * Generics
- * Extension Methods
  * Interface
  * namespace/package system
  * Abstract classes/functions
@@ -270,7 +354,6 @@ Possible connections are:
  * Compile Time Null Check
 
 #### Not so likely
- * Indexer
  * Operatoroverloading
  * Static classes
  * Annotations

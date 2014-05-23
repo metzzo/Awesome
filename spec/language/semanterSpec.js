@@ -1,4 +1,4 @@
-define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/lexer/token', 'spec/language/params/semanter/ifParams', 'spec/language/params/semanter/literalParams', 'spec/language/params/semanter/scopeParams', 'spec/language/params/semanter/expressionParams', 'spec/language/params/semanter/loopParams'], function(_, semanterModule, tokenModule, ifParams, literalParams, scopeParams, expressionParams, loopParams) {
+define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/lexer/token', 'spec/language/params/semanter/ifParams', 'spec/language/params/semanter/literalParams', 'spec/language/params/semanter/scopeParams', 'spec/language/params/semanter/expressionParams', 'spec/language/params/semanter/loopParams', 'spec/language/params/semanter/functionParams'], function(_, semanterModule, tokenModule, ifParams, literalParams, scopeParams, expressionParams, loopParams, functionParams) {
   var defaultToken = new tokenModule.Token('test', {
     file: null,
     lineText: '',
@@ -23,6 +23,7 @@ define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/l
       'Loop': loopParams,
       'Literal': literalParams,
       'Scope': scopeParams,
+      'Function': functionParams,
       'Expression': expressionParams
     };
     

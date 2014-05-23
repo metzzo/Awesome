@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration'], function(dataTypeModule, funcDeclModule) {
   var scope_node;
   return scope_node = {
     name: 'Scope',
@@ -33,6 +33,19 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       },
       getVariables: function() {
         return this.params.variables;
+      },
+      getFunctions: function() {
+        var functions = [ ];
+        if (this.getScope()) {
+          functions = functions.concat(this.getScope().functions.getFunctions());
+        }
+        for (var i = 0; i < this.params.nodes.length; i++) {
+          var node = this.params.nodes[i];
+          // function?
+          if (node.name === funcDeclModule.name) {
+            functions.push(node);
+          }
+        }
       }
     },
     types: {

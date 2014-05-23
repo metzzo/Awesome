@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope'], function(dataTypeModule, scopeModule) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, scopeModule, errorMessages) {
   return {
     name: 'Identifier',
     params: {

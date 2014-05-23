@@ -39,7 +39,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         }
       },
       getDataType: function(){
-        return dataTypeModule.PrimitiveDataTypes.VOID;
+        return dataTypeModule.PrimitiveDataTypes.VOID; // TODO: If just one variable is defined in here, return the datatype of this variable
       },
       getVariables: function() {
         return this.params.realVariables;
