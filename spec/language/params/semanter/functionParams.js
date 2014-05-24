@@ -185,6 +185,23 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       check: function(ast, semanter) {
         
       }
+    },
+    {
+      name: 'is semanting invalid extern function',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstFunction, {
+            params: [ ],
+            name: astModule.createNode(AstIdentifier, { name: 'swag' }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.UNKNOWN }),
+            aliasName: 'yolo',
+            scope: astModule.createNode(AstEmpty, { }),
+          })
+        ]
+      }),
+      check: function(expect) { },
+      fails: true
     }
   ]
 });

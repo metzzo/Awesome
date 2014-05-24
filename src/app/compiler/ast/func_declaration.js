@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/data/operator'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule, operatorModule) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/data/operator', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule, operatorModule, errorMessages) {
   var astModule;
   
   return {
@@ -58,6 +58,10 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
         return dataTypeModule.createFunctionDataType(this.params.returnDataType.getDataType(), paramTypes);
       },
       processDataTypes: function() {
+        if (this.params.scope.name === emptyModule.name && !this.getDataType().isKnown()) { // rise error, because no type inference is allowed
+          this.riseSyntaxError(errorMessages.CANNOT_RESOLVE_DATATYPE);
+        }
+        
         // update parameters
         for (var i = 0; i < this.params.params.length; i++) {
           this.params.params[i].dataType.params.dataType = this.params.realParameters[i].params.dataType;

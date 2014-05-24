@@ -156,6 +156,8 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           value: function() {
             if (this.functions && this.functions.getVariables) {
               return this.functions.getVariables();
+            } else {
+              return [];
             }
           },
           enumerable: false,
