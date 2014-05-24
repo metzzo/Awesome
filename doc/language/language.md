@@ -287,14 +287,14 @@ You can define 3 different types of data in an extern statement:
 extern
   var randomVariable is int
   
-  function array_length_int(array is array of int) named by "arr_len_int"
+  function array_length_int(array is array of int) = "arr_len_int"
   
-  function create_MyOtherObject is MyOtherObject() named by "c_my_othr_obj"
+  function create_MyOtherObject() is MyOtherObject = "c_my_othr_obj"
   
   interface MyOtherObject
-    function attr1()
-    function attr2()
-    function attr3()
+    function attr1() is void
+    function attr2() is void
+    function attr3() is void
   end
 end
 

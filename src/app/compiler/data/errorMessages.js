@@ -11,6 +11,6 @@ define([ ], function() {
     UNEXPECTED_DATATYPE: 'Unexpected datatype, expecting %s, got %s',
     CANNOT_RESOLVE_DATATYPE: 'Cannot resolve data type',
     AMBIGUOUS_DATATYPE: 'Data types are incompatible %s vs. %s',
-    IDENTIFIER_NOT_DEFINED: 'Identifier is not defined'
+    FUNCTION_NOT_DEFINED: 'Function is not defined %s'
   };
 });

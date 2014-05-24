@@ -1,51 +1,80 @@
 define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
   describe('DataType', function() {
-    it('is created properly', function() {
-      // arrange
-      var dataType;
-      var name = 'test';
-      var params = { };
+    
+  
+    describe('Primitive DataType', function() {
+      it('finds datatype by name', function() {
+        // arrange
+        var dataType;
+        var expectedDataType = dataTypeModule.PrimitiveDataTypes.INT;
+        
+        // act
+        dataType = dataTypeModule.findPrimitiveDataTypeByName('int');
+        
+        // assert
+        expect(dataType).not.toBeNull();
+        expect(dataType).toEqual(expectedDataType);
+      });
       
-      // act
-      dataType = new dataTypeModule.DataType(name, params);
+      it('matches works', function() {
+        expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.INT)).toBe(true);
+        expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(false);
+      });
       
-      // assert
-      expect(dataType).not.toBeNull();
-      expect(dataType.name).toBe(name);
-      expect(dataType.params).not.toBeNull();
-      expect(dataType.params).toEqual(params);
+      it('toString works', function() {
+        expect(dataTypeModule.PrimitiveDataTypes.INT.toString()).toBe('int');
+      });
+      
+      it('juggleName works', function() {
+        expect(dataTypeModule.PrimitiveDataTypes.INT.juggleName()).toBe('_int');
+      });
+      
+      it('balances works', function() {
+  expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.INT)).toBe(dataTypeModule.PrimitiveDataTypes.INT);
+        expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(dataTypeModule.MetaDataTypes.AMBIGUOUS);
+      });
+      
+      it('isKnown works', function() {
+        expect(dataTypeModule.PrimitiveDataTypes.INT.isKnown()).toBe(true);
+        expect(dataTypeModule.MetaDataTypes.UNKNOWN.isKnown()).toBe(false);
+      });
     });
     
-    it('finds datatype by name', function() {
-      // arrange
-      var dataType;
-      var expectedDataType = dataTypeModule.PrimitiveDataTypes.INT;
+    
+    describe('Function DataType', function() {
+       it('matches works', function() {
+        var func1 = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
+        var func2 = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.INT]);
+        
+        expect(func1.matches(func1)).toBe(true);
+        expect(func1.matches(func2)).toBe(false);
+      });
       
-      // act
-      dataType = dataTypeModule.findPrimitiveDataTypeByName('int');
+      it('toString works', function() {
+        var func = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
+        expect(func.toString()).toBe('function(int, float) is int');
+      });
       
-      // assert
-      expect(dataType).not.toBeNull();
-      expect(dataType).toEqual(expectedDataType);
+      it('juggleName works', function() {
+        var func = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
+        expect(func.juggleName()).toBe('_function_params_int_float_return_int');
+      });
+      
+      it('balances works', function() {
+        var func1 = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
+        var func2 = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.INT]);
+        
+        expect(func1.balance(func1)).toBe(func1);
+        expect(func1.balance(func2)).toBe(dataTypeModule.MetaDataTypes.AMBIGUOUS);
+      });
+      
+      it('isKnown works', function() {
+        var func1 = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
+        var func2 = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.MetaDataTypes.UNKNOWN]);
+        
+        expect(func1.isKnown()).toBe(true);
+        expect(func2.isKnown()).toBe(false);
+      });
     });
-    
-    it('matches works', function() {
-      expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.INT)).toBe(true);
-      expect(dataTypeModule.PrimitiveDataTypes.INT.matches(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(false);
-    });
-    
-    it('toString works', function() {
-      expect(dataTypeModule.PrimitiveDataTypes.INT.toString()).toBe('int');
-    })
-    
-    it('balances works', function() {
-      expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.INT)).toBe(dataTypeModule.PrimitiveDataTypes.INT);
-      expect(dataTypeModule.PrimitiveDataTypes.INT.balance(dataTypeModule.PrimitiveDataTypes.FLOAT)).toBe(dataTypeModule.MetaDataTypes.AMBIGUOUS);
-    });
-    
-    it('isKnown works', function() {
-      expect(dataTypeModule.PrimitiveDataTypes.INT.isKnown()).toBe(true);
-      expect(dataTypeModule.MetaDataTypes.UNKNOWN.isKnown()).toBe(false);
-    })
   })
 });

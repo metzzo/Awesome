@@ -3,7 +3,8 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
   return {
     name: 'Variable Declaration',
     params: {
-      variables: [ ]
+      variables: [ ],
+      realVariables: [ ]
     },
     functions: {
       init: function() {
@@ -11,11 +12,6 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         for (var i = 0; i < this.params.variables.length; i++) {
           var variable = this.params.variables[i];
           var dataType = variable.dataType.params.dataType;
-          
-          // check what we've got
-          if (variable.dataType.name === emptyModule.name) {
-            dataType = dataTypeModule.MetaDataTypes.UNKNOWN; // nothing :(
-          }
           
           this.params.realVariables.push(new identifierModule.Identifier(variable.identifier.params.name, {
             dataType: dataType,
@@ -45,10 +41,6 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         return this.params.realVariables;
       },
       processDataTypes: function() {
-        if (!astModule) {
-          astModule = require('src/app/compiler/ast/ast');
-        }
-        
         // update types!
         for (var i = 0; i < this.params.variables.length; i++) {
           var variable = this.params.variables[i], realVariable = this.params.realVariables[i];
@@ -56,9 +48,6 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
             realVariable.proposeDataType(variable.value.getDataType());
           }
           
-          if (variable.dataType.name == emptyModule.name) {
-            variable.dataType = astModule.createNode(dataTypeAstModule, { });
-          }
           variable.dataType.params.dataType = realVariable.params.dataType;
         }
       },

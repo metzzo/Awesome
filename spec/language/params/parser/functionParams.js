@@ -24,7 +24,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
         astModule.createNode(AstFunction, {
           params: [ ],
           name: astModule.createNode(AstIdentifier, { name: 'hello', token: t('hello') }),
-          returnDataType: astModule.createNode(AstEmpty, { token: t('hello') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('\n') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -56,7 +56,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             }
           ],
           name: astModule.createNode(AstIdentifier, { name: 'hello', token: t('hello') }),
-          returnDataType: astModule.createNode(AstEmpty, { token: t('hello') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('\n') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -76,11 +76,11 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           variables: [
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'i', token: t('i') }),
-              dataType: astModule.createNode(AstEmpty, { token: t('var') }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('var') }),
               value: astModule.createNode(AstFunction, {
                 params: [ ],
                 name: astModule.createNode(AstEmpty, { token: t('function') }),
-                returnDataType: astModule.createNode(AstEmpty, { token: t('function') }),
+                returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('\n') }),
                 scope: astModule.createNode(AstScope, {
                   type: AstScope.types.FUNCTION,
                   nodes: [
@@ -110,7 +110,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
               type: AstVarDec.types.VARIABLE
             }
           ],
-          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
+          name: astModule.createNode(AstEmpty, { token: t('1') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -128,7 +129,8 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       output: [
         astModule.createNode(AstFunction, {
           params: [ ],
-          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
+          name: astModule.createNode(AstEmpty, { token: t('1') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -154,12 +156,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             },
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'y', token: t('y') }),
-              dataType: astModule.createNode(AstEmpty, { token: t('y') }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('y') }),
               value: astModule.createNode(AstIntLit, { value: 0, token: t('0') }),
               type: AstVarDec.types.VARIABLE
             }
           ],
-          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
+          name: astModule.createNode(AstEmpty, { token: t('1') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [
@@ -185,12 +188,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
             },
             {
               identifier: astModule.createNode(AstIdentifier, { name: 'y', token: t('y') }),
-              dataType: astModule.createNode(AstEmpty, { token: t('y') }),
+              dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('y') }),
               value: astModule.createNode(AstIntLit, { value: 0, token: t('0') }),
               type: AstVarDec.types.VARIABLE
             }
           ],
-          returnDataType: astModule.createNode(AstEmpty, { token: t('1') }),
+          name: astModule.createNode(AstEmpty, { token: t('1') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('1') }),
           scope: astModule.createNode(AstScope, {
             type: AstScope.types.FUNCTION,
             nodes: [

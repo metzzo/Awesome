@@ -22,7 +22,7 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
     if (anyUnknown != 0) {
       this.mainNode.traverse(function(obj) {
         var dataType = obj.getDataType();
-        if (dataType.isKnown()) {
+        if (!dataType.isKnown()) {
           obj.riseSyntaxError(errorMessages.CANNOT_RESOLVE_DATATYPE);
         }
       });

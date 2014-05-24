@@ -546,6 +546,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
       beforeEach(function() {
         ast = astModule.createNode(astModule.AstPrototypes.FUNCTION, {
           returnDataType: astModule.createNode(stubNode),
+          name: astModule.createNode(stubNode),
           params: [ ],
           scope: astModule.createNode(stubNode)
         });
@@ -561,7 +562,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           params: {
             returnDataType: { name: 'Stub', params: { } },
             params: [ ],
-            scope: { name: 'Stub', params: { } }
+            scope: { name: 'Stub', params: { } },
+            name: { name: 'Stub', params: { } }
           }
         };
         
@@ -577,7 +579,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         });
         
         // assert
-        expect(traverseCount).toBe(3);
+        expect(traverseCount).toBe(4);
       });
       
       it('has parent properly set', function() {

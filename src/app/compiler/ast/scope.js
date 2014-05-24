@@ -46,6 +46,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration
             functions.push(node);
           }
         }
+        return functions;
       }
     },
     types: {

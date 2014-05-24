@@ -73,7 +73,15 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       gen.emit(node.params.value);
     },
     'Call': function(gen, node) {
-      throw 'Not yet implemented '+node.name;
+      gen.emitNode(node.params.func);
+      gen.emit('(');
+      for (var i = 0; i < node.params.params.length; i++) {
+        if (i !== 0) {
+          gen.emit(', ');
+        }
+        gen.emitNode(node.params.params[i]);
+      }
+      gen.emit(')');
     },
     'DataType': function(gen, node) {
       throw 'Not yet implemented '+node.name;
@@ -83,7 +91,21 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       throw 'Not yet implemented '+node.name;
     },
     'Function Declaration': function(gen, node) {
-      throw 'Not yet implemented '+node.name;
+      if (node.params.name) {
+        gen.emit('var ');
+        gen.emitNode(node.params.name);
+        gen.emit(' = ');
+      }
+      gen.emit('function (');
+      for (var i = 0; i < node.params.params.length; i++) {
+        if (i !== 0) {
+          gen.emit(', ');
+        }
+        var param = node.params.params[i];
+        gen.emitNode(param.identifier.params.name);
+      }
+      gen.emit(') ');
+      gen.emitNode(node.params.scope);
     },
     'Identifier': function(gen, node) {
       gen.emit(node.params.name);

@@ -1,10 +1,9 @@
-define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, errorMessages) {
   return {
     name: 'Call',
     params: {
       func: null,
       signature: null,
-      returnValue: null,
       params: [ ]
     },
     functions: {
@@ -15,10 +14,21 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
           this.params.params[i].traverse(cb);
         } 
       },
-      getDataType: function(){
-        return dataTypeModule.MetaDataTypes.UNKNOWN;
+      getDataType: function() {
+        if (this.params.signature) {
+          return this.params.signature.params.returnType;
+        } else {
+          return dataTypeModule.MetaDataTypes.UNKNOWN;
+        }
       },
-      updateFunc: function() {
+      getIntrinsicSignature: function() {
+        var params = [];
+        for (var i = 0; this.params.params.length; i++) {
+          params.push(this.params.params[i].getDataType());
+        }
+        return dataTypeModule.createFunctionDataType(this.getDataType(), params);
+      },
+      processDataTypes: function() {
         var identifier;
         
         if (identifier = this.params.func.params.identifier) {
@@ -36,19 +46,39 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
             }
           }
           if (realFunc) {
-            
+            this.params.signature = realFunc.getDataType();
           } else {
-            this.riseSyntaxError();
+            this.riseSyntaxError(_s.sprintf(errorMessages.FUNCTION_NOT_DEFINED, this.params.func.params.name));
+          }
+          
+          this.params.func.functions.functionIdentifier(realFunc.params.realFunction);
+          
+          
+          var intrinsicSignature = this.functions.getIntrinsicSignature();
+          var signature = this.params.signature;
+          
+          if (!intrinsicSignature.matches(signature)) {
+            // :( does not match!
+            // maybe its just some unknowns / ambigs that are causing this problem?
+            
+            if (!signature.isKnown() || !intrinsicSignature.isKnown()) {
+              // signature => intrinsicSignature suggestions
+              // TODO!
+              /*for (var i = 0; i < signature.paramTypes.length; i++) {
+                var sig = signature.paramTypes[i];
+              }*/
+            }
           }
         }
-      },
-      processDataTypes: function() {
-        this.functions.updateFunc();
-        
         
       },
       checkDataTypes: function() {
+        var intrinsicSignature = this.functions.getIntrinsicSignature();
+        var signature = this.params.signature;
         
+        if (!intrinsicSignature.matches(signature)) {
+          this.riseSyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, intrinsicSignature.toString(), signature.toString()))
+        }
       }
     }
   };

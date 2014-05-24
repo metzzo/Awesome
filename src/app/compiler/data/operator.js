@@ -15,6 +15,7 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     if (this.params.conversions.length == 0) {
       if (left.matches(right)) {
         // strict type check!
+        return left;
       }
     } else {
       for (var i = 0; i < this.params.conversions.length; i++) {

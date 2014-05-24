@@ -133,7 +133,6 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     },
     'function': function() {
       var token = this.iterator.current();
-      var dataType = astModule.createNode(AstEmpty, { });
       
       this.iterator.next();
       var identifier;
@@ -144,12 +143,6 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         identifier = astModule.createNode(AstEmpty, { });
       }
       
-      var dataType;
-      if (this.iterator.optMatch('is')) {
-        dataType = this.parseDataType();
-      } else {
-        dataType = astModule.createNode(AstEmpty, { });;
-      }
       var parameters = [ ];
       if (this.iterator.optMatch('(')) {
         var first = true;
@@ -166,6 +159,14 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
           
           first = false;
         }
+      }
+      
+      var dataType;
+      astModule.mark();
+      if (this.iterator.optMatch('is')) {
+        dataType = this.parseDataType();
+      } else {
+        dataType = astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN });
       }
       
       var scope = this.parseScope(AstScope.types.FUNCTION);
@@ -410,7 +411,9 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     var defaultDataType = params.defaultDataType;
     var varitype = params.varitype;
     
-    var dataType = astModule.createNode(AstEmpty, { });
+    var dataType = astModule.createNode(AstDataType, {
+      dataType: dataTypeModule.MetaDataTypes.UNKNOWN
+    });
     var value = astModule.createNode(AstEmpty, { });
     var identifier = this.parseIdentifier();
     
@@ -495,7 +498,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     
     return astModule.createNode(AstFunction, {
       params: parameters,
-      returnDataType: astModule.createNode(AstEmpty, { }),
+      name:  astModule.createNode(AstEmpty, { }),
+      returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
       scope: scope,
       token: token
     });
