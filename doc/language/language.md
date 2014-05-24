@@ -104,7 +104,7 @@ var myAddFunction = function(param1 as int, param2 as int)
   return param1 + param2
 end
 
-var mySubFunction is (int, int) = (p1 is int, p2 is int) -> return p1-p2
+var mySubFunction is (int, int) returns int = (p1 is int, p2 is int) -> return p1-p2
 
 myAddFunction = mySubFunction -- works because they both have the same signature
 
@@ -269,22 +269,19 @@ Possible connections are:
 ### Extern
 Extern allows to interface with code from the "outside" - other libraries, frameworks, ...
 In extern blocks every data type has to be explicitely defined, no type inference is performed.
-You can define 3 different types of data in an extern statement:
+You can define the following different types of data in an extern statement:
  - function: Normal functions that are callable by awesome
  - interface: Interfaces that may be used by awesome, if you want to create an interface create a function
- - variables: Normal variables that are setable and readable by awesome
 
 extern
-  var randomVariable is int
+  function array_length_int(array is array of int) = arr_len
   
-  function array_length_int(array is array of int) = "arr_len_int"
+  function create_MyOtherObject() returns MyOtherObject = crt_obj
   
-  function create_MyOtherObject() is MyOtherObject = "c_my_othr_obj"
-  
-  interface MyOtherObject
-    function attr1() is void
-    function attr2() is void
-    function attr3() is void
+  interface MyOtherObject = myObject
+    function attr1() returns void
+    function attr2() returns void
+    function attr3() returns void
   end
 end
 

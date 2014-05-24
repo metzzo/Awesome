@@ -97,18 +97,26 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       } else {
         gen.emit('(');
       }
-      gen.emit('function (');
-      for (var i = 0; i < node.params.params.length; i++) {
-        if (i !== 0) {
-          gen.emit(', ');
+      
+      // is this an extern function?
+      if (node.params.scope.name === AstEmpty.name) {
+        gen.emit(node.params.aliasName);
+      } else {
+        gen.emit('function (');
+        for (var i = 0; i < node.params.params.length; i++) {
+          if (i !== 0) {
+            gen.emit(', ');
+          }
+          var param = node.params.params[i];
+          gen.emitNode(param.identifier);
         }
-        var param = node.params.params[i];
-        gen.emitNode(param.identifier);
-      }
-      gen.emit(') ');
-      gen.emitNode(node.params.scope);
-      if (node.params.name.name === AstEmpty.name) {
-        gen.emit(')');
+        gen.emit(') ');
+        
+        gen.emitNode(node.params.scope);
+        
+        if (node.params.name.name === AstEmpty.name) {
+          gen.emit(')');
+        }
       }
     },
     'Identifier': function(gen, node) {

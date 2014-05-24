@@ -131,7 +131,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       this.iterator.optMatch('end');
       return scope;
     },
-    'function': function() {
+    'function': function(justHeader) {
       var token = this.iterator.current();
       
       this.iterator.next();
@@ -169,7 +169,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         dataType = astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN });
       }
       
-      var scope = this.parseScope(AstScope.types.FUNCTION);
+      var scope = justHeader ? astModule.createNode(AstEmpty, { }) : this.parseScope(AstScope.types.FUNCTION);
       this.iterator.optMatch('end');
       
       return astModule.createNode(AstFunction, {
@@ -256,6 +256,31 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         cases: cases,
         token: token
       });
+    },
+    'extern': function() {
+      var token = this.iterator.current();
+      var funcs = [ ];
+      
+      this.iterator.next();
+      this.iterator.match('\n');
+      do {
+        var func = this.keywordsParser['function'].call(this, true);
+        
+        var name = func.params.name.params.name;
+        if (this.iterator.optMatch('alias')) {
+          name = this.iterator.current().text;
+          this.iterator.next();
+        }
+        
+        func.params.aliasName = name;
+        
+        funcs.push(func);
+        
+        this.iterator.match('\n');
+      } while (!this.iterator.is('end'));
+      this.iterator.match('end');
+      
+      return astModule.createNode(AstScope, { type: AstScope.types.LOCAL, nodes: funcs, token: token });
     }
   };
   
