@@ -112,6 +112,11 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
   var maxPriority;
   var operators;
   return {
+    Conversions: {
+      DefaultOperator: defaultOperatorConversions,
+      AssignOperator: assignOperatorConversions,
+      ComparisonOperator: comparisonOperatorConversions
+    },
     Operator: Operator,
     Operators: operators = {
       PLUS_OPERATOR: new Operator('+', {

@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/data/operator'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule, operatorModule) {
   var astModule;
   
   return {
@@ -9,7 +9,8 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       scope: null,
       name: null, // if first class function: empty, if normal: identifier,
       realFunction: null, // identifier of this function (just used if normal function)
-      realParameters: null // identifiers of the parameters of this function (just used if normal function)
+      realParameters: null, // identifiers of the parameters of this function (just used if normal function)
+      hasRegisteredConversions: false
     },
     functions: {
       init: function() {
@@ -73,10 +74,9 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
           this.params.returnDataType.params.dataType = dataTypeModule.PrimitiveDataTypes.VOID;
         }
         
-        if (this.params.name !== emptyModule.name && !this.params.realFunction) {
-          var dataType = this.getDataType();
-          // is everything known from this function?
-          if (dataType.isKnown()) {
+        var dataType = this.getDataType();
+        if (dataType.isKnown()) {
+          if (this.params.name.name !== emptyModule.name && !this.params.realFunction) {
             // know set the realFunction bro
             this.params.realFunction = new identifierModule.Identifier(this.params.name.params.name+dataType.juggleName(), {
               dataType: dataType,
@@ -84,6 +84,15 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
             });
             
             this.params.name.functions.functionIdentifier(this.params.realFunction);
+          }
+          
+          if (!this.params.hasRegisteredConversions) {
+            this.params.hasRegisteredConversions = true;
+            
+            operatorModule.Conversions.AssignOperator.push({
+              from: [dataType, dataType],
+              to: dataType
+            });
           }
         }
       },

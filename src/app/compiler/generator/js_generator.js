@@ -91,7 +91,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       throw 'Not yet implemented '+node.name;
     },
     'Function Declaration': function(gen, node) {
-      if (node.params.name) {
+      if (node.params.name.name !== AstEmpty.name) {
         gen.emit('var ');
         gen.emitNode(node.params.name);
         gen.emit(' = ');

@@ -15,7 +15,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         } 
       },
       getDataType: function() {
-        if (this.params.signature) {
+        if (this.params.signature && this.params.signature.params.type === 'function') {
           return this.params.signature.params.returnType;
         } else {
           return dataTypeModule.MetaDataTypes.UNKNOWN;
@@ -29,11 +29,14 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         return dataTypeModule.createFunctionDataType(this.getDataType(), params);
       },
       processDataTypes: function() {
-        var identifier;
+        // I need to know whether you are a variable or not
+        this.params.func.processDataTypes();
         
-        if (identifier = this.params.func.params.identifier) {
+        var identifier;
+        if (identifier = this.params.func.functions.getIdentifier()) {
           // it is using a variable as function 
-          // TODO!
+          
+          this.params.signature = identifier.params.dataType;
         } else {
           // it is using a function name as function
           var functions = this.getScope().functions.getFunctions();
