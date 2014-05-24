@@ -86,7 +86,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
         }
       },
       getParameters: function() {
-        return this.params.params;
+        return this.params.realParameters;
       },
       getVariables: function() {
         if (this.realFunction) {
