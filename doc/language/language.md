@@ -207,7 +207,7 @@ end
 ```
 
 ### Autonomous Variables/Functions
-This is a new conecpt I would like to implement into Awesome. It is a concept that has some similarities to data-flow based programming.
+This is a new concept I would like to implement into Awesome. It is a concept that has some similarities to data-flow based programming.
 It basically states, that variables recalculate their value depending on the value of other variables or functions are called whenever the value changes. This system basically removed the need of function/method/variable pointers in the language, while still maintaining a powerful syntax.
 Example:
 ```
@@ -248,7 +248,7 @@ input.key_left => myPlayer.x = myPlayer.x - 2
 input.key_right => myPlayer.x = myPlayer.x + 2
 ```
 
-Another useful feature this can be used for, is the block chaining function, which allows threaded operations:
+Another useful feature this can be used for, is the block chaining function, which allows threaded operations.
 ```
 var as int a
 a => {
@@ -257,19 +257,9 @@ a => {
   (z) -> sleep(300); return 300
 } => (a) -> print "x: "+a
 ```
-The block chains are multiple commands, that are executed parallel in another thread. The results of the functions are collected in an array which are given as an argument to the lambda function.
+The block chains are multiple lambdas, that are executed parallel in another thread. The results of the functions are collected in an array which are given as an argument to the lambda function.
 You have to keep in mind that this feature could be too complex to implement given the strict nature of JavaScripts WebWorker.
 
-
-Removing auotnomous variables is also possible
-```
-var as int a, b
-var handle = a => b
-handle.unlink -- unlinks the connection
-handle.trigger -- triggers the connection, causing b to be recalculated
-handle.add -- adds a connection to this connection, which are then autonomous
-
-```
 
 Possible connections are:
  * variable -> variable: Whenever the value of the left operand changes, it is automatically set to the right operand.
@@ -354,6 +344,7 @@ end
  * Compile Time Null Check
 
 #### Not so likely
+ * Async / Await like functions for threading (like C#)
  * Operatoroverloading
  * Static classes
  * Annotations

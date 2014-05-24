@@ -463,8 +463,38 @@ define([], function() {
             character: 3,
             lineText: '1==2'
           }
-        },
+        }
       ]
-    }
+    },
+   {
+     name: 'is tokenizing lambda double token properly',
+     input: '1->2',
+     output: [
+      {
+        text: '1',
+        params: {
+          line: 0,
+          character: 0,
+          lineText: '1->2'
+        }
+      },
+      {
+        text: '->',
+        params: {
+          line: 0,
+          character: 1,
+          lineText: '1->2'
+        }
+      },
+      {
+        text: '2',
+        params: {
+          line: 0,
+          character: 3,
+          lineText: '1->2'
+        }
+      }
+     ]
+   } 
   ]
 });

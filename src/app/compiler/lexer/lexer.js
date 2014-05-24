@@ -4,6 +4,8 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
   var comment = '--';
   var newLine = '\n';
   
+  var doubleDelimiter = ['->'];
+  
   var Lexer = function(input) {
     this.input = input;
     this.position = 0;
@@ -33,14 +35,14 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
         }
         this.lastPosition = this.position;
         this.position--;
-      } else if (delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken)) {
+      } else if (delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken) || doubleDelimiter.indexOf(doubleToken) !== -1) {
         // shit just got serious
         this._nextToken();
         
         // add the delimiter itself if it is not silent
         do {
           if (silentDelimiter.indexOf(singleToken) === -1) {
-            var isToken = operatorModule.findOperatorByText(doubleToken);
+            var isToken = operatorModule.findOperatorByText(doubleToken) || doubleDelimiter.indexOf(doubleToken) !== -1;
             
             this.lastPosition = this.position;
             this.position = this.position + (isToken ? 2 : 1);
@@ -57,7 +59,7 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
           
           singleToken = this._getSingleToken();
           doubleToken = this._getDoubleToken();
-        } while(delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken));
+        } while(delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken) || doubleDelimiter.indexOf(doubleToken) !== -1);
       }
       
       this._handleNewLine(singleToken);
