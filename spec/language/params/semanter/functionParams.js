@@ -114,6 +114,44 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       check: function(ast, semanter) {
         
       }
+    },
+    {
+      name: 'inner type inference works for parameter and is not overwritten by outer type inference',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstFunction, {
+            params: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'foo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ],
+            name: astModule.createNode(AstIdentifier, { name: 'hello' }),
+            returnDataType: astModule.createNode(AstEmpty, { }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.FUNCTION,
+              nodes: [
+                astModule.createNode(AstOperator, {
+                  leftOperand: astModule.createNode(AstIdentifier, { name: 'foo' }),
+                  rightOperand: astModule.createNode(AstIntLit, { value: 2 }),
+                  operator: operatorModule.Operators.ASSIGN_OPERATOR
+                })
+              ]
+            })
+          }),
+          astModule.createNode(AstCall, {
+            func: astModule.createNode(AstIdentifier, { name: 'hello' }),
+            params: [ astModule.createNode(AstBoolLit, { value: true }) ]
+          })
+        ]
+      }),
+      check: function(expect) {
+        
+      },
+      fails: true
     }
   ]
 });

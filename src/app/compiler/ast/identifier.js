@@ -44,6 +44,11 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
         return this.params.info;
       },
       proposeDataType: function(dataType) {
+        if (!this.params.type) {
+          // maybe process will fix this?
+          this.processDataTypes();
+        }
+        
         if (this.params.type === IdentifierTypes.VARIABLE) {
           this.params.info.proposeDataType(dataType);
         } else {

@@ -66,7 +66,6 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                 var sig = signature.params.paramTypes[i];
                 this.params.params[i].proposeDataType(sig);
               }
-              // if not first class it is possible to define the target function, do it!
               
               // intrinsicSignature => signature suggestions
               // get list of all possible functions

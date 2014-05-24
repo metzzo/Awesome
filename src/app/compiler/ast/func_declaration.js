@@ -30,7 +30,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       traverse: function(cb) {
         this.params.returnDataType.traverse(cb);
         this.params.name.traverse(cb);
-        this.params.scope.traverse(cb);
+        
         for (var i = 0; i < this.params.params.length; i++) {
           if (this.params.params[i]) {
             var param = this.params.params[i];
@@ -39,6 +39,8 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
             param.value.traverse(cb);
           }
         }
+        
+        this.params.scope.traverse(cb);
       },
       getDataType: function() {
         var paramTypes = [ ];
