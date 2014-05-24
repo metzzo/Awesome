@@ -21,7 +21,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       },
       checkDataTypes: function() {
         var dt = this.params.condition.getDataType();
-        if (this.params.condition.name !== emptyModule.name && !dt.matches(dataTypeModule.PrimitiveDataTypes.BOOL)) {
+        if (!dt.matches(dataTypeModule.PrimitiveDataTypes.BOOL)) {
           this.riseSyntaxError(_s.sprintf(errorMessages.UNEXPECTED_DATATYPE, dataTypeModule.PrimitiveDataTypes.BOOL.toString(), dt.toString()))
         }
       }

@@ -31,6 +31,8 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         }
       },
       proposeDataType: function(dataType) {
+        this.processDataTypes();
+        
         this.params.leftOperand.proposeDataType(dataType);
         this.params.rightOperand.proposeDataType(dataType);
       }
