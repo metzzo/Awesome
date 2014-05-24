@@ -16,10 +16,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       processDataTypes: function() {
         var dataType = this.params.condition.getDataType();
         if (!dataType.isKnown()) {
-          var identifier = this.params.condition.getIdentifier();
-          if (identifier) {
-            identifier.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
-          }
+          this.params.condition.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
         }
       },
       checkDataTypes: function() {

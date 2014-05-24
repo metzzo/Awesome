@@ -21,10 +21,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           if (ifCase.condition) {
             var dataType = ifCase.condition.getDataType();
             if (!dataType.isKnown()) {
-              var identifier = ifCase.condition.getIdentifier();
-              if (identifier) {
-                identifier.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
-              }
+              ifCase.condition.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
             }
           }
         }

@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, errorMessages) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages', 'src/app/compiler/ast/empty'], function(_s, dataTypeModule, errorMessages, emptyModule) {
   return {
     name: 'Call',
     params: {
@@ -23,7 +23,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       },
       getIntrinsicSignature: function() {
         var params = [];
-        for (var i = 0; this.params.params.length; i++) {
+        for (var i = 0; i < this.params.params.length; i++) {
           params.push(this.params.params[i].getDataType());
         }
         return dataTypeModule.createFunctionDataType(this.getDataType(), params);
@@ -40,7 +40,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           var realFunc = null;
           for (var i = 0; i < functions.length; i++) {
             var func = functions[i];
-            if (func.params.name.params.name === this.params.func.params.name) {
+            if (func.params.name.params.name === this.params.func.params.name) { // TODO: Add overloads?
               realFunc = func;
               break;
             }
@@ -51,22 +51,29 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
             this.riseSyntaxError(_s.sprintf(errorMessages.FUNCTION_NOT_DEFINED, this.params.func.params.name));
           }
           
-          this.params.func.functions.functionIdentifier(realFunc.params.realFunction);
-          
+          if (realFunc.params.realFunction) {
+            this.params.func.functions.functionIdentifier(realFunc.params.realFunction);
+          }
           
           var intrinsicSignature = this.functions.getIntrinsicSignature();
           var signature = this.params.signature;
           
           if (!intrinsicSignature.matches(signature)) {
-            // :( does not match!
-            // maybe its just some unknowns / ambigs that are causing this problem?
-            
+            // maybe its just some unknowns / ambigs that are causing this problem?            
             if (!signature.isKnown() || !intrinsicSignature.isKnown()) {
               // signature => intrinsicSignature suggestions
-              // TODO!
-              /*for (var i = 0; i < signature.paramTypes.length; i++) {
-                var sig = signature.paramTypes[i];
-              }*/
+              for (var i = 0; i < signature.params.paramTypes.length; i++) {
+                var sig = signature.params.paramTypes[i];
+                this.params.params[i].proposeDataType(sig);
+              }
+              // if not first class it is possible to define the target function, do it!
+              
+              // intrinsicSignature => signature suggestions
+              // get list of all possible functions
+              for (var i = 0; i < intrinsicSignature.params.paramTypes.length; i++) {
+                var sig = intrinsicSignature.params.paramTypes[i];
+                realFunc.params.params[i].identifier.proposeDataType(sig);
+              }
             }
           }
         }

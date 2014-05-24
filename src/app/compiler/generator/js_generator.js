@@ -102,7 +102,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
           gen.emit(', ');
         }
         var param = node.params.params[i];
-        gen.emitNode(param.identifier.params.name);
+        gen.emitNode(param.identifier);
       }
       gen.emit(') ');
       gen.emitNode(node.params.scope);

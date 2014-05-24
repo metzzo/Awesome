@@ -141,6 +141,15 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           enumerable: false,
           writable: false
         },
+        proposeDataType: {
+          value: function(dataType) {
+            if (this.functions && this.functions.processDataTypes) {
+              this.functions.proposeDataType(dataType);
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
         
         // VARIABLE:
         getVariables: {
@@ -151,17 +160,6 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           },
           enumerable: false,
           writable: false
-        },
-        getIdentifier: {
-          value: function() {
-            if (this.functions && this.functions.getIdentifier) {
-              return this.functions.getIdentifier();
-            } else {
-              return null;
-            }
-          },
-          enumerable: false,
-          writeable: false
         }
       });
       

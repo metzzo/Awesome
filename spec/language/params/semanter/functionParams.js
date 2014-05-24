@@ -48,6 +48,39 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       check: function(ast, semanter) {
         
       }
+    },
+    {
+      name: 'outer type inference works for parameter',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstFunction, {
+            params: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'foo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ],
+            name: astModule.createNode(AstIdentifier, { name: 'hello' }),
+            returnDataType: astModule.createNode(AstEmpty, { }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.FUNCTION,
+              nodes: [
+                astModule.createNode(AstIntLit, { value: 1 })
+              ]
+            })
+          }),
+          astModule.createNode(AstCall, {
+            func: astModule.createNode(AstIdentifier, { name: 'hello' }),
+            params: [ astModule.createNode(AstIntLit, { value: 42 }) ]
+          })
+        ]
+      }),
+      check: function(ast, semanter) {
+        
+      }
     }
   ]
 });

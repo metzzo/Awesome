@@ -16,9 +16,20 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration
         var oldVariables = this.params.variables;
         this.params.variables = [ ];
         // add variables from parent scope but only if the current scope is a LOCAL scope
-        if (this.getScope() && this.params.type === scope_node.types.LOCAL) {
-          this.params.variables = this.params.variables.concat(this.getScope().getVariables());
+        switch (this.params.type) {
+          case scope_node.types.LOCAL:
+            if (this.getScope()) {
+              this.params.variables = this.params.variables.concat(this.getScope().getVariables());
+            }
+            break;
+          case scope_node.types.FUNCTION:
+            // add parameters!
+            if (this.parent && this.parent.name === funcDeclModule.name) {
+              this.params.variables = this.params.variables.concat(this.parent.functions.getParameters());
+            }
+            break;
         }
+        
         
         try {
           for (var i = 0; i < this.params.nodes.length; i++) {

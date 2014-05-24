@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, scopeModule, errorMessages) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, scopeModule, funcDeclModule, errorMessages) {
   var IdentifierTypes = {
     VARIABLE: 'variable',
     FUNCTION: 'function'
@@ -41,8 +41,11 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
         }
       },
       getIdentifier: function() {
+        return this.params.info;
+      },
+      proposeDataType: function(dataType) {
         if (this.params.type === IdentifierTypes.VARIABLE) {
-          return this.params.info;
+          this.params.info.proposeDataType(dataType);
         } else {
           return null;
         }
@@ -50,8 +53,15 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
       processDataTypes: function() {
         if (!this.params.type) {
           // try to find my data type pl0x
-          var scope = this.getScope();
-          var variables = scope.getVariables();
+          
+          // is this a parameter?
+          var scope;
+          if (this.parent && this.parent.name === funcDeclModule.name) {
+            scope = this.parent.params.scope; // yep, so please take the scope of the function
+          } else {
+            scope = this.getScope();
+          }
+          var variables = scope.getVariables(); // no, normal scope plz!
           
           // am I one of these variables?
           for(var i = 0; i < variables.length; i++) {

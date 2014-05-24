@@ -563,7 +563,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
             returnDataType: { name: 'Stub', params: { } },
             params: [ ],
             scope: { name: 'Stub', params: { } },
-            name: { name: 'Stub', params: { } }
+            name: { name: 'Stub', params: { } },
+            realParameters: [ ]
           }
         };
         
