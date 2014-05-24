@@ -152,6 +152,39 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         
       },
       fails: true
+    },
+    {
+      name: 'anonymous function and calling it works',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'foo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
+                value: astModule.createNode(AstFunction, {
+                  params: [ ],
+                  name: astModule.createNode(AstEmpty, { }),
+                  returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
+                  scope: astModule.createNode(AstScope, {
+                    type: AstScope.types.FUNCTION,
+                    nodes: [ ]
+                  })
+                }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          }),
+          astModule.createNode(AstCall, {
+            func: astModule.createNode(AstIdentifier, { name: 'foo' }),
+            params: [ ]
+          })
+        ]
+      }),
+      check: function(ast, semanter) {
+        
+      }
     }
   ]
 });
