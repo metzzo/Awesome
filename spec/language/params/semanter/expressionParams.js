@@ -136,7 +136,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       }
     },
     {
-      name: 'data type is correctly inferred from variable declaration',
+      name: 'plus operator sets data type properly from complex term',
       input: astModule.createNode(AstScope, {
         type: AstScope.types.LOCAL,
         nodes: [
@@ -145,15 +145,34 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
               {
                 identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
                 dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
-                value: astModule.createNode(AstIntLit, { value: 42 }),
+                value: astModule.createNode(AstEmpty, { }),
+                type: AstVarDec.types.VARIABLE
+              },
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'swag' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN}),
+                value: astModule.createNode(AstEmpty, { }),
                 type: AstVarDec.types.VARIABLE
               }
             ]
+          }),
+          astModule.createNode(AstOperator, {
+            leftOperand: astModule.createNode(AstOperator, {
+              leftOperand: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+              rightOperand: astModule.createNode(AstIdentifier, { name: 'swag' }),
+              operator: operatorModule.Operators.PLUS_OPERATOR
+            }),
+            rightOperand: astModule.createNode(AstIntLit, { value: 42 }),
+            operator: operatorModule.Operators.PLUS_OPERATOR
           }),
           astModule.createNode(AstEmpty, {
             check: function(ast) {
               expect(ast.getScope().getVariables()).toEqual([
                 new identifierModule.Identifier('yolo', {
+                  dataType: dataTypeModule.PrimitiveDataTypes.INT,
+                  type: AstVarDec.types.VARIABLE 
+                }),
+                new identifierModule.Identifier('swag', {
                   dataType: dataTypeModule.PrimitiveDataTypes.INT,
                   type: AstVarDec.types.VARIABLE 
                 })

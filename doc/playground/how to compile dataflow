@@ -1,0 +1,69 @@
+Variable -> Function Data Flow
+
+
+var x = 10
+x => (x) -> print 'Hello World'
+x = 100
+
+
+var a = (x) -> print 'yolo'
+var b = (x) -> print 'swag'
+a -> b
+a();
+
+
+Compiles to:
+var AutoVariable = function(startValue) {
+  this.value = startvalue;
+  this.links = [];
+};
+AutoVariable.prototype.link = function(target) {
+  this.links.push(target);
+};
+AutoVariable.prototype.update = function(value) {
+  this.set(value);
+};
+AutoVariable.prototype.set = function(value) {
+  this.value = value;
+  for (var i = 0; i < this.links.length; i++) {
+    this.links[i].update(value);
+  };
+};
+AutoVariable.prototype.get = function(value) {
+  return this.value;
+};
+
+var AutoFunction = function(func) {
+  this.func = func;
+  this.links = [];
+}; 
+AutoFunction.prototype.link = function(target) {
+  this.links.push(target);
+};
+AutoFunction.prototype.call = function(value) {
+  var result = this.func(value)
+  for (var i = 0; i < this.links.length; i++) {
+    this.links[i].update(result);
+  };
+};
+AutoFunction.prototype.update = function(value) {
+  this.call([ value ]);
+};
+AutoVariable.prototype.get = function(func) {
+  return this.func;
+};
+AutoVariable.prototype.set = function(func) {
+  this.func = func;
+};
+
+
+var x = new AutoVariable(10);
+x.link(function(x) {
+  print('Hello World');
+});
+x.set(100);
+
+
+
+var a = new AutoFunction(function(x) { print('yolo'); });
+var b = new AutoFunction(function(x) { print('yolo'); });

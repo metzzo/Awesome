@@ -73,7 +73,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   Parser.prototype.parseScope = function(type, endToken) {
     // if no \n => it is a one line scope, kinda like if(yolo) swag;
     var token = this.iterator.current();
-    if (!this.iterator.isNL() && type === AstScope.types.LOCAL) {
+    if (!this.iterator.isNL() && type !== AstScope.types.MAIN) {
       return astModule.createNode(AstScope, { type: type, nodes: [ this.parseLine() ], token: token });
     } else {
       if (_.isUndefined(endToken)) {

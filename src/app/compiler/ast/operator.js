@@ -17,10 +17,10 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       },
       processDataTypes: function() {
         var left = this.params.leftOperand.getDataType(), right = this.params.rightOperand.getDataType();
-        if (left.matches(dataTypeModule.MetaDataTypes.UNKNOWN) && right.isKnown()) {
+        if (!left.isKnown() && right.isKnown()) {
           this.params.leftOperand.proposeDataType(right);
         }
-        if (right.matches(dataTypeModule.MetaDataTypes.UNKNOWN) && left.isKnown()) {
+        if (!right.isKnown() && left.isKnown()) {
           this.params.rightOperand.proposeDataType(left);
         }
       },
@@ -31,12 +31,8 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         }
       },
       proposeDataType: function(dataType) {
-        if (!this.params.leftOperand.getDataType().isKnown()) {
-          this.params.leftOperand.proposeDataType(dataType);
-        }
-        if (!this.params.rightOperand.getDataType().isKnown()) {
-          this.params.rightOperand.proposeDataType(dataType);
-        }
+        this.params.leftOperand.proposeDataType(dataType);
+        this.params.rightOperand.proposeDataType(dataType);
       }
     }
   };
