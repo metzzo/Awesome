@@ -21,7 +21,8 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
   var defaultDataTypeValues = {
     'int': '0',
     'float': '0.0',
-    'string': "''"
+    'string': "''",
+    'function': '(function() { })'
   };
   var getDefaultDataTypeValue = function(dataType) {
     return defaultDataTypeValues[dataType.name];
@@ -83,9 +84,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       }
       gen.emit(')');
     },
-    'DataType': function(gen, node) {
-      throw 'Not yet implemented '+node.name;
-    },
+    'DataType': function(gen, node) { },
     'Empty': function(gen, node) { },
     'For': function(gen, node) {
       throw 'Not yet implemented '+node.name;

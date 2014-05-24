@@ -163,7 +163,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       
       var dataType;
       astModule.mark();
-      if (this.iterator.optMatch('is')) {
+      if (this.iterator.optMatch('returns')) {
         dataType = this.parseDataType();
       } else {
         dataType = astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN });
@@ -445,15 +445,39 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   
   Parser.prototype.parseDataType = function() {
     var token = this.iterator.current();
-    var dataType = dataTypeModule.findPrimitiveDataTypeByName(token.text);
-    if (!!dataType) {
-      this.iterator.next();
+    if (this.iterator.is('(')) {
+      this.iterator.match('(');
+      var first = true;
+      var params = [], returnType;
+      while (!this.iterator.is(')')) {
+        if (!first) {
+          this.iterator.match(',');
+        }
+        params.push(this.parseDataType().getDataType());
+        
+        first = false;
+      }
+      
+      this.iterator.match(')');
+      this.iterator.match('returns');
+      
+      returnType = this.parseDataType().getDataType();
+      var dataType = dataTypeModule.createFunctionDataType(returnType, params);
       return astModule.createNode(AstDataType, {
         dataType: dataType,
         token: token
       });
     } else {
-      this.iterator.riseSyntaxError(errorMessages.EXPECTING_DATATYPE);
+      var dataType = dataTypeModule.findPrimitiveDataTypeByName(token.text);
+      if (!!dataType) {
+        this.iterator.next();
+        return astModule.createNode(AstDataType, {
+          dataType: dataType,
+          token: token
+        });
+      } else {
+        this.iterator.riseSyntaxError(errorMessages.EXPECTING_DATATYPE);
+      }
     }
   };
   
