@@ -95,6 +95,8 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         gen.emit('var ');
         gen.emitNode(node.params.name);
         gen.emit(' = ');
+      } else {
+        gen.emit('(');
       }
       gen.emit('function (');
       for (var i = 0; i < node.params.params.length; i++) {
@@ -106,6 +108,9 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       }
       gen.emit(') ');
       gen.emitNode(node.params.scope);
+      if (node.params.name.name === AstEmpty.name) {
+        gen.emit(')');
+      }
     },
     'Identifier': function(gen, node) {
       gen.emit(node.params.name);

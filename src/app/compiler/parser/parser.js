@@ -293,6 +293,11 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         }
       } while(found);
       
+      if (priority === 0 && this.iterator.is('(')) {
+        // function call
+        leftOperand = this.parseFuncCall(true, leftOperand);
+      }
+      
       return leftOperand;
     } else {
       return this.parseFactor();
@@ -505,12 +510,12 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     });
   };
   
-  Parser.prototype.parseFuncCall = function(requireBrackets) {
+  Parser.prototype.parseFuncCall = function(requireBrackets, identifier) {
     var position = this.iterator.position;
     var token = this.iterator.current();
-    
-    var identifier = this.parseIdentifier();
     var hasBrackets;
+    
+    identifier = identifier ? identifier: this.parseIdentifier();
     
     if (this.iterator.optMatch('(')) {
       hasBrackets = true;

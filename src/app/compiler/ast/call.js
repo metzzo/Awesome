@@ -32,11 +32,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         // I need to know whether you are a variable or not
         this.params.func.processDataTypes();
         
-        var identifier;
-        if (identifier = this.params.func.functions.getIdentifier()) {
+        if (this.params.func.getDataType().params.type === 'function') {
           // it is using a variable as function 
-          
-          this.params.signature = identifier.params.dataType;
+          this.params.signature = this.params.func.getDataType();
         } else {
           // it is using a function name as function
           var functions = this.getScope().functions.getFunctions();
@@ -51,7 +49,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           if (realFunc) {
             this.params.signature = realFunc.getDataType();
           } else {
-            this.riseSyntaxError(_s.sprintf(errorMessages.FUNCTION_NOT_DEFINED, this.params.func.params.name));
+            return; // this.riseSyntaxError(_s.sprintf(errorMessages.FUNCTION_NOT_DEFINED, this.params.func.params.name)); <- ToDO this error messages should anywhere else be rised
           }
           
           if (realFunc.params.realFunction) {
