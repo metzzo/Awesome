@@ -204,6 +204,26 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
         expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, 'string', 'int'), { token: defaultToken }));
       },
       fails: true
+    },
+    {
+      name: 'void is invalid',
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstVarDec, {
+            variables: [
+              {
+                identifier: astModule.createNode(AstIdentifier, { name: 'yolo' }),
+                dataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.VOID}),
+                value: astModule.createNode(AstIntLit, { value: 42 }),
+                type: AstVarDec.types.VARIABLE
+              }
+            ]
+          })
+        ]
+      }),
+      check: function(ast, semanter) { },
+      fails: true
     }
   ]
 });

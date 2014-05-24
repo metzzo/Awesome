@@ -143,7 +143,7 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
         },
         proposeDataType: {
           value: function(dataType) {
-            if (this.functions && this.functions.processDataTypes) {
+            if (this.functions && this.functions.proposeDataType) {
               this.functions.proposeDataType(dataType);
             }
           },

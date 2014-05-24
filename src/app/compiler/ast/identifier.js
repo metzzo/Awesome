@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, scopeModule, funcDeclModule, errorMessages) {
+define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, scopeModule, funcDeclModule, errorMessages) {
   var IdentifierTypes = {
     VARIABLE: 'variable',
     FUNCTION: 'function'
@@ -76,6 +76,12 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
               break;
             }
           }
+        }
+      },
+      checkDataTypes: function() {
+        // identifier with void are not allowed
+        if (this.getDataType().matches(dataTypeModule.PrimitiveDataTypes.VOID)) {
+          this.riseSyntaxError(_s.sprintf(errorMessages.INVALID_DATATYPE, dataTypeModule.PrimitiveDataTypes.VOID.name));
         }
       }
     }
