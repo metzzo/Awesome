@@ -3,7 +3,7 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
   var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';
   var newLine = '\n';
-  
+  var stringStarter = '"';
   var doubleDelimiter = ['->'];
   
   var Lexer = function(input) {
@@ -35,6 +35,14 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
         }
         this.lastPosition = this.position;
         this.position--;
+      } else if (singleToken === stringStarter) {
+        this._nextToken();
+        do {
+          this.position++;
+        } while(this.position < this.input.length && this.input.charAt(this.position) !== stringStarter);
+        this.position++;
+        this._nextToken();
+        this.lastPosition = this.position + 1;
       } else if (delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken) || doubleDelimiter.indexOf(doubleToken) !== -1) {
         // shit just got serious
         this._nextToken();

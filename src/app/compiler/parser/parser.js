@@ -271,6 +271,9 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
           name = this.iterator.current().text;
           this.iterator.next();
         }
+        if ((_s.startsWith(name, '"') || _s.startsWith(name, "'")) && (_s.endsWith(name, '"') || _s.endsWith(name, "'"))) {
+          name = name.substring(1, name.length-1);
+        }
         
         func.params.aliasName = name;
         

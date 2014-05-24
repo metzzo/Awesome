@@ -495,6 +495,36 @@ define([], function() {
         }
       }
      ]
-   } 
+    },
+    {
+      name: 'is tokenizing string properly',
+      input: ['a "hello world" b'],
+      output: [
+        {
+          text: 'a',
+          params: {
+            line: 0,
+            character: 0,
+            lineText: 'a "hello world" b'
+          }
+        },
+        {
+          text: '"hello world"',
+          params: {
+            line: 0,
+            character: 2,
+            lineText: 'a "hello world" b'
+          }
+        },
+        {
+          text: 'b',
+          params: {
+            line: 0,
+            character: 16,
+            lineText: 'a "hello world" b'
+          }
+        }
+      ]
+    }
   ]
 });

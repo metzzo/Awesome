@@ -68,7 +68,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       gen.emit(node.params.value);
     },
     'String Literal': function(gen, node) {
-      gen.emit(node.params.value);
+      gen.emit('"' + node.params.value + '"');
     },
     'Float Literal': function(gen, node) {
       gen.emit(node.params.value);
