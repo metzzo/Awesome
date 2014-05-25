@@ -216,19 +216,13 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       name: 'is parsing extern function',
       input: ['extern', '\n', 'function', 'swag', '(', ')', 'returns', 'void', 'alias', 'yolo', '\n', 'end'],
       output: [
-        astModule.createNode(AstScope, {
-          type: AstScope.types.LOCAL,
-          nodes: [
-            astModule.createNode(AstFunction, {
-              params: [ ],
-              name: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag') }),
-              returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.VOID, token: t('void') }),
-              aliasName: 'yolo',
-              scope: astModule.createNode(AstEmpty, { token: t('returns') }),
-              token: t('function')
-            })
-          ],
-          token: t('extern')
+        astModule.createNode(AstFunction, {
+          params: [ ],
+          name: astModule.createNode(AstIdentifier, { name: 'swag', token: t('swag') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.VOID, token: t('void') }),
+          aliasName: 'yolo',
+          scope: astModule.createNode(AstEmpty, { token: t('returns') }),
+          token: t('function')
         })
       ]
     }

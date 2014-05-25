@@ -1,0 +1,4 @@
+extern
+  function print(text is string) returns void alias "console.log.bind(console)"
+end
+

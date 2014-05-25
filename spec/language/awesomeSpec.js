@@ -9,7 +9,6 @@ define([ 'src/app/compiler/awesome' ], function(Awesome) {
       
       // assert
       expect(awesome).not.toBeNull();
-      expect(awesome.input).toBe('print 42');
     });
     
     it('compiles simple if', function() {

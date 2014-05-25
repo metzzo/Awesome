@@ -588,5 +588,43 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.scope.parent).toBe(ast);
       });
     });
+    
+    describe('Import', function() {
+      var ast;
+      beforeEach(function() {
+        ast = astModule.createNode(astModule.AstPrototypes.IMPORT, {
+          name: 'yolo',
+          alias: astModule.createNode(stubNode)
+        });
+      });
+      afterEach(function() {
+        ast = null;
+      });
+      
+      it('is created properly', function() {
+        // arrange
+        var expectedAst = {
+          name: 'Import',
+          params: {
+            name: 'yolo',
+            alias: { name: 'Stub', params: { } }
+          }
+        };
+        
+        // assert
+        expect(ast).not.toBeNull();
+        expect(ast).toEqual(expectedAst);
+      });
+      
+      it('is traversing properly', function() {
+        // act
+        ast.traverse(function() {
+          traverseCount++;
+        });
+        
+        // assert
+        expect(traverseCount).toBe(1);
+      });
+    });
   });
 });

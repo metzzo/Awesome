@@ -13,6 +13,9 @@ define([ 'react', 'src/app/compiler/awesome' ], function(React, Awesome) {
       var outputCode = awesome.compile();
       console.log(outputCode);
       
+      console.log('Execute');
+      eval(outputCode);
+      console.log('Finished');
     }
   });
   

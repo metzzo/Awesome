@@ -35,21 +35,21 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
         }
         this.lastPosition = this.position;
         this.position--;
-      } else if (singleToken === stringStarter) {
-        this._nextToken();
-        do {
-          this.position++;
-        } while(this.position < this.input.length && this.input.charAt(this.position) !== stringStarter);
-        this.position++;
-        this._nextToken();
-        this.lastPosition = this.position + 1;
       } else if (delimiter.indexOf(singleToken) !== -1 || operatorModule.findOperatorByText(doubleToken) || doubleDelimiter.indexOf(doubleToken) !== -1) {
         // shit just got serious
         this._nextToken();
         
         // add the delimiter itself if it is not silent
         do {
-          if (silentDelimiter.indexOf(singleToken) === -1) {
+          if (singleToken === stringStarter) {
+            this._nextToken();
+            do {
+              this.position++;
+            } while(this.position < this.input.length && this.input.charAt(this.position) !== stringStarter);
+            this.position++;
+            this._nextToken();
+            this.lastPosition = this.position;
+          } else if (silentDelimiter.indexOf(singleToken) === -1) {
             var isToken = operatorModule.findOperatorByText(doubleToken) || doubleDelimiter.indexOf(doubleToken) !== -1;
             
             this.lastPosition = this.position;

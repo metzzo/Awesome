@@ -15,6 +15,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   var AstEmpty      = astModule.AstPrototypes.EMPTY;
+  var AstImport     = astModule.AstPrototypes.IMPORT;
 
   
   var Parser = function(input) {
@@ -66,7 +67,11 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     } else {
       expr = this.parseExpression();
     }
-    return expr;
+    if (!(expr instanceof Array) && !!expr) {
+      return [ expr ];
+    } else {
+      return expr;
+    }
   };
   
   // SCOPE
@@ -74,7 +79,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     // if no \n => it is a one line scope, kinda like if(yolo) swag;
     var token = this.iterator.current();
     if (!this.iterator.isNL() && type !== AstScope.types.MAIN) {
-      return astModule.createNode(AstScope, { type: type, nodes: [ this.parseLine() ], token: token });
+      return astModule.createNode(AstScope, { type: type, nodes: this.parseLine(), token: token });
     } else {
       if (_.isUndefined(endToken)) {
         endToken = [ ];
@@ -88,7 +93,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         } else {
           var line = this.parseLine();
           if (!!line) {
-            nodes.push(line);
+            nodes = nodes.concat(line);
           }
           return false;
         }
@@ -283,7 +288,26 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
       } while (!this.iterator.is('end'));
       this.iterator.match('end');
       
-      return astModule.createNode(AstScope, { type: AstScope.types.LOCAL, nodes: funcs, token: token });
+      return funcs;
+    },
+    'import': function() {
+      var token = this.iterator.current();
+      this.iterator.next();
+      var name = this.iterator.current().text;
+      this.iterator.next();
+      var alias = astModule.createNode(AstEmpty, { });
+      if (this.iterator.optMatch('alias')) {
+        astModule.mark();
+        alias = astModule.createNode(AstIdentifier, {
+          name: this.iterator.current().text
+        });
+        this.iterator.next();
+      }
+      return astModule.createNode(AstImport, {
+        name: name,
+        alias: alias,
+        token: token
+      })
     }
   };
   

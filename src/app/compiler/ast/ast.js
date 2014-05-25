@@ -1,4 +1,4 @@
-define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement', 'src/app/compiler/ast/for_statement', 'src/app/compiler/ast/repeat_statement', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/ast/datatype', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/float_literal' ], function(_, syntaxErrorModule, operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement, for_statement, repeat_statement, variable_declaration, datatype, func_declaration, empty, float_literal) {
+define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement', 'src/app/compiler/ast/for_statement', 'src/app/compiler/ast/repeat_statement', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/ast/datatype', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/float_literal', 'src/app/compiler/ast/import' ], function(_, syntaxErrorModule, operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement, for_statement, repeat_statement, variable_declaration, datatype, func_declaration, empty, float_literal, importModule) {
   var iterator;
   var current;
   
@@ -201,7 +201,8 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
       VARDEC: variable_declaration,
       DATATYPE: datatype,
       FUNCTION: func_declaration,
-      EMPTY: empty
+      EMPTY: empty,
+      IMPORT: importModule
     }
   };
 });

@@ -6,6 +6,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstCall       = astModule.AstPrototypes.CALL;
   var AstStringLit  = astModule.AstPrototypes.STRING_LITERAL;
   var AstIdentifier = astModule.AstPrototypes.IDENTIFIER;
+  var AstImport     = astModule.AstPrototypes.IMPORT;
   
   var t = function(name) {
     return new tokenModule.Token(name, {
@@ -175,6 +176,20 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
       output: [
         astModule.createNode(AstIntLit, { value: 1, token: t('1') }),
         astModule.createNode(AstIntLit, { value: 2, token: t('2') })
+      ]
+    },
+    {
+      name: 'is parsing immport',
+      input: ['import', 'yolo', 'alias', 'swag'],
+      output: [
+        astModule.createNode(AstImport, {
+          name: 'yolo',
+          alias: astModule.createNode(AstIdentifier, {
+            name: 'swag',
+            token: t('swag')
+          }),
+          token: t('import')
+        })
       ]
     }
   ];

@@ -273,6 +273,7 @@ You can define the following different types of data in an extern statement:
  - function: Normal functions that are callable by awesome
  - interface: Interfaces that may be used by awesome, if you want to create an interface create a function
 
+```
 extern
   function array_length_int(array is array of int) = arr_len
   
@@ -284,10 +285,12 @@ extern
     function attr3() returns void
   end
 end
+```
 
 ### Extension Methods
 This system is used to provide some convenience methods for existing classes or primitive datatypes
 
+```
 extend int
   function toFloat()
     var floatVal = this
@@ -325,13 +328,30 @@ extend array of int
     return array_length(this) // native function call
   end
 end
+```
+### Modules
+To import modules into Awesome one has to defined them in a file '*.awesome' which then can be imported by the 'import' keyword. Imported modules are accessible in the current scope and may be used as if they were defined in the local scope. If you do not want the stuff to be imported directly into the current scope, you can define an alias.
+
+```
+file1:
+function foo(bar)
+  return bar + 10
+end
+
+file2:
+import file1 alias addBy10Module
+import language
+
+function main()
+  print addBy10Module.foo(20)
+end
+```
 
 ### Possible Features
 #### Likely
  * Indexer
  * Generics
  * Interface
- * namespace/package system
  * Abstract classes/functions
  * Closures
  * Duck Typing in functions => create new functions as soon as it is used with a new datatype
