@@ -189,12 +189,17 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         gen.indent();
         gen.emitLine();
         
+        var first = true;
         for (var i = 0; i < node.params.nodes.length; i++) {
-          if (i !== 0) {
-            gen.emitLine();
+          if (!(node.params.nodes[i].type === AstFunction.name && node.params.nodes[i].params.name === AstEmpty.name)) {
+            if (!first) {
+              gen.emitLine();
+            }
+            gen.emitNode(node.params.nodes[i]);
+            gen.emit(';');
+            
+            first = false;
           }
-          gen.emitNode(node.params.nodes[i]);
-          gen.emit(';');
         }
         gen.outdent();
         gen.emitLine('}');
@@ -225,8 +230,26 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       gen.emit(') ');
       gen.emitNode(node.params.scope);
     },
+    'Import': function(gen, node) {
+      gen.emit('/* IMPORT N SHIT */');
+    },
     'Main': function(gen) {
-      return gen.emitNode(gen.mainNode);
+      // find all non first class function declarations and declare them at the beginning of the scope
+      var functions = gen.mainNode.getFunctions();
+      for (var i = 0; i < functions.length; i++) {
+        var func = functions[i];
+        if (i !== 0) {
+          gen.emitLine();
+        }
+        gen.emitNode(func);
+        gen.emit(';');
+      }
+      
+      if (functions.length > 0) {
+        gen.emitLine();
+      }
+      
+      gen.emitNode(gen.mainNode);
     }
   };
 });

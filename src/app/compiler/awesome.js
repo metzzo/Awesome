@@ -1,4 +1,4 @@
-define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/app/compiler/semanter/semanter', 'src/app/compiler/generator/generator', 'src/app/compiler/ast/import' ], function(lexerModule, parserModule, semanterModule, generatorModule, importModule) {
+define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/app/compiler/semanter/semanter', 'src/app/compiler/generator/generator', 'src/app/compiler/ast/import', 'src/app/awesome/standard_library' ], function(lexerModule, parserModule, semanterModule, generatorModule, importModule, standard_library) {
   var File = function(awesome, name, code) {
     this.name = name;
     this.code = code;
@@ -7,7 +7,6 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
     this.tokens = null;
     this.generatedCode = '';
     
-    this.isSemanted   = false;
     this.isParsed     = false;
     this.isTokenized  = false;
     this.isGenerated  = false;
@@ -17,7 +16,7 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
     var lexer, parser;
     
     if (!this.isTokenized) {
-      lexer = new lexerModule.Lexer(this.code);
+      lexer = new lexerModule.Lexer(this.code, this.name);
       this.tokens = lexer.tokenize();
       this.isTokenized = true;
     }
@@ -27,14 +26,6 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
       this.ast = parser.parse();
       this.isParsed = true;
       this.ast.params.context = this.awesome;
-    }
-  };
-  
-  File.prototype.semant = function() {
-    if (!this.isSemanted) {
-      var semanter = new semanterModule.Semanter(this.ast);
-      semanter.semant();
-      this.isSemanted = true;
     }
   };
   
@@ -53,17 +44,32 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
     this.mainFile = this.addFile('main', input);
   };
   
-  Awesome.prototype.addFile = function(name, code) {
-    // does this file already exist?
+  Awesome.prototype.loadFile = function(path) {
+    if (!!standard_library[path]) {
+      return standard_library[path];
+    } else {
+      return this.getFile(path);
+    }
+  };
+  
+  Awesome.prototype.getFile = function(name) {
     for (var i = 0; i < this.files.length; i++) {
       if (this.files[i].name === name) {
-        return; // yes!
+        return this.files[i];
       }
     }
-    
-    var file = new File(this, name, code);
-    this.files.push(file);
-    return file
+    return null;
+  };
+  
+  Awesome.prototype.addFile = function(name, code) {
+    // does this file already exist?
+    if (!this.getFile(name)) {
+      var file = new File(this, name, code);
+      this.files.push(file);
+      return file
+    } else {
+      return this.getFile(name);
+    }
   };
   
   Awesome.prototype.compile = function() {
@@ -76,7 +82,7 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
         // get all the imports
         file.ast.traverse(function(node) {
           if (node.name === importModule.name) {
-            node.processImports();
+            node.functions.processImports();
           }
         });
       }
@@ -91,10 +97,13 @@ define([ 'src/app/compiler/lexer/lexer', 'src/app/compiler/parser/parser', 'src/
       }
     } while(anyUnparsedFiles);
     
+    var asts = [];
     for (var i = 0; i < this.files.length; i++) {
       var file = this.files[i];
-      file.semant();
+      asts.push(file.ast);
     }
+    var semanter = new semanterModule.Semanter(asts);
+    semanter.semant();
     
     this.output = this.mainFile.generate();
     return this.output;

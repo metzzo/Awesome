@@ -15,6 +15,7 @@ define([ ], function() {
     CANNOT_RESOLVE_DATATYPE: 'Cannot resolve data type',
     AMBIGUOUS_DATATYPE: 'Data types are incompatible %s vs. %s',
     FUNCTION_NOT_DEFINED: 'Function is not defined %s',
-    INVALID_DATATYPE: '%s is not a valid data type'
+    INVALID_DATATYPE: '%s is not a valid data type',
+    CANNOT_RESOLVE_IMPORT: 'Cannot resolve import'
   };
 });

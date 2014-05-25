@@ -26,5 +26,26 @@ define([ 'src/app/compiler/awesome' ], function(Awesome) {
   };\n\
 }');
     });
+    
+    it('compiles cyclic imports', function() {
+      // arrange
+      var awesome = new Awesome('import a \n import b \n func_a \n func_b');
+      awesome.addFile('a', 'import b ; func_b \n function func_a() \n end');
+      awesome.addFile('b', 'import a ; func_a \n function func_b() \n end');
+      var result;
+      
+      // act
+      result = awesome.compile();
+      
+      // assert
+      expect(result).toBe('var func_b = function () { };\n\
+var func_a = function () { };\n\
+{\n\
+  /* IMPORT N SHIT */;\n\
+  /* IMPORT N SHIT */;\n\
+  func_a();\n\
+  func_b();\n\
+}');
+    });
   });
 })

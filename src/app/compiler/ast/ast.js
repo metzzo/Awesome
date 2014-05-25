@@ -112,6 +112,22 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           enumerable: false,
           writable: false
         },
+        getContext: {
+          value: function(cb) {
+            var returnValue = null;
+            this.backTraverse(function(astNode) {
+              if (astNode.name === scope.name && scope.params.type === scope.types.MAIN) {
+                returnValue = astNode.params.context;
+                return true;
+              } else {
+                return false;
+              }
+            });
+            return returnValue;
+          },
+          enumerable: false,
+          writable: false
+        },
         
         // DATATYPE:
         getDataType: {
@@ -151,11 +167,22 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           writable: false
         },
         
-        // VARIABLE:
+        // VARIABLE / FUNCTION
         getVariables: {
           value: function() {
             if (this.functions && this.functions.getVariables) {
               return this.functions.getVariables();
+            } else {
+              return [];
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
+        getFunctions: {
+          value: function(modules) {
+            if (this.functions && this.functions.getFunctions) {
+              return this.functions.getFunctions(modules);
             } else {
               return [];
             }

@@ -45,16 +45,21 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration
       getVariables: function() {
         return this.params.variables;
       },
-      getFunctions: function() {
+      getFunctions: function(modules) {
+        if (!modules) {
+          modules = [ ];
+        }
+        
         var functions = [ ];
         if (this.getScope()) {
-          functions = functions.concat(this.getScope().functions.getFunctions());
+          functions = functions.concat(this.getScope().getFunctions(modules));
         }
         for (var i = 0; i < this.params.nodes.length; i++) {
           var node = this.params.nodes[i];
           // function?
-          if (node.name === funcDeclModule.name) {
-            functions.push(node);
+          var funcs = node.getFunctions(modules);
+          for (var j = 0; j < funcs.length; j++) {
+            functions.push(funcs[j]);
           }
         }
         return functions;

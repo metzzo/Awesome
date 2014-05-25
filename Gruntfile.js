@@ -9,7 +9,8 @@ module.exports = function(grunt) {
         'https://raw.github.com/dragonworx/jsel/master/jsel.js',
         'http://fb.me/react-0.10.0.js',
         'http://code.jquery.com/jquery-1.11.1.js',
-        'http://requirejs.org/docs/release/2.1.11/comments/require.js'
+        'http://requirejs.org/docs/release/2.1.11/comments/require.js',
+        'http://requirejs.org/docs/release/1.0.8/comments/text.js'
       ],
       'src/lib/css': [
         
@@ -32,12 +33,12 @@ module.exports = function(grunt) {
       server: {
         options: {
           port: 8082,
-          // keepalive: true
+          keepalive: true
         }
       }
     },
     jasmine: {
-      src: 'src/**/*.js',
+      src: 'src/app/compiler/**/*.js',
       options: {
         specs: 'spec/**/*Spec.js',
         template: require('grunt-template-jasmine-requirejs'),
@@ -107,11 +108,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-react');
 
-  grunt.registerTask('default', [ 'react', 'jsvalidate', 'jshint', 'connect', 'jasmine' ]);
+  grunt.registerTask('default', [ 'react', 'jsvalidate', /*'jshint', 'connect',*/ 'jasmine' ]);
   grunt.registerTask('deps', [ 'curl-dir' ]);
   grunt.registerTask('http', [ 'connect' ]);
   grunt.registerTask('doc', [ 'jsdoc' ]);
-  grunt.registerTask('test', [ 'jsvalidate', 'connect', 'jasmine' ]);
+  grunt.registerTask('test', [ 'jsvalidate', 'jasmine'/*, 'connect'*/]);
   
   grunt.registerTask('watchtest', ['watch:test']);
   grunt.registerTask('watcheditor', ['watch:all']);

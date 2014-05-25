@@ -1,4 +1,4 @@
-define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], function(tokenModule, operatorModule) {
+define(['underscore', 'src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], function(_, tokenModule, operatorModule) {
   var delimiter = ' \t\n\r!"§$%&/()=?`´[]{}^°+*#\'-.:,;<>'; // marks the end of a token
   var silentDelimiter = ' \t\r'; // these delimiters are not added to the array
   var comment = '--';
@@ -6,7 +6,10 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
   var stringStarter = '"';
   var doubleDelimiter = ['->'];
   
-  var Lexer = function(input) {
+  var Lexer = function(input, file) {
+    if (_.isUndefined(this.file)) {
+      file = null;
+    }
     this.input = input;
     this.position = 0;
     this.lastPosition = 0;
@@ -14,6 +17,7 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
     this.line = 0;
     this.lastNewLine = 0;
     this.lineText = '';
+    this.file = file;
   };
   
   Lexer.prototype.tokenize = function() {
@@ -83,7 +87,7 @@ define(['src/app/compiler/lexer/token', 'src/app/compiler/data/operator'], funct
     var text = this.input.substring(this.lastPosition, this.position);
     if (text.length > 0) {
       var token = new tokenModule.Token(text, {
-        file: null,
+        file: this.file,
         lineText: this.lineText,
         line: this.line,
         character: this.lastPosition - this.lastNewLine

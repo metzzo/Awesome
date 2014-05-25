@@ -37,7 +37,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           this.params.signature = this.params.func.getDataType();
         } else {
           // it is using a function name as function
-          var functions = this.getScope().functions.getFunctions();
+          var functions = this.getScope().getFunctions();
           var realFunc = null;
           for (var i = 0; i < functions.length; i++) {
             var func = functions[i];

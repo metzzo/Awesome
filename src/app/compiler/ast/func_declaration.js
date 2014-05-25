@@ -110,6 +110,9 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
           return [];
         }
       },
+      getFunctions: function() {
+        return [ this ];
+      },
       checkDataTypes: function() {
         
       }

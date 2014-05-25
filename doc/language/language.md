@@ -206,20 +206,19 @@ class List<Type>
 end
 ```
 
-### Autonomous Variables/Functions
-This is a new concept I would like to implement into Awesome. It is a concept that has some similarities to data-flow based programming.
-It basically states, that variables recalculate their value depending on the value of other variables or functions are called whenever the value changes. This system basically removed the need of function/method/variable pointers in the language, while still maintaining a powerful syntax.
+### Data Flow
+Variables recalculate their value depending on the value of other variables or functions. This system basically removes the need of function/method/variable pointers in the language, while still maintaining a powerful syntax. 
+
 Example:
 ```
 var a as int, b as int
 a => b
 a = 10
 ```
-This is a very basic example of this programming style. Whenever the value of a changes, the value of b automatically adjust - b is an autonomous variable.
-The return type of '=>' is a handle containing the object that references to the connection.
+This is a very basic example of this programming style. Whenever the value of 'a' changes, the value of b automatically adjusts.
+The return type of '=>' is 'b', so data flows can be chained toghether
 
-
-Of course this is not useful, as it is right now, let me give you a more useful example:
+A more useful application of this system would be:
 ```
 var a, b
 a => (a) -> print "Value of a " + a
@@ -227,13 +226,13 @@ a = 10
 ```
 Whenever the value of 'a' changes, the lambda is called with the parameter of the value of a.
 
-Chaining of autonomous variables is also possible:
+Chaining of data flows is also possible:
 ```
 var as int a, b
-a => ((x) -> sleep(1000); return x) => b
+a => ((x) -> return x*10) => b
 a = 1000
 ```
-Whenever a is assigned a value, b also is assigned the value, after 1 second of waiting time.
+Whenever a is assigned a value, b also is assigned a recalculated value
  
 This system is very useful for games or UI based applications, here is an example
 ```
@@ -248,23 +247,74 @@ input.key_left => myPlayer.x = myPlayer.x - 2
 input.key_right => myPlayer.x = myPlayer.x + 2
 ```
 
-Another useful feature this can be used for, is the block chaining function, which allows threaded operations.
-```
-var as int a
-a => {
-  (x) -> sleep(20); return 20
-  (y) -> sleep(200); return 200
-  (z) -> sleep(300); return 300
-} => (a) -> print "x: "+a
-```
-The block chains are multiple lambdas, that are executed parallel in another thread. The results of the functions are collected in an array which are given as an argument to the lambda function.
-You have to keep in mind that this feature could be too complex to implement given the strict nature of JavaScripts WebWorker.
-
-
 Possible connections are:
  * variable -> variable: Whenever the value of the left operand changes, it is automatically set to the right operand.
  * variable -> function: Whenever the value of the left operand changes, the function of the right operand called, the parameter being the value of the left operand
  * function -> function: Whenever the value of the left operand is called and the execution is ended, the function on the right operand is called with the parameter being the return type of the left operand. You can combine this with yield
+
+#### Threading
+Proper multithreading support is something JavaScript lacks and is more than ever needed. Awesome seeks to solve this problem by introducing the { } expression.
+
+The simplest form of threaded brackets is the following:
+```
+var thread =  {
+                (input) -> veryLongTask()
+              };
+thread(10)
+
+```
+A threaded routine can be started by calling it and parameters are also sent. Note: Any parameter sent to a thread must be JSONable, they are transmitted by value.
+
+To get results from a thread one has to use the data flow operator in order to receive the values:
+```
+var thread = { (input) -> begin
+  while input > 0
+    veryLongTask()
+    yield input
+    input = input - 1
+  end
+end } => (x) -> print x
+```
+
+To communicate with a threaded function you have to use the 'request' keyword. This keywords halts the current execution until the next value is posted into the thread. The data type that is emitted into the thread must be consistent.
+```
+var thread = {
+  (input) -> begin
+    var value
+    while true
+      request value
+      
+      value = veryLongTask(value)
+      yield value
+    end
+  end
+}
+thread.emit 1
+thread.emit 2
+thread.emit 'hello'  -- throws a syntax error, because post has to be consistent
+
+thread => (x) -> print 'Result!'
+thread();
+```
+
+
+If you want to wait for a certain threaded routine to be finished, you may use the 'await' keyword inside a thread. This executes the defined threaded routine and halts the execution of the current thread until it is finished. If a threaded routine returns a value via 'yield' the value is ignored, until a value which is returns with 'return' is received.
+```
+var thread = {
+  (input) -> begin
+    var a, b, c
+    
+    a = await { () -> return veryLongTask() }
+    b = await { () -> return veryLongTask() }
+    c = await { () -> return veryLongTask() }
+    return a + b +c
+  end
+}
+
+thread => (x) -> print 'FINISHED'
+thread()
+```
+NOTE: THIS FEATURE MAY BE UNNECESSARY, because the data flow operator offers similar functionality, so it may not be implemented or be changed.
 
 ### Extern
 Extern allows to interface with code from the "outside" - other libraries, frameworks, ...
