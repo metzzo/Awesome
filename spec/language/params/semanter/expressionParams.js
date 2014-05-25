@@ -38,11 +38,11 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       name: 'simple type check in operator fails',
       input: astModule.createNode(AstOperator, {
         leftOperand: astModule.createNode(AstIntLit, { value: 1 }),
-        rightOperand: astModule.createNode(AstStringLit, { value: 'YOLO' }),
+        rightOperand: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.VOID }),
         operator: operatorModule.Operators.PLUS_OPERATOR
       }),
       check: function(expect) {
-        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, 'int', 'string'), { token: defaultToken }));
+        expect.toThrow(new syntaxErrorModule.SyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, 'int', 'void'), { token: defaultToken }));
       },
       fails: true
     },

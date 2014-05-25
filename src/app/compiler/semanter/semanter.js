@@ -7,8 +7,8 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
     }
   };
   
-  Semanter.prototype.semant = function() {
-    // type erasure
+  Semanter.prototype.semant = function() {    
+    // type inference
     var anyUnknown, oldAnyUnknown;
     do {
       oldAnyUnknown = anyUnknown;

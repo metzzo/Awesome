@@ -55,6 +55,35 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     }
   ];
   
+  var plusOperatorConversions = defaultOperatorConversions.slice(0).concat(
+    [
+      {
+        from: [dataTypeModule.PrimitiveDataTypes.STRING, dataTypeModule.PrimitiveDataTypes.INT],
+        to: dataTypeModule.PrimitiveDataTypes.STRING
+      },
+      {
+        from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.STRING],
+        to: dataTypeModule.PrimitiveDataTypes.STRING
+      },
+      {
+        from: [dataTypeModule.PrimitiveDataTypes.STRING, dataTypeModule.PrimitiveDataTypes.FLOAT],
+        to: dataTypeModule.PrimitiveDataTypes.STRING
+      },
+      {
+        from: [dataTypeModule.PrimitiveDataTypes.FLOAT, dataTypeModule.PrimitiveDataTypes.STRING],
+        to: dataTypeModule.PrimitiveDataTypes.STRING
+      },
+      {
+        from: [dataTypeModule.PrimitiveDataTypes.STRING, dataTypeModule.PrimitiveDataTypes.BOOL],
+        to: dataTypeModule.PrimitiveDataTypes.STRING
+      },
+      {
+        from: [dataTypeModule.PrimitiveDataTypes.BOOL, dataTypeModule.PrimitiveDataTypes.STRING],
+        to: dataTypeModule.PrimitiveDataTypes.STRING
+      }
+    ]
+  );
+  
   var assignOperatorConversions = [
     {
       from: [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.INT],
@@ -114,6 +143,7 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
   return {
     Conversions: {
       DefaultOperator: defaultOperatorConversions,
+      plusOperator: plusOperatorConversions,
       AssignOperator: assignOperatorConversions,
       ComparisonOperator: comparisonOperatorConversions
     },
@@ -121,7 +151,7 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     Operators: operators = {
       PLUS_OPERATOR: new Operator('+', {
         priority: 10,
-        conversions: defaultOperatorConversions
+        conversions: plusOperatorConversions
       }),
       MINUS_OPERATOR: new Operator('-', {
         priority: 10,

@@ -35,7 +35,7 @@ define(['src/app/compiler/data/operator', 'src/app/compiler/data/dataType'], fun
       // arrange
       var operator = operatorModule.Operators.PLUS_OPERATOR;
       var left = dataTypeModule.PrimitiveDataTypes.INT;
-      var right = dataTypeModule.PrimitiveDataTypes.STRING;
+      var right = dataTypeModule.MetaDataTypes.AMBIGUOUS;
       var result;
       // act
       result = operator.balance(left, right);

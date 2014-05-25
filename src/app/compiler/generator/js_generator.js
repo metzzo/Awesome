@@ -191,7 +191,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         
         var first = true;
         for (var i = 0; i < node.params.nodes.length; i++) {
-          if (!(node.params.nodes[i].type === AstFunction.name && node.params.nodes[i].params.name === AstEmpty.name)) {
+          if (!(node.params.nodes[i].name === AstFunction.name && node.params.nodes[i].params.name.params.name !== AstEmpty.name)) {
             if (!first) {
               gen.emitLine();
             }
@@ -231,7 +231,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       gen.emitNode(node.params.scope);
     },
     'Import': function(gen, node) {
-      gen.emit('/* IMPORT N SHIT */');
+      gen.emit('if (' + node.params.name + ') { ' + node.params.name + '(); }');
     },
     'Main': function(gen) {
       // find all non first class function declarations and declare them at the beginning of the scope
@@ -249,7 +249,28 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         gen.emitLine();
       }
       
-      gen.emitNode(gen.mainNode);
+      // now do the Main Scope of the modules
+      
+      if (gen.mainNode.params.context) {
+        var files = gen.mainNode.params.context.files;
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          gen.emit('var '+file.name+' = function() {');
+          gen.indent();
+          gen.emitLine(file.name + ' = null;');
+          gen.emitLine();
+          
+          gen.emitNode(file.ast);
+          gen.outdent();
+          gen.emitLine();
+          gen.emit('};');
+          gen.emitLine();
+        }
+        
+        gen.emit('main();');
+      } else {
+        gen.emitNode(gen.mainNode);
+      }
     }
   };
 });
