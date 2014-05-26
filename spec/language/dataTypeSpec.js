@@ -52,12 +52,12 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       
       it('toString works', function() {
         var func = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
-        expect(func.toString()).toBe('function(int, float) is int');
+        expect(func.toString()).toBe('function(int, float) returns int');
       });
       
       it('decorateName works', function() {
         var func = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
-        expect(func.decorateName()).toBe('_function_params_int_float_return_int');
+        expect(func.decorateName()).toBe('_func_int_float_ret_int');
       });
       
       it('balances works', function() {

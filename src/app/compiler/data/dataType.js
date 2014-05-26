@@ -59,7 +59,7 @@ define(['underscore'], function(_) {
           ret += this.params.paramTypes[i].toString();
         }
         
-        return this.name + '(' + ret + ') is ' + this.params.returnType.toString();
+        return this.name + '(' + ret + ') returns ' + this.params.returnType.toString();
       default:
         throw 'Unknown DataType type';
     }
@@ -79,7 +79,7 @@ define(['underscore'], function(_) {
           ret += this.params.paramTypes[i].toString();
         }
         
-        return '_'+this.name + '_params_' + ret + '_return_' + this.params.returnType.toString();
+        return '_func_' + ret + '_ret_' + this.params.returnType.toString();
       default:
         throw 'Unknown DataType type';
     }

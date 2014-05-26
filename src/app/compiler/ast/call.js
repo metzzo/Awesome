@@ -52,7 +52,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                   var dt1, dt2;
                   dt1 = intrinsicSignature.params.paramTypes[j];
                   dt2 = funcParams[j].dataType.getDataType();
-                  if (!dt1.matches(dt2)) {
+                  if (!dt1.matches(dt2) && !(!dt1.isKnown() || !dt2.isKnown())) {
                     signatureDoesNotMatch = true;
                     break;
                   }
