@@ -62,8 +62,8 @@ until expression -- traditional "do - while" loop
 -- error handling
 try
   rise new ArgumentError
-catch ArgumentError e
-  
+catch ArgumentError
+  -- the local variable 'exception' with the exception object is available here
 end
 
 -- select
@@ -91,8 +91,8 @@ var as int a, b, c -- use one default datatype for all
 const myConst = 100 -- not mutatable
 
 
-var myArray is array of int = new int[20] -- int array
-var myArrayBig is array of array of int = new int[20][10] -- 2 dim array
+var myArray is array of int = new array[10] of int -- int array
+var myArrayBig is array of array of int = new array[20] of array[10] of int -- 2 dim array
 
 
 ```

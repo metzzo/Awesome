@@ -65,7 +65,7 @@ define(['underscore'], function(_) {
     }
   };
   
-  DataType.prototype.juggleName = function() {
+  DataType.prototype.decorateName = function() {
     switch (this.params.type) {
       case DataTypeTypes.PRIMITIVE:
       case DataTypeTypes.META:

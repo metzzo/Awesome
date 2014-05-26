@@ -82,7 +82,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
         if (dataType.isKnown()) {
           if (this.params.name.name !== emptyModule.name && !this.params.realFunction) {
             // know set the realFunction bro
-            this.params.realFunction = new identifierModule.Identifier(this.params.name.params.name+dataType.juggleName(), {
+            this.params.realFunction = new identifierModule.Identifier(this.params.name.params.name, {
               dataType: dataType,
               type: variableDeclModule.types.CONSTANT
             });

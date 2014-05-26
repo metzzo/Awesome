@@ -32,6 +32,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         // I need to know whether you are a variable or not
         this.params.func.processDataTypes();
         
+        var intrinsicSignature = this.functions.getIntrinsicSignature();
         if (this.params.func.getDataType().params.type === 'function') {
           // it is using a variable as function 
           this.params.signature = this.params.func.getDataType();
@@ -39,11 +40,28 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           // it is using a function name as function
           var functions = this.getScope().getFunctions();
           var realFunc = null;
+          var signature
           for (var i = 0; i < functions.length; i++) {
             var func = functions[i];
             if (func.params.name.params.name === this.params.func.params.name) { // TODO: Add overloads?
-              realFunc = func;
-              break;
+              // check datatypes
+              var funcParams = func.params.params;
+              if (funcParams.length === intrinsicSignature.params.paramTypes.length) {
+                var signatureDoesNotMatch = false;
+                for (var j = 0; j < funcParams.length; j++) {
+                  var dt1, dt2;
+                  dt1 = intrinsicSignature.params.paramTypes[j];
+                  dt2 = funcParams[j].dataType.getDataType();
+                  if (!dt1.matches(dt2)) {
+                    signatureDoesNotMatch = true;
+                    break;
+                  }
+                }
+                if (!signatureDoesNotMatch) {
+                  realFunc = func;
+                  break;
+                }
+              }
             }
           }
           if (realFunc) {
@@ -56,8 +74,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
             this.params.func.functions.functionIdentifier(realFunc.params.realFunction);
           }
           
-          var intrinsicSignature = this.functions.getIntrinsicSignature();
+          
           var signature = this.params.signature;
+          intrinsicSignature = this.functions.getIntrinsicSignature();
           
           if (!intrinsicSignature.matches(signature)) {
             // maybe its just some unknowns / ambigs that are causing this problem?            

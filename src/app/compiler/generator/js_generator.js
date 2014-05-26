@@ -120,7 +120,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
       }
     },
     'Identifier': function(gen, node) {
-      gen.emit(node.params.name);
+      gen.emit(node.functions.getDecoratedName());
     },
     'If': function(gen, node) {
       for (var i = 0; i < node.params.cases.length; i++) {
@@ -215,7 +215,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         }
         
         var variable = node.params.variables[i];
-        gen.emit(variable.identifier.params.name);
+        gen.emit(variable.identifier.functions.getDecoratedName());
         gen.emit(' = ');
         if (variable.value.name !== AstEmpty.name) {
           castNode(gen, variable.value, variable.dataType.getDataType());

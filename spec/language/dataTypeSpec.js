@@ -25,8 +25,8 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         expect(dataTypeModule.PrimitiveDataTypes.INT.toString()).toBe('int');
       });
       
-      it('juggleName works', function() {
-        expect(dataTypeModule.PrimitiveDataTypes.INT.juggleName()).toBe('_int');
+      it('decorateName works', function() {
+        expect(dataTypeModule.PrimitiveDataTypes.INT.decorateName()).toBe('_int');
       });
       
       it('balances works', function() {
@@ -55,9 +55,9 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         expect(func.toString()).toBe('function(int, float) is int');
       });
       
-      it('juggleName works', function() {
+      it('decorateName works', function() {
         var func = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
-        expect(func.juggleName()).toBe('_function_params_int_float_return_int');
+        expect(func.decorateName()).toBe('_function_params_int_float_return_int');
       });
       
       it('balances works', function() {

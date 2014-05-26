@@ -1,6 +1,5 @@
 extern
-  function print(text is string) returns void alias "console.log.bind(console)"
+  function log(text is string) returns void alias "console.log.bind(console)"
+  function log(text is int) returns void alias "console.log.bind(console)"
 end
 
-
-print "Language loaded"

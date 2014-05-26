@@ -83,6 +83,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         if (this.getDataType().matches(dataTypeModule.PrimitiveDataTypes.VOID)) {
           this.riseSyntaxError(_s.sprintf(errorMessages.INVALID_DATATYPE, dataTypeModule.PrimitiveDataTypes.VOID.name));
         }
+      },
+      getDecoratedName: function() {
+        return this.params.name+this.getDataType().decorateName();
       }
     }
   };
