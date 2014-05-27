@@ -6,6 +6,9 @@ define(['underscore', 'src/app/compiler/data/dataType', 'src/app/compiler/data/e
       alias: null
     },
     functions: {
+      traverse: function(cb) {
+        this.params.alias.traverse(cb);
+      },
       getDataType: function() {
         return dataTypeModule.PrimitiveDataTypes.VOID;
       },

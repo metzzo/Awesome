@@ -16,6 +16,7 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   var AstEmpty      = astModule.AstPrototypes.EMPTY;
   var AstImport     = astModule.AstPrototypes.IMPORT;
+  var AstReturn     = astModule.AstPrototypes.RETURN;
 
   
   var Parser = function(input) {
@@ -138,8 +139,8 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
     },
     'function': function(justHeader) {
       var token = this.iterator.current();
-      
       this.iterator.next();
+      
       var identifier;
       if (this.isIdentifier()) {
         astModule.mark();
@@ -184,6 +185,15 @@ define([ 'underscore', 'underscore.string', 'src/app/compiler/parser/tokenIterat
         token: token,
         name: identifier
       });
+    },
+    'return': function() {
+      var token = this.iterator.current();
+      this.iterator.next();
+      var ret = this.parseExpression();
+      return astModule.createNode(AstReturn, {
+        ret: ret,
+        token: token
+      })
     },
     'repeat': function() {
       var token = this.iterator.current();

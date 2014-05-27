@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/data/operator', 'src/app/compiler/data/errorMessages'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule, operatorModule, errorMessages) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/data/operator', 'src/app/compiler/data/errorMessages', 'src/app/compiler/ast/return_statement'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule, operatorModule, errorMessages, retModule) {
   var astModule;
   
   return {
@@ -67,15 +67,19 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
           this.params.params[i].dataType.params.dataType = this.params.realParameters[i].params.dataType;
         }
         
-        
-        // try to guess my return type if returnDataType is unknown
         if (this.params.returnDataType.getDataType().matches(dataTypeModule.MetaDataTypes.UNKNOWN)) {
-          // this.params.scope.traverse(function(node) {
-            // TODO!
-            // if node === return statement: myDataType == return Statement data Type, exit
-          // });
-          // Until return is implemented:
-          this.params.returnDataType.params.dataType = dataTypeModule.PrimitiveDataTypes.VOID;
+          // if there is know return => i am void!
+          var thereIsNoRet = true;
+          this.params.scope.traverse(function(node) {
+            if (node.name === retModule.name) {
+              thereIsNoRet = false;
+              return true;
+            }
+          });
+          // no return defined
+          if (thereIsNoRet) {
+            this.params.returnDataType.params.dataType = dataTypeModule.PrimitiveDataTypes.VOID;
+          }
         }
         
         var dataType = this.getDataType();
@@ -112,6 +116,9 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       },
       getFunctions: function() {
         return [ this ];
+      },
+      proposeDataType: function(dt) {
+        this.params.returnDataType.proposeDataType(dt);
       },
       checkDataTypes: function() {
         

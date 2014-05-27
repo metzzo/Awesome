@@ -623,7 +623,7 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         });
         
         // assert
-        expect(traverseCount).toBe(1);
+        expect(traverseCount).toBe(2);
       });
     });
   });

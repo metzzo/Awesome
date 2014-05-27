@@ -7,6 +7,11 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
     functions: {
       getDataType: function() {
         return this.params.dataType;
+      },
+      proposeDataType: function(dt) {
+        if (!this.params.dataType || !this.params.dataType.isKnown()) {
+          this.params.dataType = dt;
+        }
       }
     }
   };

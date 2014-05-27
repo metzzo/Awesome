@@ -14,8 +14,9 @@ define([ ], function() {
     // Semanter
     CANNOT_RESOLVE_DATATYPE: 'Cannot resolve data type',
     AMBIGUOUS_DATATYPE: 'Data types are incompatible %s vs. %s',
-    FUNCTION_NOT_DEFINED: 'Function is not defined %s',
+    FUNCTION_NOT_DEFINED: 'Function is not defined %s', // unused?
     INVALID_DATATYPE: '%s is not a valid data type',
-    CANNOT_RESOLVE_IMPORT: 'Cannot resolve import'
+    CANNOT_RESOLVE_IMPORT: 'Cannot resolve import',
+    RETURN_IN_FUNCTION: 'Return must be defined inside a function'
   };
 });

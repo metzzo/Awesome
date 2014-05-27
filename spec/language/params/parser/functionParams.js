@@ -6,6 +6,7 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   var AstVarDec     = astModule.AstPrototypes.VARDEC;
   var AstEmpty      = astModule.AstPrototypes.EMPTY;
+  var AstReturn     = astModule.AstPrototypes.RETURN;
   
   var t = function(name) {
     return new tokenModule.Token(name, {
@@ -222,6 +223,25 @@ define(['underscore.string', 'src/app/compiler/lexer/token', 'src/app/compiler/a
           returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.VOID, token: t('void') }),
           aliasName: 'yolo',
           scope: astModule.createNode(AstEmpty, { token: t('returns') }),
+          token: t('function')
+        })
+      ]
+    },
+    {
+      name: 'is parsing function with return',
+      input: ['function', 'hello', '\n', 'return', '1', '\n', 'end'],
+      output: [
+        astModule.createNode(AstFunction, {
+          params: [ ],
+          name: astModule.createNode(AstIdentifier, { name: 'hello', token: t('hello') }),
+          returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN, token: t('\n') }),
+          scope: astModule.createNode(AstScope, {
+            type: AstScope.types.FUNCTION,
+            nodes: [
+              astModule.createNode(AstReturn, { ret: astModule.createNode(AstIntLit, { value: 1, token: t('1')}), token: t('return') })
+            ],
+            token: t('\n')
+          }),
           token: t('function')
         })
       ]
