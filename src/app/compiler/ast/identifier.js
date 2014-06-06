@@ -1,7 +1,8 @@
 define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, scopeModule, funcDeclModule, errorMessages) {
   var IdentifierTypes = {
     VARIABLE: 'variable',
-    FUNCTION: 'function'
+    FUNCTION: 'function',
+    FUNCTIONDECL: 'funcdecl'
   };
   
   return {
@@ -26,13 +27,21 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         this.params.type = IdentifierTypes.VARIABLE;
         this.params.info = info;
       },
+      functionDeclIdentifier: function(info) {
+        if (this.params.type && this.params.type !== IdentifierTypes.FUNCTIONDECL) {
+          throw 'Cannot reset type of identifier';
+        }
+        this.params.type = IdentifierTypes.FUNCTIONDECL;
+        this.params.info = info;
+      },
       getDataType: function() {
         if (this.params.type && this.params.info) {
           switch (this.params.type) {
             case IdentifierTypes.VARIABLE:
-              return this.params.info.params.dataType;
             case IdentifierTypes.FUNCTION:
               return this.params.info.params.dataType;
+            case IdentifierTypes.FUNCTIONDECL:
+              return this.params.info.getDataType();
             default:
               throw 'Unknown Identifier Type';
           }
@@ -73,8 +82,27 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
             var variable = variables[i];
             if (variable.name === this.params.name) {
               this.functions.variableIdentifier(variable);
-              break;
+              return;
             }
+          }
+          
+          var functions = scope.functions.getFunctions();
+          var maybeFunc = null;
+          // maybe I am a function?
+          for (var i = 0; i < functions.length; i++) {
+            var func = functions[i];
+            if (func.params.name.params.name === this.params.name) {
+              if (maybeFunc) {
+                // cannot be resolved :(
+                maybeFunc = null;
+                break;
+              } else {
+                maybeFunc = func;
+              }
+            }
+          }
+          if (maybeFunc) {
+            this.functions.functionDeclIdentifier(maybeFunc);
           }
         }
       },

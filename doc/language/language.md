@@ -130,6 +130,11 @@ end
 foo 10 -- parameter is implicitly backtracked, creates a new function, if the datatype is not explicitly defined
 foo 30.4
 
+function foo2()
+
+end
+
+var f = foo2
 
 
 ```

@@ -85,13 +85,11 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
         var dataType = this.getDataType();
         if (dataType.isKnown()) {
           if (this.params.name.name !== emptyModule.name && !this.params.realFunction) {
-            // know set the realFunction bro
+            // now set the realFunction bro
             this.params.realFunction = new identifierModule.Identifier(this.params.name.params.name, {
               dataType: dataType,
               type: variableDeclModule.types.CONSTANT
             });
-            
-            this.params.name.functions.functionIdentifier(this.params.realFunction);
           }
           
           if (!this.params.hasRegisteredConversions) {

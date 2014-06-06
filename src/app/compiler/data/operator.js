@@ -162,7 +162,15 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
       NOT_EQUAL_OPERATOR: new Operator('!=', {
         priority: 6,
         conversions: equalOperatorConversions
-      })
+      })/*,
+      BINARY_PLUS_OPERATOR: new Operator('+', {
+        priority: 25,
+        conversions: defaultBinaryConversions
+      }),
+      BINARY_MINUS_OPERATOR: new Operator('+', {
+        priority: 25,
+        conversions: defaultBinaryConversions
+      }),*/
     },
     findOperatorsByPriority: function(priority) {
       var result = [ ];
