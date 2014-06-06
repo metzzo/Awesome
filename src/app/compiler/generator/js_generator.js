@@ -73,6 +73,10 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
     'Float Literal': function(gen, node) {
       gen.emit(node.params.value);
     },
+    'Return': function(gen, node) {
+      gen.emit('return ');
+      gen.emitNode(node.params.ret);
+    },
     'Call': function(gen, node) {
       gen.emitNode(node.params.func);
       gen.emit('(');

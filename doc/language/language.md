@@ -123,6 +123,15 @@ for i in myCoroutine() -- if given an object / array /.. it automatically calls 
   print "Value "+i
 end
 
+-- Duck Typing functions
+function foo(bar)
+  return bar*2
+end
+foo 10 -- parameter is implicitly backtracked, creates a new function, if the datatype is not explicitly defined
+foo 30.4
+
+
+
 ```
 
 ### OOP
@@ -184,7 +193,8 @@ class Vector is final, public -- "is acces_modifier" says how this class can be 
     end
 end
 
-class List<Type>
+-- Generic Example
+class List of Type
   private
     var data, ptr
   
@@ -204,6 +214,18 @@ class List<Type>
       return result
     end
 end
+
+var myList = new list
+myList.add 10
+myList.add "Hello World" -- error
+
+class Map of Key, Value
+  -- etc
+end
+
+var map = new map of int, string
+
+var otherList = new list of int -- explicit definition of the parameter type
 ```
 
 ### Data Flow
@@ -253,13 +275,11 @@ Possible connections are:
  * function -> function: Whenever the value of the left operand is called and the execution is ended, the function on the right operand is called with the parameter being the return type of the left operand. You can combine this with yield
 
 #### Threading
-Proper multithreading support is something JavaScript lacks and is more than ever needed. Awesome seeks to solve this problem by introducing the { } expression.
+Proper multithreading support is something JavaScript lacks and is more than ever needed. Awesome seeks to solve this problem by introducing the "task" expression: task () -> ACTION
 
 The simplest form of threaded brackets is the following:
 ```
-var thread =  {
-                (input) -> veryLongTask()
-              };
+var thread =  task (input) -> veryLongTask()
 thread(10)
 
 ```
@@ -267,19 +287,18 @@ A threaded routine can be started by calling it and parameters are also sent. No
 
 To get results from a thread one has to use the data flow operator in order to receive the values:
 ```
-var thread = { (input) -> begin
+var thread = ( task (input) -> begin
   while input > 0
     veryLongTask()
     yield input
     input = input - 1
   end
-end } => (x) -> print x
+end ) => (x) -> print x
 ```
 
 To communicate with a threaded function you have to use the 'request' keyword. This keywords halts the current execution until the next value is posted into the thread. The data type that is emitted into the thread must be consistent.
 ```
-var thread = {
-  (input) -> begin
+var thread = task (input) -> begin
     var value
     while true
       request value
@@ -288,7 +307,7 @@ var thread = {
       yield value
     end
   end
-}
+
 thread.emit 1
 thread.emit 2
 thread.emit 'hello'  -- throws a syntax error, because post has to be consistent
@@ -298,18 +317,16 @@ thread();
 ```
 
 
-If you want to wait for a certain threaded routine to be finished, you may use the 'await' keyword inside a thread. This executes the defined threaded routine and halts the execution of the current thread until it is finished. If a threaded routine returns a value via 'yield' the value is ignored, until a value which is returns with 'return' is received.
+If you want to wait for a certain threaded routine to be finished, you may use the 'wait for' keyword inside a thread. This executes the defined threaded routine and halts the execution of the current thread until it is finished. If a threaded routine returns a value via 'yield' the value is ignored, until a value which is returns with 'return' is received.
 ```
-var thread = {
-  (input) -> begin
-    var a, b, c
-    
-    a = await { () -> return veryLongTask() }
-    b = await { () -> return veryLongTask() }
-    c = await { () -> return veryLongTask() }
-    return a + b +c
-  end
-}
+var thread = task (input) -> begin
+  var a, b, c
+  
+  a = wait for task () -> return veryLongTask()
+  b = wait for task () -> return veryLongTask()
+  c = wait for task () -> return veryLongTask()
+  return a + b +c
+end
 
 thread => (x) -> print 'FINISHED'
 thread()
@@ -350,24 +367,24 @@ extend int
     return this
   end
   function toString()
-    return int_to_string_func(this) // native function call
+    return int_to_string_func(this) -- native function call
   end
 end
 
 extend array of int
   property this[position]
     get
-      return access_intarray(this, position) // native function call
+      return access_intarray(this, position) -- native function call
     end
     set
-      set_intarray(this, position, value) // native function call
+      set_intarray(this, position, value) -- native function call
     end
   end
   function toFloatArray()
-    // convert to float array
+    -- convert to float array
   end
   function toStringArray()
-    // convert to string array
+    -- convert to string array
   end
   function iterate()
     for i in range(this.length)
@@ -375,7 +392,7 @@ extend array of int
     end
   end
   function length()
-    return array_length(this) // native function call
+    return array_length(this) -- native function call
   end
 end
 ```

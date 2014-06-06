@@ -14,14 +14,14 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
       processDataTypes: function() {
         var funcNode;
         this.backTraverse(function(node) {
-          if (node.params.type === 'function') { // must be string cause of cyclic reference in deps
-            funcNode = node.parent;
+          if (node.name === 'Function Declaration') { // must be string cause of cyclic reference in deps
+            funcNode = node;
             return true;
           }
         });
         
         if (funcNode) {
-          var dt = ret.getDataType();
+          var dt = this.params.ret.getDataType();
           if (dt.isKnown()) {
             funcNode.proposeDataType(dt);
           } else {

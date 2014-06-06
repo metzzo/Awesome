@@ -14,6 +14,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
   var AstDataType   = astModule.AstPrototypes.DATATYPE;
   var AstFunction   = astModule.AstPrototypes.FUNCTION;
   var AstEmpty      = astModule.AstPrototypes.EMPTY;
+  var AstReturn     = astModule.AstPrototypes.RETURN;
   
   var defaultToken = new tokenModule.Token('test', {
     file: null,
@@ -31,7 +32,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
           astModule.createNode(AstFunction, {
             params: [ ],
             name: astModule.createNode(AstIdentifier, { name: 'hello' }),
-            returnDataType: astModule.createNode(AstEmpty, { }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
             scope: astModule.createNode(AstScope, {
               type: AstScope.types.FUNCTION,
               nodes: [
@@ -64,7 +65,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
               }
             ],
             name: astModule.createNode(AstIdentifier, { name: 'hello' }),
-            returnDataType: astModule.createNode(AstEmpty, { }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
             scope: astModule.createNode(AstScope, {
               type: AstScope.types.FUNCTION,
               nodes: [
@@ -97,7 +98,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
               }
             ],
             name: astModule.createNode(AstIdentifier, { name: 'hello' }),
-            returnDataType: astModule.createNode(AstEmpty, { }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
             scope: astModule.createNode(AstScope, {
               type: AstScope.types.FUNCTION,
               nodes: [
@@ -130,7 +131,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
               }
             ],
             name: astModule.createNode(AstIdentifier, { name: 'hello' }),
-            returnDataType: astModule.createNode(AstEmpty, { }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
             scope: astModule.createNode(AstScope, {
               type: AstScope.types.FUNCTION,
               nodes: [
@@ -194,7 +195,7 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
           astModule.createNode(AstFunction, {
             params: [ ],
             name: astModule.createNode(AstIdentifier, { name: 'swag' }),
-            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.PrimitiveDataTypes.UNKNOWN }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
             aliasName: 'yolo',
             scope: astModule.createNode(AstEmpty, { }),
           })
@@ -202,6 +203,23 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
       }),
       check: function(expect) { },
       fails: true
+    },
+    {
+      name: 'is semanting return datatype correctly',
+      input: astModule.createNode(AstFunction, {
+        params: [ ],
+        name: astModule.createNode(AstIdentifier, { name: 'hello' }),
+        returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
+        scope: astModule.createNode(AstScope, {
+          type: AstScope.types.FUNCTION,
+          nodes: [
+            astModule.createNode(AstReturn, { ret: astModule.createNode(AstIntLit, {value: 1}) })
+          ]
+        })
+      }),
+      check: function(ast, semanter) {
+        expect(ast.params.returnDataType.getDataType()).toEqual(dataTypeModule.PrimitiveDataTypes.INT);
+      }
     }
   ]
 });
