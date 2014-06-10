@@ -17,6 +17,7 @@ define([ ], function() {
     FUNCTION_NOT_DEFINED: 'Function is not defined %s', // unused?
     INVALID_DATATYPE: '%s is not a valid data type',
     CANNOT_RESOLVE_IMPORT: 'Cannot resolve import',
-    RETURN_IN_FUNCTION: 'Return must be defined inside a function'
+    RETURN_IN_FUNCTION: 'Return must be defined inside a function',
+    CANNOT_MUTATE: 'Can only mutate variable.'
   };
 });

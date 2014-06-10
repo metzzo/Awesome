@@ -7,7 +7,8 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
     this.name = name;
     this.params = {
       priority: params.priority,
-      conversions: params.conversions
+      conversions: params.conversions,
+      mutates: params.mutates ? params.mutates : false
     };
   };
   
@@ -137,7 +138,8 @@ define(['underscore', 'src/app/compiler/data/dataType'], function(_, dataTypeMod
       }),
       ASSIGN_OPERATOR: new Operator('=', {
         priority: 2,
-        conversions: assignOperatorConversions
+        conversions: assignOperatorConversions,
+        mutates: true
       }),
       GREATER_THAN_OPERATOR: new Operator('>', {
         priority: 8,

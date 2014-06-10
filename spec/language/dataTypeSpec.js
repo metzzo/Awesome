@@ -38,8 +38,9 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         expect(dataTypeModule.PrimitiveDataTypes.INT.isKnown()).toBe(true);
         expect(dataTypeModule.MetaDataTypes.UNKNOWN.isKnown()).toBe(false);
       });
+      
+      // TODO: add Tests for proposeDataType
     });
-    
     
     describe('Function DataType', function() {
        it('matches works', function() {
@@ -75,6 +76,8 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
         expect(func1.isKnown()).toBe(true);
         expect(func2.isKnown()).toBe(false);
       });
+      
+      // TODO: add tests for proposeDataType
     });
   })
 });

@@ -166,6 +166,17 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           enumerable: false,
           writable: false
         },
+        isMutable: {
+          value: function() {
+            if (this.functions && this.functions.isMutable) {
+              return this.functions.isMutable();
+            } else {
+              return false;
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
         
         // VARIABLE / FUNCTION
         getVariables: {

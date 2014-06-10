@@ -27,6 +27,12 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         if (!myType.isKnown()) {
           this.riseSyntaxError(_s.sprintf(errorMessages.AMBIGUOUS_DATATYPE, this.params.leftOperand.getDataType().toString(), this.params.rightOperand.getDataType().toString()));
         }
+        
+        // check if mutating a const
+        var isMutable = this.params.leftOperand.isMutable();
+        if (!isMutable && this.params.operator.params.mutates) {
+          this.riseSyntaxError(errorMessages.CANNOT_MUTATE);
+        }
       },
       proposeDataType: function(dataType) {
         this.processDataTypes();

@@ -37,6 +37,13 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         this.params.type = IdentifierTypes.FUNCTIONDECL;
         this.params.info = info;
       },
+      isMutable: function() {
+        if (this.params.type === IdentifierTypes.VARIABLE && this.params.info) {
+          return this.params.info.params.type !== 'const';
+        } else {
+          return false;
+        }
+      },
       getDataType: function() {
         if (this.params.type && this.params.info) {
           switch (this.params.type) {

@@ -109,10 +109,10 @@ define(['underscore'], function(_) {
           if (i !== 0) {
             ret += '_';
           }
-          ret += this.params.paramTypes[i].toString();
+          ret += this.params.paramTypes[i].decorateName();
         }
         
-        return '_func_' + ret + '_ret_' + this.params.returnType.toString();
+        return '_func_' + ret + '_ret_' + this.params.returnType.decorateName();
       default:
         throw 'Unknown DataType type';
     }
