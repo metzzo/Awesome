@@ -55,8 +55,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                   dt1 = intrinsicSignature.params.paramTypes[j];
                   dt2 = funcParams[j].dataType.getDataType();
                   if (dt1.isKnown() && !dt2.isKnown()) {
-                    // propose my datatype!
+                    // propose my datatype, but only if i would be the only possible function
                     funcParams[j].identifier.proposeDataType(dt1);
+                    
                     // TODO: implement function duck typing here
                   }
                   
@@ -75,13 +76,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           if (realFunc) {
             this.params.signature = realFunc.getDataType();
           } else { 
-            // is my signature known? if so, maybe tell it the identifier it could use it for further type inference
-            var tmpIntrinsicSignature = this.functions.getIntrinsicSignature();
-            tmpIntrinsicSignature.params.returnType = dataTypeModule.MetaDataTypes.ANY;
-            if (tmpIntrinsicSignature.isKnown()) {
-              this.params.func.proposeDataType(tmpIntrinsicSignature);
-            }
-            return; // this.riseSyntaxError(_s.sprintf(errorMessages.FUNCTION_NOT_DEFINED, this.params.func.params.name)); <- ToDO this error messages should anywhere else be rised
+            // maybe my intrinsic signature helps the function?
+            this.params.func.proposeDataType(this.functions.getIntrinsicSignature());
+            return;
           }
           
           if (realFunc.params.realFunction && this.params.func.functions.isNotSetYet()) {
@@ -95,10 +92,18 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           if (!intrinsicSignature.matches(signature)) {
             // maybe its just some unknowns / ambigs that are causing this problem?            
             if (!signature.isKnown() || !intrinsicSignature.isKnown()) {
-              // signature => intrinsicSignature suggestions
-              for (var i = 0; i < signature.params.paramTypes.length; i++) {
-                var sig = signature.params.paramTypes[i];
-                this.params.params[i].proposeDataType(sig);
+              // signature => intrinsicSignature suggestions, but only if i'm surely the only function that would be appliable
+              var count = 0;
+              for (var k = 0; k < functions.length && count < 2; k++) {
+                if (functions[k].params.name.params.name === this.params.func.params.name) {
+                  count++;
+                }
+              }
+              if (count < 2) {
+                for (var i = 0; i < signature.params.paramTypes.length; i++) {
+                  var sig = signature.params.paramTypes[i];
+                  this.params.params[i].proposeDataType(sig);
+                }
               }
               
               // intrinsicSignature => signature suggestions
