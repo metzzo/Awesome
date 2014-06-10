@@ -8,13 +8,14 @@ define([ 'underscore', 'src/app/compiler/data/dataType' ], function(_, dataTypeM
     this.name   = name;
     this.params = {
       dataType: params.dataType,
-      type: params.type
+      type: params.type,
+      nodes: [ ]
     };
   };
   
   Identifier.prototype.proposeDataType = function(dataType) {
-    if (this.params.dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN) && dataType.isKnown()) {
-      this.params.dataType = dataType;
+    if (!this.params.dataType.isUnique()) {
+      this.params.dataType = this.params.dataType.proposeDataType(dataType);
     }
   };
   

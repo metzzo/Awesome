@@ -1,6 +1,4 @@
 define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/data/operator', 'src/app/compiler/data/errorMessages', 'src/app/compiler/ast/return_statement'], function(dataTypeModule, identifierModule, emptyModule, variableDeclModule, operatorModule, errorMessages, retModule) {
-  var astModule;
-  
   return {
     name: 'Function Declaration',
     params: {
@@ -90,6 +88,10 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
               dataType: dataType,
               type: variableDeclModule.types.CONSTANT
             });
+            
+            if (this.params.name.functions.isNotSetYet()) {
+              this.params.name.functions.functionIdentifier(this.params.realFunction);
+            }
           }
           
           if (!this.params.hasRegisteredConversions) {
@@ -115,12 +117,22 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       getFunctions: function() {
         return [ this ];
       },
-      proposeDataType: function(dt) {
+      proposeReturnDataType: function(dt) {
         this.params.returnDataType.proposeDataType(dt);
       },
-      checkDataTypes: function() {
-        
-      }
+      proposeDataType: function(dt) {
+        if (this.params.realFunction) {
+          this.params.realFunction.proposeDataType(dt);
+        } else if (dt.name === 'function' && dt.params.paramTypes.length === this.params.realParameters.length) {
+          for (var i = 0; i < dt.params.paramTypes.length; i++) {
+            var param1 = dt.params.paramTypes[i];
+            var param2 = this.params.realParameters[i];
+            
+            param2.proposeDataType(param1);
+          }
+        }
+      },
+      checkDataTypes: function() { }
     }
   };
 });

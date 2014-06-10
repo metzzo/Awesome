@@ -26,6 +26,7 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         for (var i = 0; i < this.params.params.length; i++) {
           params.push(this.params.params[i].getDataType());
         }
+        
         return dataTypeModule.createFunctionDataType(this.getDataType(), params);
       },
       processDataTypes: function() {
@@ -33,17 +34,18 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         this.params.func.processDataTypes();
         
         var intrinsicSignature = this.functions.getIntrinsicSignature();
-        if (this.params.func.getDataType().params.type === 'function') {
-          // it is using a variable as function 
+        if (this.params.func.getDataType().params.type === 'function' && this.params.func.params.type !== 'funcdecl') {
+          // it is using a variable as function => propose my intrinsic signature
+          this.params.func.proposeDataType(intrinsicSignature);
           this.params.signature = this.params.func.getDataType();
         } else {
           // it is using a function name as function
           var functions = this.getScope().getFunctions();
           var realFunc = null;
-          var signature
+          
           for (var i = 0; i < functions.length; i++) {
             var func = functions[i];
-            if (func.params.name.params.name === this.params.func.params.name) { // TODO: Add overloads?
+            if (func.params.name.params.name === this.params.func.params.name) {
               // check datatypes
               var funcParams = func.params.params;
               if (funcParams.length === intrinsicSignature.params.paramTypes.length) {
@@ -52,6 +54,12 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                   var dt1, dt2;
                   dt1 = intrinsicSignature.params.paramTypes[j];
                   dt2 = funcParams[j].dataType.getDataType();
+                  if (dt1.isKnown() && !dt2.isKnown()) {
+                    // propose my datatype!
+                    funcParams[j].identifier.proposeDataType(dt1);
+                    // TODO: implement function duck typing here
+                  }
+                  
                   if (!dt1.matches(dt2) && !(!dt1.isKnown() || !dt2.isKnown())) {
                     signatureDoesNotMatch = true;
                     break;
@@ -66,11 +74,17 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           }
           if (realFunc) {
             this.params.signature = realFunc.getDataType();
-          } else {
+          } else { 
+            // is my signature known? if so, maybe tell it the identifier it could use it for further type inference
+            var tmpIntrinsicSignature = this.functions.getIntrinsicSignature();
+            tmpIntrinsicSignature.params.returnType = dataTypeModule.MetaDataTypes.ANY;
+            if (tmpIntrinsicSignature.isKnown()) {
+              this.params.func.proposeDataType(tmpIntrinsicSignature);
+            }
             return; // this.riseSyntaxError(_s.sprintf(errorMessages.FUNCTION_NOT_DEFINED, this.params.func.params.name)); <- ToDO this error messages should anywhere else be rised
           }
           
-          if (realFunc.params.realFunction) {
+          if (realFunc.params.realFunction && this.params.func.functions.isNotSetYet()) {
             this.params.func.functions.functionIdentifier(realFunc.params.realFunction);
           }
           

@@ -13,6 +13,39 @@ define(['underscore'], function(_) {
     this.params = params;
   };
   
+  DataType.prototype.proposeDataType = function(dt) {
+    if (!this.isUnique()) {
+      switch (this.params.type) {
+        case DataTypeTypes.META:
+          if ((this.matches(metaTypes.UNKNOWN) || this.matches(metaTypes.ANY))) { 
+            return dt;
+          } else {
+            return this;
+          }
+        case DataTypeTypes.FUNCTION:
+          if (dt.params.type === 'function' && this.params.paramTypes.length === dt.params.paramTypes.length) {
+            var paramTypes = [];
+            for (var i = 0; i < this.params.paramTypes.length; i++) {
+              paramTypes.push(this.params.paramTypes[i].proposeDataType(dt.params.paramTypes[i]));
+            }
+            return new DataType('function', {
+              type: DataTypeTypes.FUNCTION,
+              returnType: this.params.returnType.proposeDataType(dt.params.returnType),
+              paramTypes: paramTypes
+            });
+          } else {
+            return this;
+          }
+        case DataTypeTypes.PRIMITIVE:
+          throw 'IMPOSSIBRU'; // because primitive datatypes are always Unique
+        default:
+          throw 'Unknown DataType type';
+      }
+    } else {
+      return this;
+    }
+  };
+  
   DataType.prototype.matches = function(dt) {
     if (dt.params.type === this.params.type) {
       switch (this.params.type) {
@@ -119,6 +152,29 @@ define(['underscore'], function(_) {
     }
   };
   
+  DataType.prototype.isUnique = function() {
+    if (!this.isKnown()) {
+      return false;
+    }
+    
+    switch (this.params.type) {
+      case DataTypeTypes.PRIMITIVE:
+      case DataTypeTypes.META:
+        return !this.matches(metaTypes.ANY);
+      case DataTypeTypes.FUNCTION:
+        var isUnique = false;
+        for (var i = 0; i < this.params.paramTypes.length; i++) {
+          if (this.params.paramTypes[i].isUnique()) {
+            isUnique = true;
+            break;
+          }
+        }
+        return this.params.returnType.isUnique() && isUnique;
+      default:
+        throw 'Unknown DataType type';
+    }
+  };
+  
   var dataTypes, metaTypes;
   return {
     PrimitiveDataTypes: dataTypes = {
@@ -130,7 +186,8 @@ define(['underscore'], function(_) {
     },
     MetaDataTypes: metaTypes = {
       UNKNOWN: new DataType('unknown', { type: DataTypeTypes.META }), // this is the data type of ast nodes that are not known yet, but may be known in future
-      AMBIGUOUS: new DataType('ambiguous', { type: DataTypeTypes.META }) // this is the data type of ast nodes where the data type cannot be traced definitely
+      AMBIGUOUS: new DataType('ambiguous', { type: DataTypeTypes.META }), // this is the data type of ast nodes where the data type cannot be traced definitely
+      ANY: new DataType('any', { type: DataTypeTypes.META }) // this is the data type that stands for ANY datatype, therefore it is known, but should not be used.
     },
     findPrimitiveDataTypeByName: function(name) {
       var result = null;

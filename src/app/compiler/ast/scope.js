@@ -56,10 +56,12 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration
         }
         for (var i = 0; i < this.params.nodes.length; i++) {
           var node = this.params.nodes[i];
-          // function?
-          var funcs = node.getFunctions(modules);
-          for (var j = 0; j < funcs.length; j++) {
-            functions.push(funcs[j]);
+          if (node.name !== scope_node.name) {
+            // function?
+            var funcs = node.getFunctions(modules);
+            for (var j = 0; j < funcs.length; j++) {
+              functions.push(funcs[j]);
+            }
           }
         }
         return functions;

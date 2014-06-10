@@ -1,0 +1,77 @@
+function foo()
+  var yolo = 10
+  yield yolo
+  yolo = 20
+  yield yolo
+  yolo = 30
+  yield yolo
+end
+
+for i in foo()
+  print i
+end
+
+Converts to:
+
+var foo = function foo(ctx) {
+  switch (ctx.pc) {
+  case 0:
+    ctx.pc = 1;
+    
+    ctx.yolo = 10;
+    return ctx.yolo;
+  case 1:
+    ctx.pc = 2;
+    
+    ctx.yolo = 20;
+    return ctx.yolo;
+  case 2:
+    pc = 3
+    
+    ctx.yolo = 30
+    return ctx.yolo;
+  case 3:
+    ctx.running = false;
+    break;
+  }
+};
+
+var defaultctx_1 = function() {
+  return {
+    running: false,
+    pc: 0,
+    yolo: 0
+  };
+};
+
+
+var Iterator = function(func, ctx) {
+  this.func = func;
+  this.ctx = ctx;
+};
+
+Iterator.prototype.next = function(params) {
+  for (var key in params) {
+    this.ctx[key] = params;
+  }
+  
+  this.ctx.running = true;
+  return this.func(this.ctx);
+};
+
+Iterator.prototyoe.isRunning = function() {
+  return this.ctx.running;
+};
+
+
+{
+  var iterator = new Iterator(foo, defaultctx_1);
+  while (true) {
+    var i = iterator.next();
+    if (!iterator.isRunning()) {
+      break;
+    }
+    
+    print(i);
+  }
+}

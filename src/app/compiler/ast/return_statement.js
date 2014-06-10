@@ -23,9 +23,9 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
         if (funcNode) {
           var dt = this.params.ret.getDataType();
           if (dt.isKnown()) {
-            funcNode.proposeDataType(dt);
+            funcNode.functions.proposeReturnDataType(dt);
           } else {
-            dt = funcNode.params.returnDataType;
+            dt = funcNode.params.returnDataType.getDataType();
             if (dt.isKnown()) {
               ret.proposeDataType(dt);
             }

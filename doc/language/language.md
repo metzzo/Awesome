@@ -347,11 +347,11 @@ You can define the following different types of data in an extern statement:
 
 ```
 extern
-  function array_length_int(array is array of int) = arr_len
+  function array_length_int(array is array of int) alias arr_len
   
-  function create_MyOtherObject() returns MyOtherObject = crt_obj
+  function create_MyOtherObject() returns MyOtherObject alias crt_obj
   
-  interface MyOtherObject = myObject
+  interface MyOtherObject alias myObject
     function attr1() returns void
     function attr2() returns void
     function attr3() returns void

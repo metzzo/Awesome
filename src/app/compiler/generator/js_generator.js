@@ -22,7 +22,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
     'int': '0',
     'float': '0.0',
     'string': "''",
-    'function': '(function() { })'
+    'function': 'null'
   };
   var getDefaultDataTypeValue = function(dataType) {
     return defaultDataTypeValues[dataType.name];

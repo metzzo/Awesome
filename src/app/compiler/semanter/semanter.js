@@ -9,10 +9,9 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
   
   Semanter.prototype.semant = function() {    
     // type inference
-    var anyUnknown, oldAnyUnknown;
-    do {
-      oldAnyUnknown = anyUnknown;
-      anyUnknown = 0;
+    var anyUnknown, oldAnyUnknown = 0;
+    
+    var resolver = (function() {
       for (var i = 0; i < this.mainNodes.length; i++) {
         var mainNode = this.mainNodes[i];
         mainNode.traverse(function(obj) {
@@ -24,7 +23,15 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
           }
         });
       }
+    }).bind(this);
+    
+    do {
+      oldAnyUnknown = anyUnknown;
+      anyUnknown = 0;
+      resolver();
     } while(anyUnknown != oldAnyUnknown && anyUnknown !== 0); // as long as it is able to resolve data types, repeat this step
+    
+    resolver(); // to get every reference n stuff up 2 date
     
     if (anyUnknown != 0) {
       for (var i = 0; i < this.mainNodes.length; i++) {

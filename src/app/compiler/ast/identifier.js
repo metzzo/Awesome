@@ -13,6 +13,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       info: null
     },
     functions: {
+      isNotSetYet: function() {
+        return !this.params.type;
+      },
       functionIdentifier: function(info) {
         if (this.params.type && this.params.type !== IdentifierTypes.FUNCTION) {
           throw 'Cannot reset type of identifier';

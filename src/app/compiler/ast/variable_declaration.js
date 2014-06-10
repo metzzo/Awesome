@@ -44,8 +44,15 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         // update types!
         for (var i = 0; i < this.params.variables.length; i++) {
           var variable = this.params.variables[i], realVariable = this.params.realVariables[i];
-          if (variable.value.name !== emptyModule.name && variable.value.getDataType().isKnown()) {
+          if (variable.value.name !== emptyModule.name) {
             realVariable.proposeDataType(variable.value.getDataType());
+          }
+          
+          if (!variable.value.getDataType().isKnown()) {
+            variable.value.proposeDataType(realVariable.params.dataType);
+          }
+          if (variable.value.getDataType().isKnown()) {
+            variable.identifier.proposeDataType(variable.value.getDataType());
           }
           
           variable.dataType.params.dataType = realVariable.params.dataType;

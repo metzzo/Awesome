@@ -16,13 +16,11 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         return this.params.operator.balance(left, right);
       },
       processDataTypes: function() {
-        var left = this.params.leftOperand.getDataType(), right = this.params.rightOperand.getDataType();
-        if (!left.isKnown() && right.isKnown()) {
-          this.params.leftOperand.proposeDataType(right);
-        }
-        if (!right.isKnown() && left.isKnown()) {
-          this.params.rightOperand.proposeDataType(left);
-        }
+        var right = this.params.rightOperand.getDataType();
+        this.params.leftOperand.proposeDataType(right);
+        
+        var left = this.params.leftOperand.getDataType();
+        this.params.rightOperand.proposeDataType(left);
       },
       checkDataTypes: function() {
         var myType = this.getDataType();
