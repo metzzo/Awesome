@@ -14,10 +14,10 @@ define(['underscore'], function(_) {
   };
   
   DataType.prototype.proposeDataType = function(dt) {
-    if (!this.isUnique()) {
+    if (!this.isKnown()) {
       switch (this.params.type) {
         case DataTypeTypes.META:
-          if ((this.matches(metaTypes.UNKNOWN) || this.matches(metaTypes.ANY))) { 
+          if (this.matches(metaTypes.UNKNOWN)) { 
             return dt;
           } else {
             return this;
@@ -152,29 +152,6 @@ define(['underscore'], function(_) {
     }
   };
   
-  DataType.prototype.isUnique = function() {
-    if (!this.isKnown()) {
-      return false;
-    }
-    
-    switch (this.params.type) {
-      case DataTypeTypes.PRIMITIVE:
-      case DataTypeTypes.META:
-        return !this.matches(metaTypes.ANY);
-      case DataTypeTypes.FUNCTION:
-        var isUnique = false;
-        for (var i = 0; i < this.params.paramTypes.length; i++) {
-          if (this.params.paramTypes[i].isUnique()) {
-            isUnique = true;
-            break;
-          }
-        }
-        return this.params.returnType.isUnique() && isUnique;
-      default:
-        throw 'Unknown DataType type';
-    }
-  };
-  
   var dataTypes, metaTypes;
   return {
     PrimitiveDataTypes: dataTypes = {
@@ -186,8 +163,7 @@ define(['underscore'], function(_) {
     },
     MetaDataTypes: metaTypes = {
       UNKNOWN: new DataType('unknown', { type: DataTypeTypes.META }), // this is the data type of ast nodes that are not known yet, but may be known in future
-      AMBIGUOUS: new DataType('ambiguous', { type: DataTypeTypes.META }), // this is the data type of ast nodes where the data type cannot be traced definitely
-      ANY: new DataType('any', { type: DataTypeTypes.META }) // this is the data type that stands for ANY datatype, therefore it is known, but should not be used.
+      AMBIGUOUS: new DataType('ambiguous', { type: DataTypeTypes.META }) // this is the data type of ast nodes where the data type cannot be traced definitely
     },
     findPrimitiveDataTypeByName: function(name) {
       var result = null;

@@ -14,7 +14,7 @@ define([ 'underscore', 'src/app/compiler/data/dataType' ], function(_, dataTypeM
   };
   
   Identifier.prototype.proposeDataType = function(dataType) {
-    if (!this.params.dataType.isUnique()) {
+    if (!this.params.dataType.isKnown()) {
       this.params.dataType = this.params.dataType.proposeDataType(dataType);
     }
   };
