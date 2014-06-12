@@ -3,4 +3,3 @@ extern
   function print(text is int) returns void alias "console.log.bind(console)"
   function print(text is float) returns void alias "console.log.bind(console)"
 end
-

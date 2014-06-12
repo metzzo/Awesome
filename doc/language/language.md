@@ -47,12 +47,16 @@ else
 end
 
 -- Loops
-while expression do -- traditional "while" loop
+while expression do -- traditional "while" loop, do is optional
   
 end
 
-for i in range(0, 10) do -- traditional "foor" loop, range is a coroutine iterating from 0 to 10
+for i in 0 to 10 do -- traditional "foor" loop, "to" operator returns a coroutine that iterates from 0 to 10.
   
+end
+
+for i in 0 to 10 step 2 -- only iterate 0,2,4,6,8,10
+
 end
 
 repeat
@@ -86,15 +90,12 @@ var myVariable = 10 -- Implicit data types
 var myVariable2 is int -- explicit data types
 var myVariable3 is float -- explicit data types
 var myVariable4 is string -- explicit data types
-var as int a, b, c -- use one default datatype for all
+var is int a, b, c -- use one default datatype for all
 
 const myConst = 100 -- not mutatable
 
-
 var myArray is array of int = new array[10] of int -- int array
 var myArrayBig is array of array of int = new array[20] of array[10] of int -- 2 dim array
-
-
 ```
 
 ### Functions
@@ -347,7 +348,9 @@ You can define the following different types of data in an extern statement:
 
 ```
 extern
-  function array_length_int(array is array of int) alias arr_len
+  function array_length_int(array is array of int) returns int alias arr_len
+  
+  function print(output are int, string, float) returns void -- Multiple return types may be allowed, not sure if this will be implemented 
   
   function create_MyOtherObject() returns MyOtherObject alias crt_obj
   
@@ -363,7 +366,7 @@ end
 This system is used to provide some convenience methods for existing classes or primitive datatypes
 
 ```
-extend int
+class int is extension
   function toFloat()
     var floatVal = this
     return floatVal
@@ -376,7 +379,7 @@ extend int
   end
 end
 
-extend array of int
+class array of int is extension
   property this[position]
     get
       return access_intarray(this, position) -- native function call

@@ -7,17 +7,6 @@ define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/l
   });
   
   describe('Semanter', function() {
-    it('is created properly', function() {
-      // arrange
-      var semanter;
-      
-      // act
-      semanter = new semanterModule.Semanter({ });
-      
-      // assert
-      expect(semanter).not.toBeNull();
-    });
-    
     var params = {
       'If': ifParams,
       'Loop': loopParams,
@@ -58,6 +47,6 @@ define([ 'underscore', 'src/app/compiler/semanter/semanter', 'src/app/compiler/l
           });
         });
       });
-    })
+    });
   });
 });

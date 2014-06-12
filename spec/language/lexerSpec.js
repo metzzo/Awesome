@@ -1,17 +1,5 @@
 define(['src/app/compiler/lexer/lexer', 'src/app/compiler/lexer/token', 'spec/language/params/lexer/lexerParams'], function(lexerModule, tokenModule, params) {
   describe('Lexer', function() {
-    it('is created properly', function() {
-      // arrange
-      var lexer;
-      
-      // act
-      lexer = new lexerModule.Lexer();
-      
-      
-      // assert
-      expect(lexer).not.toBeNull();
-    });
-    
     it('is taking parameter properly', function() {
       // arrange
       var lexer;

@@ -1,7 +1,5 @@
 define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
   describe('DataType', function() {
-    
-  
     describe('Primitive DataType', function() {
       it('finds datatype by name', function() {
         // arrange
@@ -58,7 +56,7 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       
       it('decorateName works', function() {
         var func = dataTypeModule.createFunctionDataType(dataTypeModule.PrimitiveDataTypes.INT, [dataTypeModule.PrimitiveDataTypes.INT, dataTypeModule.PrimitiveDataTypes.FLOAT]);
-        expect(func.decorateName()).toBe('_func_int_float_ret_int');
+        expect(func.decorateName()).toBe('_func__int__float_ret__int');
       });
       
       it('balances works', function() {

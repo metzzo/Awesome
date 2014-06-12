@@ -7,18 +7,6 @@ define([ 'src/app/compiler/generator/generator', 'src/app/compiler/lexer/token',
   });
   
   describe('Generator', function() {
-    it('is created properly', function() {
-      // arrange
-      var generator;
-      
-      // act
-      generator = new generatorModule.Generator({ })
-      
-      // assert
-      expect(generator).not.toBeNull();
-      expect(generator.mainNode).toEqual({ });
-    });
-    
     it('emits properly', function() {
       // arrange
       var generator = new generatorModule.Generator({ });

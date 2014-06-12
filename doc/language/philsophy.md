@@ -4,8 +4,6 @@ This means Awesome tries to be as "silent" as possible, only state meta informat
 
 ## Concepts
 ### DRY
-Don't Repeat Yourself is a concept Awesome is embracing, but does not follow it religiously. For example: Implicit typing is a feature that is very handy and useful for programmers, but if someone wants to explicitely define a type of a function it is also possible. Other cases are variable definitions: "var i = 10" the keyword var is not particularly necessary, but it prevents common errors and therefore is forced.
+Don't Repeat Yourself is a concept Awesome is embracing, but does not follow it religiously. For example: Implicit typing is a feature that is very handy and useful for programmers, but if someone wants to explicitely define a type of a variable it is also possible. Other cases are variable definitions: "var i = 10" the keyword var is not particularly necessary, but it prevents common errors and therefore is forced.
 
-
-TODO
 
