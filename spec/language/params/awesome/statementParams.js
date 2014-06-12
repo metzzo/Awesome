@@ -6,20 +6,56 @@ define([], function() {
         'if true',
         '  compiletest "if"',
         'else if false',
+        '  compiletest "not here"',
+        'else',
+        '  compiletest "not here"',
         'end',
         'if false',
         'else if true',
         '  compiletest "elseif"',
         'else',
+        '  compiletest "not here"',
         'end',
         'if false',
+        '  compiletest "not here"',
         'else if false',
+        '  compiletest "not here"',
         'else',
         '  compiletest "else"',
         'end',
         'if true compiletest "1 line"'
       ],
       output: ['if', 'elseif', 'else', '1 line']
+    },
+    {
+      name: 'while',
+      input: [
+        'while false',
+        'compiletest "not here"',
+        'end',
+        'compiletest "here"',
+        'var i is int = 3',
+        'while i > 0',
+        '  compiletest i',
+        '  i = i - 1',
+        'end'
+      ],
+      output: ['here', 3, 2, 1]
+    },
+    {
+      name: 'repeat',
+      input: [
+        'repeat',
+        'compiletest "here"',
+        'until true',
+        'compiletest "here"',
+        'var i is int = 3',
+        'repeat',
+        '  compiletest i',
+        '  i = i - 1',
+        'until i == 0'
+      ],
+      output: [ 'here', 'here', 3, 2, 1 ]
     },
     {
       name: 'compiles cyclic imports',
