@@ -104,6 +104,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                   var sig = signature.params.paramTypes[i];
                   this.params.params[i].proposeDataType(sig);
                 }
+              } else {
+                // nope :(
+                this.params.func.functions.reset();
               }
               
               // intrinsicSignature => signature suggestions

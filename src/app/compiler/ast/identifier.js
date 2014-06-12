@@ -37,6 +37,11 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         this.params.type = IdentifierTypes.FUNCTIONDECL;
         this.params.info = info;
       },
+      // be careful when using this function pl0x
+      reset: function() {
+        this.params.info = null;
+        this.params.type = null;
+      },
       isMutable: function() {
         if (this.params.type === IdentifierTypes.VARIABLE && this.params.info) {
           return this.params.info.params.type !== 'const';
