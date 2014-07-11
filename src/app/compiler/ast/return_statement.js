@@ -5,6 +5,11 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
       ret: null
     },
     functions: {
+      copy: function() {
+        return {
+          ret: this.params.ret
+        };
+      },
       traverse: function(cb) {
         this.params.ret.traverse(cb);
       },
@@ -33,6 +38,8 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app
         } else {
           this.riseSyntaxError(errorMessages.RETURN_IN_FUNCTION);
         }
+        
+        this.params.ret.use();
       }
     }
   };

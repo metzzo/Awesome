@@ -5,6 +5,11 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       value: ''
     },
     functions: {
+      copy: function() {
+        return {
+          value: this.params.value
+        };
+      },
       getDataType: function(){
         return dataTypeModule.PrimitiveDataTypes.STRING;
       }

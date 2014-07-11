@@ -7,10 +7,25 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
       scope: null,
       name: null, // if first class function: empty, if normal: identifier,
       realFunction: null, // identifier of this function (just used if normal function)
-      realParameters: null, // identifiers of the parameters of this function (just used if normal function)
-      hasRegisteredConversions: false
+      realParameters: null, // identifiers of the parameters of this function
+      hasRegisteredConversions: false,
+      used: false,
+      parentFunc: null // if this a dynamically overridden function this declares the function
     },
     functions: {
+      copy: function() {
+        return {
+          params: this.astModule.copyNodeArray(this.params.params),
+          returnDataType: this.params.returnDataType.copy(),
+          scope: this.params.scope.copy(),
+          name: this.params.name.copy(),
+          realFunction: null,
+          realParameters: null,
+          hasRegisteredConversions: false,
+          used: false,
+          parentFunc: null
+        };
+      },
       init: function() {
         this.params.realParameters = [ ];
         
@@ -62,6 +77,7 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
         
         // update parameters
         for (var i = 0; i < this.params.params.length; i++) {
+          // this.params.params[i].dataType.params.dataType = this.params.params[i].dataType.params.dataType.proposeDataType(this.params.realParameters[i].params.dataType);
           this.params.params[i].dataType.params.dataType = this.params.realParameters[i].params.dataType;
         }
         
@@ -132,7 +148,35 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/data/identifier', 's
           }
         }
       },
-      checkDataTypes: function() { }
+      checkDataTypes: function() { },
+      implicitOverload: function(newSignature) {
+        if (this.params.parentFunc) {
+          throw 'Cannot overload already overloaded function';
+        }
+        
+        var scope = this.getScope();
+        var signature = this.getDataType();
+        
+        newSignature = signature.proposeDataType(newSignature);
+        
+        var newFuncDecl = this.copy();
+        newFuncDecl.params.parentFunc = this;
+        scope.functions.append(newFuncDecl);
+        
+        newFuncDecl.params.hasRegisteredConversions = false;
+        newFuncDecl.functions.init(); // init again pl0x
+        newFuncDecl.processDataTypes();
+        newFuncDecl.proposeDataType(newSignature);
+        newFuncDecl.processDataTypes();
+        
+        return newFuncDecl;
+      },
+      use: function() {
+        this.params.used = true;
+      },
+      isUsed: function() {
+        return !!this.params.used;
+      }
     }
   };
 });

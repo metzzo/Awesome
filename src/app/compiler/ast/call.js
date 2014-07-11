@@ -7,6 +7,13 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       params: [ ]
     },
     functions: {
+      copy: function() {
+        return {
+          func: this.params.func.copy(),
+          signature: null,
+          params: this.astModule.copyNodeArray(this.params.params)
+        };
+      },
       traverse: function(cb) {
         this.params.func.traverse(cb);
         
@@ -40,11 +47,13 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           this.params.signature = this.params.func.getDataType();
         } else {
           // it is using a function name as function
+          var realFunc = null;          
           var functions = this.getScope().getFunctions();
-          var realFunc = null;
-          
+          var overloadCandidates = [ ];
           for (var i = 0; i < functions.length; i++) {
             var func = functions[i];
+            func.processDataTypes();
+            
             if (func.params.name.params.name === this.params.func.params.name) {
               // check datatypes
               var funcParams = func.params.params;
@@ -55,13 +64,12 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                   dt1 = intrinsicSignature.params.paramTypes[j];
                   dt2 = funcParams[j].dataType.getDataType();
                   if (dt1.isKnown() && !dt2.isKnown()) {
-                    // propose my datatype, but only if i would be the only possible function
-                    funcParams[j].identifier.proposeDataType(dt1);
-                    
-                    // TODO: implement function duck typing here
+                    // propose my datatype
+                    // funcParams[j].identifier.proposeDataType(dt1);
+                    overloadCandidates.push(func);
                   }
                   
-                  if (!dt1.matches(dt2) && !(!dt1.isKnown() || !dt2.isKnown())) {
+                  if (!dt1.matches(dt2) || !dt2.isKnown()) { // !(!dt1.isKnown() || !dt2.isKnown())
                     signatureDoesNotMatch = true;
                     break;
                   }
@@ -73,7 +81,15 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
               }
             }
           }
+          if (!realFunc && overloadCandidates.length === 1) {
+            var func = overloadCandidates[0];
+            realFunc = func.functions.implicitOverload(intrinsicSignature);
+            
+            this.params.func.functions.reset();
+          }
+          
           if (realFunc) {
+            realFunc.use();
             this.params.signature = realFunc.getDataType();
           } else { 
             // maybe my intrinsic signature helps the function?
@@ -108,17 +124,13 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
                 // nope :(
                 this.params.func.functions.reset();
               }
-              
-              // intrinsicSignature => signature suggestions
-              // get list of all possible functions
-              for (var i = 0; i < intrinsicSignature.params.paramTypes.length; i++) {
-                var sig = intrinsicSignature.params.paramTypes[i];
-                realFunc.params.params[i].identifier.proposeDataType(sig);
-              }
             }
           }
         }
         
+        for (var i = 0; i < this.params.params.length; i++) {
+          this.params.params[i].use();
+        }
       },
       checkDataTypes: function() {
         var intrinsicSignature = this.functions.getIntrinsicSignature();

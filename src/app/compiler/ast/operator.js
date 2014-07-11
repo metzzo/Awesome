@@ -7,6 +7,13 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       operator: null
     },
     functions: {
+      copy: function() {
+        return {
+          leftOperand: this.params.leftOperand.copy(),
+          rightOperand: this.params.rightOperand.copy(),
+          operator: this.params.operator
+        };
+      },
       traverse: function(cb) {
         this.params.leftOperand.traverse(cb);
         this.params.rightOperand.traverse(cb);
@@ -21,6 +28,9 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         
         var left = this.params.leftOperand.getDataType();
         this.params.rightOperand.proposeDataType(left);
+        
+        this.params.rightOperand.use();
+        this.params.leftOperand.use();
       },
       checkDataTypes: function() {
         var myType = this.getDataType();

@@ -1,7 +1,7 @@
 define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/ast/operator', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/int_literal', 'src/app/compiler/ast/if_statement', 'src/app/compiler/ast/bool_literal', 'src/app/compiler/ast/string_literal', 'src/app/compiler/ast/call', 'src/app/compiler/ast/identifier', 'src/app/compiler/ast/while_statement', 'src/app/compiler/ast/for_statement', 'src/app/compiler/ast/repeat_statement', 'src/app/compiler/ast/variable_declaration', 'src/app/compiler/ast/datatype', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/ast/empty', 'src/app/compiler/ast/float_literal', 'src/app/compiler/ast/import', 'src/app/compiler/ast/return_statement' ], function(_, syntaxErrorModule, operator, scope, int_literal, if_statement, bool_literal, string_literal, call, identifier, while_statement, for_statement, repeat_statement, variable_declaration, datatype, func_declaration, empty, float_literal, importModule, return_statement) {
   var iterator;
   var current;
-  
+    
   var moduleData
   return moduleData = {
     setIterator: function(it) {
@@ -9,6 +9,28 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
     },
     mark: function() {
       current = iterator.current();
+    },
+    copyNodeArray: function(arr) {
+      var newArr = [ ];
+      for (var i = 0; i < arr.length; i++) {
+        var obj = arr[i];
+        if (!!obj.copy) {
+          newArr.push(obj.copy());
+        } else {
+          var newObj = { };
+          for (var key in obj) {
+            var node = obj[key];
+            if (!!node.copy) {
+              newObj[key] = node.copy();
+            } else {
+              newObj[key] = JSON.parse(JSON.stringify(node));
+            }
+          }
+          newArr.push(newObj);
+        }
+        
+      }
+      return newArr;
     },
     createNode: function(astPrototype, params) {
       if (!params) params = { };
@@ -31,7 +53,7 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
         name: {
           value: astPrototype.name,
           enumerable: true,
-          writable: false
+          writable: true
         },
         token: {
           value: token,
@@ -42,20 +64,30 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           enumerable: false,
           writable: true
         },
+        astModule: {
+          enumerable: false,
+          writable: false,
+          value: moduleData
+        },
         params: {
           value: params,
           enumerable: true,
-          writable: false
+          writable: true
         },
         functions: {
           value: _.clone(astPrototype.functions),
           enumerable: false,
-          writeable: false
-          
+          writable: true
         },
         copy: {
           value: function() {
-            return moduleData.createNode(astPrototype, JSON.parse(JSON.stringify(this.params)));
+            if (this.functions.copy) {
+              var newParams = this.functions.copy();
+              newParams.token = this.token;
+              return moduleData.createNode(astPrototype, newParams);
+            } else {
+              throw 'Cannot copy AST node';
+            }
           }
         },
         riseSyntaxError: {
@@ -177,7 +209,47 @@ define([ 'underscore', 'src/app/compiler/data/syntaxError', 'src/app/compiler/as
           enumerable: false,
           writable: false
         },
-        
+        use: {
+          value: function() {
+            if (this.functions && this.functions.use) {
+              this.functions.use();
+            } else {
+              var obj = this;
+              this.traverse(function(traversingObject) {
+                if (traversingObject !== obj) {
+                  traversingObject.use();
+                  return true;
+                }
+              });
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
+        isUsed: {
+          value: function() {
+            if (this.functions && this.functions.isUsed) {
+              return this.functions.isUsed();
+            } else {
+              return true;
+            }
+          },
+          enumerable: false,
+          writable: false
+        },
+        remove: {
+          value: function(node) {
+            this.params = { };
+            this.functions = _.clone(empty.functions);
+            this.name = empty.name;
+            
+            _.each(this.functions, (function(value, key) {
+              this.functions[key] = value.bind(this);
+            }).bind(this));
+          },
+          enumerable: false,
+          writable: false
+        },
         // VARIABLE / FUNCTION
         getVariables: {
           value: function() {

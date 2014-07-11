@@ -7,6 +7,12 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       realVariables: [ ]
     },
     functions: {
+      copy: function() {
+        return {
+          variables: this.astModule.copyNodeArray(this.params.variables),
+          realVariables: [ ]
+        };
+      },
       init: function() {
         this.params.realVariables = [ ];
         for (var i = 0; i < this.params.variables.length; i++) {
@@ -56,6 +62,8 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
           }
           
           variable.dataType.params.dataType = realVariable.params.dataType;
+          
+          variable.value.use();
         }
       },
       checkDataTypes: function() {

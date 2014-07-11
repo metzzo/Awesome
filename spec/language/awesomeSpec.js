@@ -12,7 +12,7 @@ define([ 'src/app/compiler/awesome', 'spec/language/params/awesome/functionParam
             // arrange
             var input = test.input instanceof Array ? test.input.join('\n') : test.input;
             var awesome = new Awesome('import compiletest_module \n '+input);
-            awesome.addFile('compiletest_module', 'extern \n function compiletest(arg is bool) returns void alias "compiletest.push.bind(compiletest)" \n function compiletest(arg is int) returns void alias "compiletest.push.bind(compiletest)" \n function compiletest(arg is string) returns void alias "compiletest.push.bind(compiletest)" \n end');
+            awesome.addFile('compiletest_module', 'extern \n function compiletest(arg is bool) returns void alias "compiletest.push.bind(compiletest)" \n function compiletest(arg is int) returns void alias "compiletest.push.bind(compiletest)" \n function compiletest(arg is string) returns void alias "compiletest.push.bind(compiletest)" \n function compiletest(arg is float) returns void alias "compiletest.push.bind(compiletest)" \n end');
             var result;
             
             if (test.setup) {

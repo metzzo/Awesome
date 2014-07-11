@@ -120,7 +120,7 @@ end
 
 
 -- using coroutines
-for i in myCoroutine() -- if given an object / array /.. it automatically calls the 'iterate' function/method of this object
+for i in myCoroutine -- if given an object / array /.. it automatically calls the 'iterate' function/method of this object
   print "Value "+i
 end
 
@@ -422,6 +422,41 @@ function main()
 end
 ```
 
+### CleanUp Functions
+Not sure if this will be implemented.
+
+```
+function pushMatrix()
+  matrix.pushMatrix
+  yield
+  matrix.popMatrix
+end
+
+clean pushMatrix
+  matrix.translate 10, 10
+  matrix.rotate 20, 20
+  drawimage hndl
+end
+```
+
+Equivalent to this would be:
+
+```
+function pushMatrix()
+  matrix.pushMatrix
+  yield 42
+  matrix.popMatrix
+end
+
+for var i in pushMatrix
+  matrix.translate 10, 10
+  matrix.rotate 20, 20
+  drawimage hndl
+end
+```
+without implementing a new keyword
+
+
 ### Possible Features
 #### Likely
  * Indexer
@@ -434,6 +469,8 @@ end
  * Break / Continue in loops
  * Multiple Return
  * Compile Time Null Check
+ * Language side clone feature (fast!)
+ * Pattern Matching
 
 #### Not so likely
  * Async / Await like functions for threading (like C#)
@@ -445,3 +482,4 @@ end
  * Contracts
  * Nullable / Not Nullable Data Types
  * Dynamic Typing
+ * CleanUp Functions

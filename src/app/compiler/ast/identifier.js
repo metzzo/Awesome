@@ -1,4 +1,4 @@
-define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/data/errorMessages'], function(_s, dataTypeModule, scopeModule, funcDeclModule, errorMessages) {
+define(['underscore', 'underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler/ast/scope', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/data/errorMessages'], function(_, _s, dataTypeModule, scopeModule, funcDeclModule, errorMessages) {
   var IdentifierTypes = {
     VARIABLE: 'variable',
     FUNCTION: 'function',
@@ -13,6 +13,11 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       info: null
     },
     functions: {
+      copy: function() {
+        return {
+          name: this.params.name
+        };
+      },
       isNotSetYet: function() {
         return !this.params.type;
       },
@@ -66,6 +71,29 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       },
       getIdentifier: function() {
         return this.params.info;
+      },
+      isUsed: function() {
+        /*if (this.params.info) {
+          if (!_.isUndefined(this.params.info.used)) {
+            return this.params.info.params.used
+          } else if (this.params.info.isUsed) {
+            return this.params.info.isUsed();
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }*/
+        return true;
+      },
+      use: function() {
+        if (this.params.info) {
+          if (!_.isUndefined(this.params.info.used)) {
+            this.params.info.use();
+          } else if (this.params.info.isUsed) {
+            this.params.info.use();
+          }
+        }
       },
       proposeDataType: function(dataType) {
         if (!this.params.type) {

@@ -9,7 +9,7 @@ define([ 'underscore', 'src/app/compiler/data/dataType' ], function(_, dataTypeM
     this.params = {
       dataType: params.dataType,
       type: params.type,
-      nodes: [ ]
+      used: false
     };
   };
   
@@ -17,6 +17,10 @@ define([ 'underscore', 'src/app/compiler/data/dataType' ], function(_, dataTypeM
     if (!this.params.dataType.isKnown()) {
       this.params.dataType = this.params.dataType.proposeDataType(dataType);
     }
+  };
+  
+  Identifier.prototype.use = function() {
+    this.params.used = true;
   };
   
   return module = {

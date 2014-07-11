@@ -6,6 +6,12 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       scope: null
     },
     functions: {
+      copy: function() {
+        return {
+          condition: this.params.condition.copy(),
+          scope: this.params.condition.copy()
+        };
+      },
       traverse: function(cb) {
         this.params.condition.traverse(cb);
         this.params.scope.traverse(cb);
@@ -18,6 +24,8 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
         if (!dataType.isKnown()) {
           this.params.condition.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
         }
+        
+        this.params.condition.use();
       },
       checkDataTypes: function() {
         var dt = this.params.condition.getDataType();

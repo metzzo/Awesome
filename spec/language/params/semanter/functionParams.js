@@ -206,19 +206,28 @@ define(['underscore.string', 'src/lib/js/jsel', 'src/app/compiler/ast/ast', 'src
     },
     {
       name: 'is semanting return datatype correctly',
-      input: astModule.createNode(AstFunction, {
-        params: [ ],
-        name: astModule.createNode(AstIdentifier, { name: 'hello' }),
-        returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
-        scope: astModule.createNode(AstScope, {
-          type: AstScope.types.FUNCTION,
-          nodes: [
-            astModule.createNode(AstReturn, { ret: astModule.createNode(AstIntLit, {value: 1}) })
-          ]
-        })
+      input: astModule.createNode(AstScope, {
+        type: AstScope.types.LOCAL,
+        nodes: [
+          astModule.createNode(AstFunction, {
+            params: [ ],
+            name: astModule.createNode(AstIdentifier, { name: 'hello' }),
+            returnDataType: astModule.createNode(AstDataType, { dataType: dataTypeModule.MetaDataTypes.UNKNOWN }),
+            scope: astModule.createNode(AstScope, {
+              type: AstScope.types.FUNCTION,
+              nodes: [
+                astModule.createNode(AstReturn, { ret: astModule.createNode(AstIntLit, {value: 1}) })
+              ]
+            })
+          }),
+          astModule.createNode(AstCall, {
+            func: astModule.createNode(AstIdentifier, { name: 'hello' }),
+            params: [ ]
+          })
+        ]
       }),
       check: function(ast, semanter) {
-        expect(ast.params.returnDataType.getDataType()).toEqual(dataTypeModule.PrimitiveDataTypes.INT);
+        expect(ast.params.nodes[0].params.returnDataType.getDataType()).toEqual(dataTypeModule.PrimitiveDataTypes.INT);
       }
     }
   ]

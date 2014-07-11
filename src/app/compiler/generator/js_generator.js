@@ -195,7 +195,7 @@ define([ 'src/app/compiler/ast/ast', 'src/app/compiler/data/dataType' ], functio
         
         var first = true;
         for (var i = 0; i < node.params.nodes.length; i++) {
-          if (!(node.params.nodes[i].name === AstFunction.name && node.params.nodes[i].params.name.params.name !== AstEmpty.name)) {
+          if (!(node.params.nodes[i].name === AstFunction.name && node.params.nodes[i].params.name.params.name !== AstEmpty.name) && node.params.nodes[i].name !== AstEmpty.name) {
             if (!first) {
               gen.emitLine();
             }

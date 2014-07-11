@@ -9,6 +9,13 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           if (this.name !== 'Stub') {
             throw 'Stub has invalid this';
           }
+        },
+        copy: function() {
+          var obj = { };
+          for (var key in this.params) {
+            obj[key] = this.params[key];
+          }
+          return obj;
         }
       }
     };
@@ -67,6 +74,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.leftOperand.parent).toBe(ast);
         expect(ast.params.rightOperand.parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Int Literal', function() {
@@ -103,6 +114,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         // assert
         expect(traverseCount).toBe(1);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Bool Literal', function() {
@@ -139,6 +154,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         // assert
         expect(traverseCount).toBe(1);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('String Literal', function() {
@@ -175,6 +194,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         // assert
         expect(traverseCount).toBe(1);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Scope', function() {
@@ -219,6 +242,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
       it('has parent properly set', function() {
         expect(ast.params.nodes[0].parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('If', function() {
@@ -271,6 +298,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ifCase.scope.parent).toBe(ast);
         expect(ifCase.condition.parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('While', function() {
@@ -314,6 +345,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.condition.parent).toBe(ast);
         expect(ast.params.scope.parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
      describe('For', function() {
@@ -360,6 +395,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.collection.parent).toBe(ast);
         expect(ast.params.scope.parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Call', function() {
@@ -367,7 +406,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
       beforeEach(function() {
         ast = astModule.createNode(astModule.AstPrototypes.CALL, {
           func: astModule.createNode(stubNode),
-          params: [ astModule.createNode(stubNode) ]
+          params: [ astModule.createNode(stubNode) ],
+          signature: null
         });
       });
       afterEach(function() {
@@ -380,7 +420,8 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           name: 'Call',
           params: {
             func: { name: 'Stub', params: { } },
-            params: [ { name: 'Stub', params: { } } ]
+            params: [ { name: 'Stub', params: { } } ],
+            signature: null
           }
         };
         
@@ -403,6 +444,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.func.parent).toBe(ast);
         expect(ast.params.params[0].parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Identifier', function() {
@@ -439,6 +484,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         // assert
         expect(traverseCount).toBe(1);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Variable Declaration', function() {
@@ -503,6 +552,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.variables[0].identifier.parent).toBe(ast);
         expect(ast.params.variables[0].value.parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('DataType', function() {
@@ -539,6 +592,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         // assert
         expect(traverseCount).toBe(1);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Function Declaration', function() {
@@ -548,7 +605,12 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
           returnDataType: astModule.createNode(stubNode),
           name: astModule.createNode(stubNode),
           params: [ ],
-          scope: astModule.createNode(stubNode)
+          scope: astModule.createNode(stubNode),
+          realFunction: null,
+          realParameters: null,
+          hasRegisteredConversions: false,
+          used: false,
+          parentFunc: null
         });
       });
       afterEach(function() {
@@ -564,7 +626,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
             params: [ ],
             scope: { name: 'Stub', params: { } },
             name: { name: 'Stub', params: { } },
-            realParameters: [ ]
+            realParameters: [ ],
+            realFunction: null,
+            hasRegisteredConversions: false,
+            used: false,
+            parentFunc: null
           }
         };
         
@@ -587,6 +653,10 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         expect(ast.params.returnDataType.parent).toBe(ast);
         expect(ast.params.scope.parent).toBe(ast);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
     
     describe('Import', function() {
@@ -625,6 +695,11 @@ define(['src/app/compiler/ast/ast', 'src/app/compiler/data/operator', 'src/app/c
         // assert
         expect(traverseCount).toBe(2);
       });
+      
+      it('is copied properly', function() {
+        expect(ast.copy()).toEqual(ast);
+      })
     });
+    // TODO: Add Return AstNode tests
   });
 });

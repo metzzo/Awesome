@@ -11,6 +11,18 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
     // type inference
     var anyUnknown, oldAnyUnknown = 0;
     
+    var cleanUp = (function() {
+      // remove all unused nodes
+      for (var i = 0; i < this.mainNodes.length; i++) {
+        var mainNode = this.mainNodes[i];
+        mainNode.traverse(function(obj) {
+          if (!obj.isUsed()) {
+            obj.remove();
+          }
+        });
+      }
+    }).bind(this);
+    
     var resolver = (function() {
       for (var i = 0; i < this.mainNodes.length; i++) {
         var mainNode = this.mainNodes[i];
@@ -18,7 +30,7 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
           obj.processDataTypes();
           
           var dataType = obj.getDataType();
-          if (dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN)) {
+          if (dataType.matches(dataTypeModule.MetaDataTypes.UNKNOWN) && obj.isUsed()) {
             anyUnknown++;
           }
         });
@@ -31,6 +43,7 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
       resolver();
     } while(anyUnknown != oldAnyUnknown && anyUnknown !== 0); // as long as it is able to resolve data types, repeat this step
     
+    cleanUp();
     resolver(); // to get every reference n stuff up 2 date
     
     if (anyUnknown != 0) {
@@ -39,6 +52,7 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
         mainNode.traverse(function(obj) {
           var dataType = obj.getDataType();
           if (!dataType.isKnown()) {
+            console.log(obj.isUsed());
             obj.riseSyntaxError(errorMessages.CANNOT_RESOLVE_DATATYPE);
           }
         });
@@ -48,7 +62,9 @@ define([ 'src/app/compiler/data/dataType', 'src/app/compiler/data/errorMessages'
       for (var i = 0; i < this.mainNodes.length; i++) {
         var mainNode = this.mainNodes[i];
         mainNode.traverse(function(obj) {
-          obj.checkDataTypes();
+          if (obj.isUsed()) {
+            obj.checkDataTypes();
+          }
         });
       }
     }

@@ -6,6 +6,12 @@ define(['underscore', 'src/app/compiler/data/dataType', 'src/app/compiler/data/e
       alias: null
     },
     functions: {
+      copy: function() {
+        return {
+          name: this.params.name,
+          alias: this.params.alias.copy()
+        };
+      },
       traverse: function(cb) {
         this.params.alias.traverse(cb);
       },

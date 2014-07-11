@@ -5,6 +5,11 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
       cases: null
     },
     functions: {
+      copy: function() {
+        return {
+          cases: this.astModule.copyNodeArray(this.params.cases)
+        };
+      },
       traverse: function(cb) {
         for (var i = 0; i < this.params.cases.length; i++) {
           var ifCase = this.params.cases[i];
@@ -23,6 +28,8 @@ define(['underscore.string', 'src/app/compiler/data/dataType', 'src/app/compiler
             if (!dataType.isKnown()) {
               ifCase.condition.proposeDataType(dataTypeModule.PrimitiveDataTypes.BOOL);
             }
+            
+            ifCase.condition.use();
           }
         }
       },

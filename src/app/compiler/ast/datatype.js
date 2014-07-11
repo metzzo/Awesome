@@ -5,13 +5,16 @@ define(['src/app/compiler/data/dataType'], function(dataTypeModule) {
       dataType: null
     },
     functions: {
+      copy: function() {
+        return {
+          dataType: this.params.dataType // dataTypes are inmutable
+        };
+      },
       getDataType: function() {
         return this.params.dataType;
       },
       proposeDataType: function(dt) {
-        if (!this.params.dataType || !this.params.dataType.isKnown()) {
-          this.params.dataType = dt;
-        }
+        this.params.dataType = this.params.dataType.proposeDataType(dt);
       }
     }
   };

@@ -1,4 +1,4 @@
-define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration'], function(dataTypeModule, funcDeclModule) {
+define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration', 'src/app/compiler/ast/empty'], function(dataTypeModule, funcDeclModule, emptyModule) {
   var scope_node;
   return scope_node = {
     name: 'Scope',
@@ -8,6 +8,13 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration
       variables: [ ]
     },
     functions: {
+      copy: function() {
+        return {
+          nodes: this.astModule.copyNodeArray(this.params.nodes),
+          type: this.params.type,
+          variables: [ ]
+        };
+      },
       init: function() {
         this.params.variables = [ ];
       },
@@ -65,6 +72,10 @@ define(['src/app/compiler/data/dataType', 'src/app/compiler/ast/func_declaration
           }
         }
         return functions;
+      },
+      append: function(node) {
+        this.params.nodes.push(node);
+        node.parent = this;
       }
     },
     types: {

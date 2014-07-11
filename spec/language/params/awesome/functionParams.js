@@ -32,6 +32,21 @@ define([], function() {
       output: [
         5, 3, 2, 1, 1, 0
       ]
+    },
+    {
+      name: 'automatic duck typing of functions',
+      input: [
+        'foo 10',
+        'foo 10.4',
+        'function foo(bar)',
+        '  if bar > 10',
+        '    compiletest bar',
+        '  end',
+        'end'
+      ],
+      output: [
+        10.4
+      ]
     }
   ];
 });
